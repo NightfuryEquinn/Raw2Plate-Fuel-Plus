@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "Raw2Plate-Fuel-Plus",
+    "slug": "Raw2Plate-Fuel-Plus",
+    "scheme": "raw2platefuelplus",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/white_no_text.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/white_text.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#fafafa"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/white_no_text.png",
+        "backgroundColor": "#fafafa"
+      }
+    },
+    "web": {
+      "favicon": "./assets/images/white_no_text.png"
+    }
+  }
+}
