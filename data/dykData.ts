@@ -1,4 +1,4 @@
-const dykDataArr: string[] = [
+export const dykDataArr: string[] = [
   "You can use a trouser hanger to hold your recipe book.",
   "You can use toilet paper tubes to make seed starter pots.",
   "You can freeze grapes to chill wine without watering it down.",
@@ -25,5 +25,3 @@ const dykDataArr: string[] = [
   "You can put tea bags in smelly shoes.",
   "You can cure headache with lime.",
 ]
-
-export default dykDataArr
