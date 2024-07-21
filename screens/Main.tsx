@@ -1,13 +1,13 @@
 import { fetchFailure, fetchStart, fetchSuccess } from 'actions/fetchAction';
 import { useFontFromContext } from 'context/FontProvider';
-import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'reducers/store';
 import { fetchData } from 'services/fetchServices';
+import Loading from './Loading';
 
-export default function App() {
+export default function Main() {
   const dispatch: AppDispatch = useDispatch()
   const { data, loading, error } = useSelector(( state: RootState ) => state.fetch )
 
@@ -33,25 +33,23 @@ export default function App() {
   }, [])
 
   return (
-    <View style={ styles.container }>
+    <View style={ s.container }>
       { loading ?
-        <Text style={ styles.text }>Loading</Text>
+        <Loading />
         : error ?
-        <Text style={ styles.text }>Error: { error }</Text>
+        <Text style={ s.text }>Error: { error }</Text>
         : 
-        <Text style={ styles.text }>Done!</Text>
+        <Text style={ s.text }>Done!</Text>
       }
 
       { data.map(( item ) => (
-        <Text key={0} style={ styles.sub }>{ item.fact }</Text>
+        <Text key={0} style={ s.sub }>{ item.fact }</Text>
       ))}
-
-      <StatusBar style="auto" />
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const s = StyleSheet.create({
   "container": {
     flex: 1,
     justifyContent: "center",
