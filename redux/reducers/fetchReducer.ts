@@ -1,5 +1,5 @@
-import { FETCH_FAILURE, FETCH_START, FETCH_SUCCESS, FetchActionTypes } from "types/actionTypes";
-import { FetchState } from "types/stateTypes";
+import { FETCH_FAILURE, FETCH_START, FETCH_SUCCESS, FetchActionTypes } from "redux/types/actionTypes";
+import { FetchState } from "redux/types/stateTypes";
 
 const initialState: FetchState = {
   data: [],

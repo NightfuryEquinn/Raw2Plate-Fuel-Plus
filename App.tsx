@@ -3,7 +3,7 @@ import { configureFonts, DefaultTheme, PaperProvider } from 'react-native-paper'
 import { registerRootComponent } from 'expo';
 import { Provider } from 'react-redux';
 import { FontProvider } from 'context/FontProvider';
-import { store } from 'reducers/store';
+import { store } from 'redux/reducers/store';
 
 import Login from 'screens/landing/Login';
 

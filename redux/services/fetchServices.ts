@@ -1,5 +1,5 @@
 import { axiosInstance } from "data/axiosInstance"
-import { FetchState } from "types/stateTypes"
+import { FetchState } from "redux/types/stateTypes"
 
 interface ApiRes<T> {
   data: T,

@@ -4,6 +4,7 @@
     "slug": "Raw2Plate-Fuel-Plus",
     "scheme": "raw2platefuelplus",
     "platforms": ["ios", "android"],
+    "backgroundColor": "#FAFAFA",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/white_no_text.png",

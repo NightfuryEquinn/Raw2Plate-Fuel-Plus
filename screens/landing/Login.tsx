@@ -1,9 +1,10 @@
 import { LightMode } from 'assets/colors/LightMode'
 import LinedTextField from 'components/LinedTextField'
+import RoundedBorderButton from 'components/RoundedBorderButton'
+import Spacer from 'components/Spacer'
 import { useFontFromContext } from 'context/FontProvider'
 import React, { useState } from 'react'
-import { Text, Image, StyleSheet, View, Pressable } from 'react-native'
-import { Button } from 'react-native-paper'
+import { Text, Image, StyleSheet, Pressable, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function Login() {
@@ -18,32 +19,83 @@ export default function Login() {
   
   return (
     <SafeAreaView style={ s.container }>
-      <Image 
-        style={ s.image }
-        source={ require( "../../assets/images/white_no_text.png" ) } 
-      />
+      <KeyboardAvoidingView behavior={ Platform.OS === "ios" ? "padding" : "height" }>
+        <TouchableWithoutFeedback onPress={ Keyboard.dismiss }>
+          <View>
+            <Image 
+              style={ s.image }
+              source={ require( "../../assets/images/white_no_text.png" ) } 
+            />
 
-      <Text style={ s.heading }>Explore our Recipes</Text>
-      <Text style={ s.sub }>With meal planner, calories tracker, grocery shopping and more!</Text>
+            <Text style={ s.heading }>Explore our Recipes</Text>
+            <Text style={ s.sub }>With meal planner, calories tracker, grocery shopping and more!</Text>
 
-      <LinedTextField name="email" placeholder="Email Address" text={ email } setText={ setEmail } />
-      <LinedTextField name="password" placeholder="Password" secure={ true } text={ password } setText={ setPassword } />
+            <LinedTextField 
+              name="email" 
+              placeholder="Email Address" 
+              text={ email } 
+              setText={ setEmail } 
+            />
 
-      <Button style={ s.minorWrapper } onPress={ () => console.log( "Pressed" ) }>
-        <Text style={ s.minor }>Forgot Password?</Text>
-      </Button>
+            <LinedTextField 
+              name="password" 
+              placeholder="Password" 
+              secure={ true } 
+              text={ password } 
+              setText={ setPassword } 
+            />
+
+            <Pressable style={ s.minorWrapper } onPress={ () => console.log( "Pressed" ) }>
+              <Text style={ s.minor }>Forgot Password?</Text>
+            </Pressable>
+
+            <RoundedBorderButton
+              onPress={ () => console.log( "Pressed" ) }
+              name="apple"
+              text="Login with Apple"
+              color={ LightMode.black }
+              textColor={ LightMode.white }
+              borderRadius={ 10 }
+            />
+
+            <Spacer size={ 25 } />
+
+            <RoundedBorderButton
+              onPress={ () => console.log( "Pressed" ) }
+              name="google"
+              text="Login with Google"
+              color={ LightMode.black }
+              textColor={ LightMode.white }
+              borderRadius={ 10 }
+            />
+
+            <Spacer size={ 25 } />
+
+            <RoundedBorderButton
+              onPress={ () => console.log( "Pressed" ) }
+              icon="MA"
+              name="account-circle"
+              text="Create New Account"
+              color={ LightMode.yellow }
+              textColor={ LightMode.white }
+              borderRadius={ 10 }
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }
 
 const s = StyleSheet.create({
   "container": {
+    marginVertical: "auto",
     padding: 30,
     backgroundColor: LightMode.white
   },
   "image": {
-    height: 125,
-    width: 125,
+    height: 175,
+    width: 175,
     margin: 'auto'
   },
   "heading": {
@@ -60,6 +112,7 @@ const s = StyleSheet.create({
   },
   "minorWrapper": {
     marginLeft: "auto",
+    marginBottom: 40,
   },
   "minor": {
     fontSize: 12,

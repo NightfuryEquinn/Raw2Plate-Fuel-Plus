@@ -3,6 +3,7 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { TextInput } from 'react-native-paper'
 import IconMA from 'react-native-vector-icons/MaterialIcons'; 
+import PropTypes from 'prop-types'
 
 export default function LinedTextField( { name, placeholder, secure, text, setText }: any ) {  
   return (
@@ -49,3 +50,15 @@ const s = StyleSheet.create({
     textAlign: "auto"
   }
 })
+
+LinedTextField.propTypes = {
+  name: PropTypes.string.isRequired,
+  placeholder: PropTypes.string.isRequired,
+  secure: PropTypes.bool,
+  text: PropTypes.string.isRequired,
+  setText: PropTypes.func.isRequired
+}
+
+LinedTextField.defaultProps = {
+  secure: false
+}

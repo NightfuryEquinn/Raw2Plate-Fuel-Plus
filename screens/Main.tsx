@@ -1,10 +1,10 @@
-import { fetchFailure, fetchStart, fetchSuccess } from 'actions/fetchAction';
+import { fetchFailure, fetchStart, fetchSuccess } from 'redux/actions/fetchAction';
 import { useFontFromContext } from 'context/FontProvider';
 import { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from 'reducers/store';
-import { fetchData } from 'services/fetchServices';
+import { AppDispatch, RootState } from 'redux/reducers/store';
+import { fetchData } from 'redux/services/fetchServices';
 import Loading from './Loading';
 
 export default function Main() {

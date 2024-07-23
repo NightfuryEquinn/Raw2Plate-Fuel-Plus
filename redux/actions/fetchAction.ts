@@ -1,4 +1,4 @@
-import { FETCH_FAILURE, FETCH_START, FETCH_SUCCESS, FetchActionTypes } from "types/actionTypes";
+import { FETCH_FAILURE, FETCH_START, FETCH_SUCCESS, FetchActionTypes } from "redux/types/actionTypes";
 
 export const fetchStart = (): FetchActionTypes => ({
   type: FETCH_START
