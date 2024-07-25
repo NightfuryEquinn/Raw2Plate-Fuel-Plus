@@ -4,8 +4,7 @@ import { registerRootComponent } from 'expo';
 import { Provider } from 'react-redux';
 import { FontProvider } from 'context/FontProvider';
 import { store } from 'redux/reducers/store';
-
-import Login from 'screens/landing/Login';
+import AppStack from 'app/AppStack';
 
 export default function App() {
   const fontConfig = {
@@ -21,7 +20,7 @@ export default function App() {
     <Provider store={ store }>
       <PaperProvider theme={ theme }>
         <FontProvider>
-          <Login />
+          <AppStack />
         </FontProvider>
       </PaperProvider>
     </Provider>

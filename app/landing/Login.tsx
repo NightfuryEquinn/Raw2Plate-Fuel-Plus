@@ -4,12 +4,20 @@ import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
 import { useFontFromContext } from 'context/FontProvider'
 import React, { useState } from 'react'
-import { Text, Image, StyleSheet, Pressable, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, View } from 'react-native'
+import { Image, Keyboard, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-export default function Login() {
+export default function Login( { navigation }: any ) {
   const [ email, setEmail ] = useState( "" )
   const [ password, setPassword ] = useState( "" )
+
+  const toRegister = () => {
+    navigation.navigate( "Register" )
+  }
+
+  const toReset = () => {
+    navigation.navigate( "Reset" )
+  }
 
   const { fontsLoaded } = useFontFromContext()
 
@@ -45,7 +53,7 @@ export default function Login() {
               setText={ setPassword } 
             />
 
-            <Pressable style={ s.minorWrapper } onPress={ () => console.log( "Pressed" ) }>
+            <Pressable style={ s.minorWrapper } onPress={ () => toReset() }>
               <Text style={ s.minor }>Forgot Password?</Text>
             </Pressable>
 
@@ -72,7 +80,7 @@ export default function Login() {
             <Spacer size={ 25 } />
 
             <RoundedBorderButton
-              onPress={ () => console.log( "Pressed" ) }
+              onPress={ () => toRegister() }
               icon="MA"
               name="account-circle"
               text="Create New Account"
@@ -89,7 +97,6 @@ export default function Login() {
 
 const s = StyleSheet.create({
   "container": {
-    marginVertical: "auto",
     padding: 30,
     backgroundColor: LightMode.white
   },
