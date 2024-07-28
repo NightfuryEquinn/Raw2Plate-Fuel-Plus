@@ -121,7 +121,6 @@ export default function CalendarOverview() {
           ListFooterComponent={ () => <Spacer size={ 75 } /> }
         />
       </View>
-
     </SafeAreaView>
   )
 }
@@ -138,11 +137,13 @@ const s = StyleSheet.create({
   },
   "heading": {
     fontFamily: "fjalla",
-    fontSize: 32
+    fontSize: 32,
+    color: LightMode.black
   },
   "sub": {
     fontFamily: "cantarell",
     fontSize: 12,
+    color: LightMode.black
   },
   "blue": {
     color: LightMode.blue
@@ -176,10 +177,12 @@ const s = StyleSheet.create({
     padding: 5,
     fontFamily: "cantarell",
     fontSize: 12, 
-    textAlign: "center"
+    textAlign: "center",
+    color: LightMode.black
   },
   "heading2": {
     fontFamily: "fjalla",
-    fontSize: 24
+    fontSize: 24,
+    color: LightMode.black
   }
 })

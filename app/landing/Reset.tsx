@@ -118,18 +118,21 @@ const s = StyleSheet.create({
     fontFamily: "fjalla",
     fontSize: 32,
     textAlign: "center",
-    marginBottom: 5
+    marginBottom: 5,
+    color: LightMode.black
   },
   "sub": {
     fontFamily: "cantarell",
     fontSize: 12,
     textAlign: "center",
-    marginBottom: 20
+    marginBottom: 20,
+    color: LightMode.black
   },
   "subLeft": {
     fontFamily: "cantarell",
     fontSize: 12,
-    marginBottom: 20
+    marginBottom: 20,
+    color: LightMode.black
   },
   "blue": {
     color: LightMode.blue

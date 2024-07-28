@@ -11,6 +11,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import IconMA from 'react-native-vector-icons/MaterialIcons'; 
 import Profile from './Profile'
 import Settings from './Settings'
+import ViewCalendar from './recipe/ViewCalendar'
 
 const Tab = createMaterialBottomTabNavigator()
 const Drawer = createDrawerNavigator()
@@ -48,10 +49,11 @@ const LandingStack = () => {
 
 const RecipeStack = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="CalendarOverview">
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="ViewCalendar">
       <Stack.Screen name="Profile" component={ Profile } />
       <Stack.Screen name="Settings" component={ Settings } />
       <Stack.Screen name="CalendarOverview" component={ CalendarOverview } />
+      <Stack.Screen name="ViewCalendar" component={ ViewCalendar } />
     </Stack.Navigator>
   )
 }
