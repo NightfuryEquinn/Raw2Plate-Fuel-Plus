@@ -18,6 +18,8 @@ export default function LinedTextField( { name, placeholder, secure, text, setTe
         <TextInput 
           style={ s.textInput }
           textColor={ LightMode.black }
+          selectionColor={ LightMode.black }
+          cursorColor={ LightMode.black }
           underlineColor="transparent"
           activeUnderlineColor="transparent"
           placeholder={ placeholder }
@@ -47,7 +49,7 @@ const s = StyleSheet.create({
   "textInput": {
     width: "90%",
     backgroundColor: "transparent",
-    textAlign: "auto"
+    textAlign: "auto",
   }
 })
 

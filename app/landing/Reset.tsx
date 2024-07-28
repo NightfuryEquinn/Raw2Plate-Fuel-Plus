@@ -4,7 +4,7 @@ import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
 import { useFontFromContext } from 'context/FontProvider'
 import React, { useEffect, useState } from 'react'
-import { Image, Text, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TouchableWithoutFeedback, View, Pressable } from 'react-native'
+import { Image, Text, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TouchableWithoutFeedback, View, Pressable, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function Reset() {
@@ -37,9 +37,9 @@ export default function Reset() {
   
   return (
     <SafeAreaView style={ s.container }>
-      <KeyboardAvoidingView behavior={ Platform.OS === "ios" ? "padding" : "height" }>
-        <TouchableWithoutFeedback onPress={ Keyboard.dismiss }>
-          <View>
+      <TouchableWithoutFeedback onPress={ Keyboard.dismiss }>
+        <View>
+          <ScrollView showsVerticalScrollIndicator={ false }>
             <Image 
               style={ s.image }
               source={ require( "../../assets/images/white_no_text.png" ) } 
@@ -74,7 +74,9 @@ export default function Reset() {
             </Text>
 
             <Spacer size={ 100 } />
-
+          </ScrollView>
+          
+          <KeyboardAvoidingView behavior={ Platform.OS === "ios" ? "padding" : "height" }>
             {
               timer !== 0 ? (
                 <RoundedBorderButton
@@ -95,10 +97,9 @@ export default function Reset() {
                 />
               )
             }
-            
-          </View>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+          </KeyboardAvoidingView>
+        </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   )
 }

@@ -4,7 +4,7 @@ import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
 import { useFontFromContext } from 'context/FontProvider'
 import React, { useState } from 'react'
-import { Image, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function Register() {
@@ -21,64 +21,66 @@ export default function Register() {
 
   return (
     <SafeAreaView style={ s.container }>
-      <KeyboardAvoidingView behavior={ Platform.OS === "ios" ? "padding" : "height" }>
-        <TouchableWithoutFeedback onPress={ Keyboard.dismiss }>
-          <View>
-            <Image 
-              style={ s.image }
-              source={ require( "../../assets/images/white_no_text.png" ) } 
-            />
+      <TouchableWithoutFeedback onPress={ Keyboard.dismiss }>
+        <View>
+          <KeyboardAvoidingView behavior={ Platform.OS === "ios" ? "padding" : "height" }>
+            <ScrollView showsVerticalScrollIndicator={ false }>
+              <Image 
+                style={ s.image }
+                source={ require( "../../assets/images/white_no_text.png" ) } 
+              />
 
-            <Text style={ s.heading }>Explore our Recipes</Text>
-            <Text style={ s.sub }>With meal planner, calories tracker, grocery shopping and more!</Text>
-            
-            <LinedTextField 
-              name="email" 
-              placeholder="Email Address" 
-              text={ email } 
-              setText={ setEmail } 
-            />
+              <Text style={ s.heading }>Explore our Recipes</Text>
+              <Text style={ s.sub }>With meal planner, calories tracker, grocery shopping and more!</Text>
+              
+              <LinedTextField 
+                name="email" 
+                placeholder="Email Address" 
+                text={ email } 
+                setText={ setEmail } 
+              />
 
-            <LinedTextField 
-              name="password" 
-              placeholder="Password" 
-              secure={ true } 
-              text={ password } 
-              setText={ setPassword } 
-            />
+              <LinedTextField 
+                name="password" 
+                placeholder="Password" 
+                secure={ true } 
+                text={ password } 
+                setText={ setPassword } 
+              />
 
-            <LinedTextField 
-              name="password" 
-              placeholder="Confirm Password" 
-              secure={ true } 
-              text={ confirm } 
-              setText={ setConfirm } 
-            />
+              <LinedTextField 
+                name="password" 
+                placeholder="Confirm Password" 
+                secure={ true } 
+                text={ confirm } 
+                setText={ setConfirm } 
+              />
 
-            <LinedTextField 
-              name="alternate-email" 
-              placeholder="Username" 
-              secure={ true } 
-              text={ username } 
-              setText={ setUsername } 
-            />
+              <LinedTextField 
+                name="alternate-email" 
+                placeholder="Username" 
+                secure={ true } 
+                text={ username } 
+                setText={ setUsername } 
+              />
 
-            <Spacer size={ 10 } />
+              <Spacer size={ 10 } />
 
-            <Text style={ s.subLeft }>You can add more information to your profile later for better recipe suggestion.</Text>
-            
-            <Spacer size={ 20 } />
+              <Text style={ s.subLeft }>You can add more information to your profile later for better recipe suggestion.</Text>
 
-            <RoundedBorderButton
-              onPress={ () => console.log( "Pressed" ) }
-              text="Start Exploring!"
-              color={ LightMode.yellow }
-              textColor={ LightMode.white }
-              borderRadius={ 10 }
-            />
-          </View>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+              <Spacer size={ 20 } />
+            </ScrollView>
+          </KeyboardAvoidingView>
+
+          <RoundedBorderButton
+            onPress={ () => console.log( "Pressed" ) }
+            text="Start Exploring!"
+            color={ LightMode.yellow }
+            textColor={ LightMode.white }
+            borderRadius={ 10 }
+          />
+        </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   )
 }

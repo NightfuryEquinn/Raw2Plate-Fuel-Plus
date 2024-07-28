@@ -6,8 +6,7 @@ import IconMA from 'react-native-vector-icons/MaterialIcons';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types'
 
-export default function RoundedBorderButton( { onPress, disabled, icon, name, text, color, textColor, borderRadius }: any ) {  
-
+export default function RoundedBorderButton( { onPress, disabled, icon, name, text, color, textColor, borderRadius, marginHori }: any ) {  
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
@@ -19,7 +18,7 @@ export default function RoundedBorderButton( { onPress, disabled, icon, name, te
       activeOpacity={ 0.5 }
       disabled={ disabled }
       onPress={ onPress } 
-      style={[ s.container, { backgroundColor: color, borderRadius: borderRadius } ]}
+      style={[ s.container, { backgroundColor: color, borderRadius: borderRadius, marginHorizontal: marginHori } ]}
     >
       <View style={ s.wrapper }>
         { name ? (
@@ -45,7 +44,7 @@ export default function RoundedBorderButton( { onPress, disabled, icon, name, te
 
 const s = StyleSheet.create({
   "container": {
-    marginHorizontal: 20,
+    minWidth: "45%",
     padding: 10,
     shadowColor: LightMode.black,
     shadowOffset: {
@@ -81,10 +80,15 @@ RoundedBorderButton.propTypes = {
     PropTypes.number,
     PropTypes.string
   ]).isRequired,
+  marginHori: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string
+  ]),
 }
 
 RoundedBorderButton.defaultProps = {
   disabled: false,
   icon: "FA",
-  name: ""
+  name: "",
+  marginHori: 20,
 }

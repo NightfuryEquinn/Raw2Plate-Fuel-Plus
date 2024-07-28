@@ -7,7 +7,12 @@ import { LightMode } from 'assets/colors/LightMode'
 import Reset from './landing/Reset'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import CalendarOverview from './recipe/CalendarOverview'
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
+import IconMA from 'react-native-vector-icons/MaterialIcons'; 
+import Profile from './Profile'
+import Settings from './Settings'
 
+const Tab = createMaterialBottomTabNavigator()
 const Drawer = createDrawerNavigator()
 const Stack = createNativeStackNavigator()
 
@@ -16,15 +21,16 @@ export default function AppStack() {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      background: LightMode.white
+      background: LightMode.white,
+      secondaryContainer: LightMode.white
     }
   }
   
   return (
     <NavigationContainer theme={ theme }>
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="LandingStack">
+      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="BottomTab">
         <Stack.Screen name="LandingStack" component={ LandingStack } />
-        <Stack.Screen name="RecipeStack" component={ RecipeStack } />
+        <Stack.Screen name="BottomTab" component={ BottomTab } />
       </Stack.Navigator>
     </NavigationContainer>
   )
@@ -43,7 +49,39 @@ const LandingStack = () => {
 const RecipeStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="CalendarOverview">
+      <Stack.Screen name="Profile" component={ Profile } />
+      <Stack.Screen name="Settings" component={ Settings } />
       <Stack.Screen name="CalendarOverview" component={ CalendarOverview } />
     </Stack.Navigator>
+  )
+}
+
+const BottomTab = () => {
+  return (
+    <Tab.Navigator 
+      initialRouteName="Planner"
+      activeColor={ LightMode.blue }
+      inactiveColor={ LightMode.black }
+      barStyle={{ 
+        backgroundColor: `${ LightMode.white }`
+      }}
+      screenOptions={{
+        
+      }}
+    >
+      <Tab.Screen 
+        name="PLANNER" 
+        component={ RecipeStack } 
+        options={{
+          tabBarIcon: ({ color }) => (
+            <IconMA 
+              name="calendar-month"
+              color={ color }
+              size={ 28 }
+            />
+          )
+        }}
+      />
+    </Tab.Navigator>
   )
 }
