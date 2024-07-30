@@ -2,7 +2,7 @@ import { LightMode } from 'assets/colors/LightMode'
 import { useFontFromContext } from 'context/FontProvider'
 import PropTypes from 'prop-types'
 import React, { useRef } from 'react'
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
 
@@ -17,7 +17,7 @@ export default function HoriSwipeCard( { onPress, onBookmark, onDelete, data, fi
         onBookmark()
       }}
     >
-      <View style={[ s.swipeButton, { marginHorizontal: 20 } ]}>
+      <View style={[ s.swipeButton, { marginHorizontal: 15 } ]}>
         <IconMA 
           name="bookmark"
           color={ LightMode.green }
@@ -35,7 +35,7 @@ export default function HoriSwipeCard( { onPress, onBookmark, onDelete, data, fi
         onDelete()
       }}
     >
-      <View style={[ s.swipeButton, { marginHorizontal: 20 } ]}>
+      <View style={[ s.swipeButton, { marginHorizontal: 15 } ]}>
         <IconMA 
           name="delete"
           color={ LightMode.red }
@@ -88,10 +88,11 @@ export default function HoriSwipeCard( { onPress, onBookmark, onDelete, data, fi
 const s = StyleSheet.create({
   "container": {
     margin: 15,
+    marginBottom: Platform.OS === "android" ? 17.5 : 15,
     height: 110,
     flexDirection: "row",
     borderRadius: 10,
-    backgroundColor: LightMode.darkGrey,
+    backgroundColor: LightMode.white,
     shadowColor: LightMode.black,
     shadowOffset: {
       width: 4,
@@ -136,7 +137,7 @@ const s = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 10,
-    backgroundColor: LightMode.lightBlack,
+    backgroundColor: LightMode.white,
     justifyContent: "center",
     alignItems: "center",
     shadowColor: LightMode.black,

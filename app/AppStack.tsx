@@ -49,7 +49,7 @@ const LandingStack = () => {
 
 const RecipeStack = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="CalendarOverview">
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="ViewCalendar">
       <Stack.Screen name="Profile" component={ Profile } />
       <Stack.Screen name="Settings" component={ Settings } />
       <Stack.Screen name="CalendarOverview" component={ CalendarOverview } />

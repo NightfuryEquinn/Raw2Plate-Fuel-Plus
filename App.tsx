@@ -24,8 +24,7 @@ export default function App() {
         </FontProvider>
       </PaperProvider>
     </Provider>
-    
   )
 }
 
-registerRootComponent(App)
+registerRootComponent( App )
