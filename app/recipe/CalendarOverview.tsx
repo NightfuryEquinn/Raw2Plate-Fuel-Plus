@@ -3,16 +3,16 @@ import HoriSwipeCard from 'components/HoriSwipeCard';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import { useFontFromContext } from 'context/FontProvider';
-import { forCalendarOverview, ForCalendarOverview } from 'data/dummyData';
+import { forCalendarOverview } from 'data/dummyData';
 import { mealCategories, MealCategory } from 'data/mealCategory';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import React, { Fragment, useEffect, useState } from 'react';
-import { Dimensions, FlatList, Image, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { Dimensions, FlatList, Image, Pressable, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import Animated, { LinearTransition, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import IconMA from 'react-native-vector-icons/MaterialIcons'; 
+import IconMA from 'react-native-vector-icons/MaterialIcons';
 
-export default function CalendarOverview() {
+export default function CalendarOverview( { navigation }: any ) {
   const [ active, setActive ] = useState( 0 )
   const margin = useSharedValue( 0 )
 
@@ -25,12 +25,13 @@ export default function CalendarOverview() {
     }
   }
 
-  const cookItem = ( { item }: any ) => (
+  const cookItem = ( { item, index }: any ) => (
     <HoriSwipeCard 
       onPress={ () => console.log( "Recipe Detail" ) }
       onBookmark={ () => console.log( "Bookmark" ) }
       onDelete={ () => console.log( "Delete" ) }
       data={ item }
+      first={ index === 0 && true }
     />
   )
 
@@ -54,14 +55,14 @@ export default function CalendarOverview() {
         <View style={ s.headingContainer }>
           <Text style={ s.heading }>Today's Meal</Text>
 
-          <Pressable onPress={ () => console.log( "View Calendar" ) }>
+          <Pressable onPress={ () => navigation.navigate( "ViewCalendar" ) }>
             <Text style={[ s.sub, s.blue ]}>View Calendar</Text>
           </Pressable>
         </View>
 
         <Spacer size={ 5 } />
 
-        <Text style={ s.sub }>{ moment().format( "D MMMM YYYY" ) }</Text>
+        <Text style={ s.sub }>{ dayjs().format( "D MMMM YYYY" ) }</Text>
 
         <Spacer size={ 15 } />
 
@@ -112,12 +113,11 @@ export default function CalendarOverview() {
         <Spacer size={ 15 } />
 
         <FlatList
-          style={{ height: Dimensions.get( "window" ).height * 0.5 }}
+          style={{ height: Dimensions.get( "window" ).height * 0.5, margin: -15, marginTop: -7.5 }}
           showsVerticalScrollIndicator= { false }
           data={ forCalendarOverview }
           renderItem={ cookItem }
           keyExtractor={ data => data.id.toString() }
-          ItemSeparatorComponent={ () => <Spacer size={ 15 } /> }
           ListFooterComponent={ () => <Spacer size={ 75 } /> }
         />
       </View>

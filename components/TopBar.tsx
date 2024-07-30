@@ -1,8 +1,8 @@
 import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
 import { LightMode } from 'assets/colors/LightMode';
-import React from 'react'
-import { Pressable, StyleSheet, View } from 'react-native'
-import IconMA from 'react-native-vector-icons/MaterialIcons'; 
+import React from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
+import IconMA from 'react-native-vector-icons/MaterialIcons';
 
 export default function TopBar() {
   const navigation = useNavigation<NavigationProp<ParamListBase>>()

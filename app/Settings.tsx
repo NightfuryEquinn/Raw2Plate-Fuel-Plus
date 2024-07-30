@@ -1,10 +1,10 @@
-import { View, Text, StyleSheet, Image, useColorScheme, Alert, Linking, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { LightMode } from 'assets/colors/LightMode'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import * as Location from 'expo-location'
+import React, { useEffect, useState } from 'react'
+import { Alert, Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function Settings() {
   const pkg = require( "../package.json" )

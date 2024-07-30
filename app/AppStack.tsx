@@ -1,16 +1,16 @@
+import { createDrawerNavigator } from '@react-navigation/drawer'
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import React from 'react'
-import Register from './landing/Register'
-import Login from './landing/Login'
 import { LightMode } from 'assets/colors/LightMode'
-import Reset from './landing/Reset'
-import { createDrawerNavigator } from '@react-navigation/drawer'
-import CalendarOverview from './recipe/CalendarOverview'
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
-import IconMA from 'react-native-vector-icons/MaterialIcons'; 
+import React from 'react'
+import IconMA from 'react-native-vector-icons/MaterialIcons'
 import Profile from './Profile'
 import Settings from './Settings'
+import Login from './landing/Login'
+import Register from './landing/Register'
+import Reset from './landing/Reset'
+import CalendarOverview from './recipe/CalendarOverview'
 import ViewCalendar from './recipe/ViewCalendar'
 
 const Tab = createMaterialBottomTabNavigator()
@@ -49,7 +49,7 @@ const LandingStack = () => {
 
 const RecipeStack = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="ViewCalendar">
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="CalendarOverview">
       <Stack.Screen name="Profile" component={ Profile } />
       <Stack.Screen name="Settings" component={ Settings } />
       <Stack.Screen name="CalendarOverview" component={ CalendarOverview } />

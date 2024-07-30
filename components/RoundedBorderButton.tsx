@@ -1,10 +1,10 @@
 import { LightMode } from 'assets/colors/LightMode';
 import { useFontFromContext } from 'context/FontProvider';
-import React from 'react'
-import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import IconMA from 'react-native-vector-icons/MaterialIcons'; 
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import IconFA from 'react-native-vector-icons/FontAwesome';
-import PropTypes from 'prop-types'
+import IconMA from 'react-native-vector-icons/MaterialIcons';
 
 export default function RoundedBorderButton( { onPress, disabled, icon, name, text, color, textColor, borderRadius, marginHori }: any ) {  
   const { fontsLoaded } = useFontFromContext()

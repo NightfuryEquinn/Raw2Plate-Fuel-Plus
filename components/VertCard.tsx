@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet, Platform, Image, Pressable, TouchableOpacity } from 'react-native'
-import React from 'react'
 import { LightMode } from 'assets/colors/LightMode'
-import PropTypes from 'prop-types'
 import { useFontFromContext } from 'context/FontProvider'
+import PropTypes from 'prop-types'
+import React from 'react'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 export default function VertCard( { width, height, image, text, fontSize, textAlign }: any ) {
   const { fontsLoaded } = useFontFromContext()

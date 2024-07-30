@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet } from 'react-native'
-import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { LightMode } from 'assets/colors/LightMode'
-import TopBar from 'components/TopBar'
 import Spacer from 'components/Spacer'
+import TopBar from 'components/TopBar'
+import React from 'react'
+import { StyleSheet, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function ViewCalendar() {
   return (

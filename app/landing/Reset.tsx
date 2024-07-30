@@ -4,17 +4,15 @@ import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
 import { useFontFromContext } from 'context/FontProvider'
 import React, { useEffect, useState } from 'react'
-import { Image, Text, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TouchableWithoutFeedback, View, Pressable, ScrollView } from 'react-native'
+import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function Reset() {
   const [ email, setEmail ] = useState( "" )
   const [ timer, setTimer ] = useState( 0 )
-  const [ resend, setResend ] = useState( false )
 
   const sendEmail = () => {
     setTimer( 60 )
-    setResend( false )
   }
 
   const { fontsLoaded } = useFontFromContext()
@@ -30,8 +28,6 @@ export default function Reset() {
       }, 1000)
 
       return () => clearInterval( interval )
-    } else {
-      setResend( true )
     }
   }, [ timer ])
   

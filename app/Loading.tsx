@@ -1,7 +1,7 @@
 import { LightMode } from 'assets/colors/LightMode'
 import { LinearGradient } from 'expo-linear-gradient'
 import React from 'react'
-import { View, StyleSheet, Dimensions } from 'react-native'
+import { Dimensions, StyleSheet, View } from 'react-native'
 import Animated, { Easing, interpolate, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
 

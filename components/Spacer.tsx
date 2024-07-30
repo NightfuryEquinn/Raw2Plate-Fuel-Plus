@@ -1,6 +1,6 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 import { View } from 'react-native'
-import PropTypes from 'prop-types'
 
 export default function Spacer( { horizontal, size }: any ) {
   const defaultValue = "auto"

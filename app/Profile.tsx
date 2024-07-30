@@ -1,13 +1,13 @@
-import { View, Text, StyleSheet, KeyboardAvoidingView, TouchableWithoutFeedback, Platform, Keyboard, Image, TouchableOpacity, ScrollView } from 'react-native'
-import React, { useState } from 'react'
-import { useFontFromContext } from 'context/FontProvider'
 import { LightMode } from 'assets/colors/LightMode'
-import TopBar from 'components/TopBar'
-import Spacer from 'components/Spacer'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import * as ImagePicker from 'expo-image-picker';
-import { TextInput } from 'react-native-paper'
 import RoundedBorderButton from 'components/RoundedBorderButton'
+import Spacer from 'components/Spacer'
+import TopBar from 'components/TopBar'
+import { useFontFromContext } from 'context/FontProvider'
+import * as ImagePicker from 'expo-image-picker'
+import React, { useState } from 'react'
+import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { TextInput } from 'react-native-paper'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function Profile() {
   const [ image, setImage ] = useState( "" )

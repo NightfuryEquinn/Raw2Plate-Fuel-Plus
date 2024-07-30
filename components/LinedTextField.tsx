@@ -1,9 +1,9 @@
-import { LightMode } from 'assets/colors/LightMode'
-import React from 'react'
-import { StyleSheet, View } from 'react-native'
-import { TextInput } from 'react-native-paper'
-import IconMA from 'react-native-vector-icons/MaterialIcons'; 
-import PropTypes from 'prop-types'
+import { LightMode } from 'assets/colors/LightMode';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { TextInput } from 'react-native-paper';
+import IconMA from 'react-native-vector-icons/MaterialIcons';
 
 export default function LinedTextField( { name, placeholder, secure, text, setText }: any ) {  
   return (

@@ -1,12 +1,12 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
-import React, { useRef, useState } from 'react'
-import { useFontFromContext } from 'context/FontProvider'
 import { LightMode } from 'assets/colors/LightMode'
+import { useFontFromContext } from 'context/FontProvider'
 import PropTypes from 'prop-types'
-import IconMA from 'react-native-vector-icons/MaterialIcons'; 
+import React, { useRef } from 'react'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler'
+import IconMA from 'react-native-vector-icons/MaterialIcons'
 
-export default function HoriSwipeCard( { onPress, onBookmark, onDelete, data }: any ) {
+export default function HoriSwipeCard( { onPress, onBookmark, onDelete, data, first }: any ) {
   const swipeRef = useRef<Swipeable>( null )
 
   const leftAction = () => (
@@ -17,7 +17,7 @@ export default function HoriSwipeCard( { onPress, onBookmark, onDelete, data }: 
         onBookmark()
       }}
     >
-      <View style={[ s.swipeButton, { marginRight: 20 } ]}>
+      <View style={[ s.swipeButton, { marginHorizontal: 20 } ]}>
         <IconMA 
           name="bookmark"
           color={ LightMode.green }
@@ -35,7 +35,7 @@ export default function HoriSwipeCard( { onPress, onBookmark, onDelete, data }: 
         onDelete()
       }}
     >
-      <View style={[ s.swipeButton, { marginLeft: 20 } ]}>
+      <View style={[ s.swipeButton, { marginHorizontal: 20 } ]}>
         <IconMA 
           name="delete"
           color={ LightMode.red }
@@ -61,7 +61,7 @@ export default function HoriSwipeCard( { onPress, onBookmark, onDelete, data }: 
         <TouchableOpacity
           activeOpacity={ 0.5 }
           onPress={ onPress }
-          style={ s.container }
+          style={[ s.container, !first && { marginTop: 5 } ]}
         >
           <Image 
             resizeMode="cover"
@@ -87,10 +87,19 @@ export default function HoriSwipeCard( { onPress, onBookmark, onDelete, data }: 
 
 const s = StyleSheet.create({
   "container": {
+    margin: 15,
     height: 110,
     flexDirection: "row",
     borderRadius: 10,
     backgroundColor: LightMode.darkGrey,
+    shadowColor: LightMode.black,
+    shadowOffset: {
+      width: 4,
+      height: 4
+    },
+    shadowOpacity: 0.375,
+    shadowRadius: 6,
+    elevation: 10,
   },
   "detailContainer": {
     flex: 1,
@@ -129,7 +138,15 @@ const s = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: LightMode.lightBlack,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    shadowColor: LightMode.black,
+    shadowOffset: {
+      width: 4,
+      height: 4
+    },
+    shadowOpacity: 0.375,
+    shadowRadius: 6,
+    elevation: 10,
   },
 })
 
@@ -137,5 +154,10 @@ HoriSwipeCard.propTypes = {
   onPress: PropTypes.func.isRequired,
   onBookmark: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
-  data: PropTypes.any.isRequired
+  data: PropTypes.any.isRequired,
+  first: PropTypes.bool.isRequired,
+}
+
+HoriSwipeCard.defaultProps = {
+  first: false
 }
