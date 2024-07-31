@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
-export default function VertCard( { width, height, image, text, fontSize, textAlign }: any ) {
+export default function VertCard( { onPress, width, height, fontSize, textAlign, data, last }: any ) {
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
@@ -14,17 +14,17 @@ export default function VertCard( { width, height, image, text, fontSize, textAl
   return (
     <TouchableOpacity 
       activeOpacity={ 0.5 }
-      onPress={ () => console.log( "Pressed" ) }
-      style={ s.container }
+      onPress={ onPress }
+      style={[ s.container, !last && { marginRight: 15 } ]}
     >
       <View style={{ width: width, height: height }}>
         <Image 
           resizeMode="cover"
-          style={[ s.image, { width: width, height: height * 0.75 } ]}
-          source={ image }
+          style={[ s.image, { width: width, height: height * 0.625 } ]}
+          source={ data.image }
         />
 
-        <Text style={[ s.sub, { fontSize: fontSize, textAlign: textAlign } ]}>{ text }</Text>
+        <Text numberOfLines={ 2 } style={[ s.sub, { fontSize: fontSize, textAlign: textAlign } ]}>{ data.heading }</Text>
       </View>
     </TouchableOpacity>
   )
@@ -49,21 +49,23 @@ const s = StyleSheet.create({
     borderTopRightRadius: 10,
   },
   "sub": {
-    padding: 5,
+    padding: 10,
     fontFamily: "cantarell"
   }
 })
 
 VertCard.propTypes = {
+  onPress: PropTypes.func.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
-  image: PropTypes.any.isRequired,
-  text: PropTypes.string.isRequired,
+  data: PropTypes.any.isRequired,
   fontSize: PropTypes.number,
-  textAlign: PropTypes.string
+  textAlign: PropTypes.string,
+  last: PropTypes.bool.isRequired,
 }
 
 VertCard.defaultProps = {
   fontSize: 12,
-  textAlign: "center"
+  textAlign: "center",
+  last: false
 }

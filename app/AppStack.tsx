@@ -12,6 +12,7 @@ import Register from './landing/Register'
 import Reset from './landing/Reset'
 import CalendarOverview from './recipe/CalendarOverview'
 import ViewCalendar from './recipe/ViewCalendar'
+import RecipeManager from './recipe/RecipeManager'
 
 const Tab = createMaterialBottomTabNavigator()
 const Drawer = createDrawerNavigator()
@@ -54,6 +55,7 @@ const RecipeStack = () => {
       <Stack.Screen name="Settings" component={ Settings } />
       <Stack.Screen name="CalendarOverview" component={ CalendarOverview } />
       <Stack.Screen name="ViewCalendar" component={ ViewCalendar } />
+      <Stack.Screen name="RecipeManager" component={ RecipeManager } />
     </Stack.Navigator>
   )
 }

@@ -88,7 +88,7 @@ export default function HoriSwipeCard( { onPress, onBookmark, onDelete, data, fi
 const s = StyleSheet.create({
   "container": {
     margin: 15,
-    marginBottom: Platform.OS === "android" ? 17.5 : 15,
+    marginBottom: 17.5,
     height: 110,
     flexDirection: "row",
     borderRadius: 10,

@@ -1,23 +1,41 @@
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker'
 import { LightMode } from 'assets/colors/LightMode'
+import HoriScrollRecipes from 'components/HoriScrollRecipes'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
+import { forViewCalendar } from 'data/dummyData'
 import dayjs from 'dayjs'
 import React, { useEffect, useRef, useState } from 'react'
-import { Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import IconMA from 'react-native-vector-icons/MaterialIcons';
+import IconMA from 'react-native-vector-icons/MaterialIcons'
 
 interface DateItem {
   dayOfWeek: string,
   dayOfMonth: number,
 }
 
-export default function ViewCalendar() {
+export default function ViewCalendar( { navigation }: any ) {
   const today = dayjs()
   const [ currentMonth, setCurrentMonth ] = useState( dayjs() )
   const [ selectedDate, setSelectedDate ] = useState( dayjs().date() )
+  const [ pickerDate, setPickerDate ] = useState( dayjs().toDate() )
+  const [ isPickerVisible, setPickerVisible ] = useState( false )
   const scrollRef = useRef<ScrollView>( null )
+
+  const showPicker = () => {
+    setPickerVisible( true )
+  }
+
+  const onChangePicker = ( event: DateTimePickerEvent, eventSelectedDate: Date | undefined ) => {
+    const currentDate = eventSelectedDate || pickerDate
+    
+    setPickerVisible( false )
+    setPickerDate( currentDate )
+    setSelectedDate( dayjs( currentDate ).date() )
+    setCurrentMonth( dayjs( currentDate ) )
+  }
 
   const changeMonth = ( direction: number ) => {
     const newMonth = currentMonth.clone().add( direction, "months" )
@@ -102,7 +120,7 @@ export default function ViewCalendar() {
             </TouchableOpacity>
           </View>
           
-          <Pressable onPress={ () => console.log( "Select Date" ) }>
+          <Pressable onPress={ showPicker }>
             <Text style={[ s.sub, s.blue ]}>Select Date</Text>
           </Pressable>
         </View>
@@ -137,7 +155,7 @@ export default function ViewCalendar() {
         <View style={ s.headingContainer }>
           <Text style={ s.recipeHeading }>Recipes to Cook</Text>
 
-          <Pressable onPress={ () => console.log( "To Recipe Manager" ) }>
+          <Pressable onPress={ () => navigation.navigate( "RecipeManager" ) }>
             <IconMA 
               name="edit-note"
               color={ LightMode.blue }
@@ -148,8 +166,37 @@ export default function ViewCalendar() {
 
         <Spacer size={ 5 } />
 
-        <Text style={ s.recipeSection }>Breakfast</Text>
+        <ScrollView
+          contentContainerStyle={{ paddingHorizontal: 20 }}
+          style={ s.nestedScroll }
+          showsVerticalScrollIndicator={ false }
+        >
+          {
+            [ "Breakfast", "Brunch", "Lunch", "Tea Time", "Dinner" ].map(( meal: string, index: number ) => (
+              <View key={ index }>
+                <HoriScrollRecipes 
+                  title={ meal }
+                  data={ forViewCalendar }
+                  onPressAddRecipe={ () => console.log( "Add Recipe" ) }
+                />
+
+                { meal === "Dinner" ? <Spacer size={ 85 } /> : <Spacer size={ 20 } /> }
+              </View>
+            ))
+          }
+        </ScrollView>
       </View>
+
+      {
+        isPickerVisible && (
+          <DateTimePicker 
+            value={ pickerDate }
+            mode="date"
+            display="default"
+            onChange={ onChangePicker }
+          />
+        )
+      }
     </SafeAreaView>
   )
 }
@@ -189,7 +236,7 @@ const s = StyleSheet.create({
     flexDirection: "row",
   },
   "date": {
-    width: 35,
+    width: 40,
     padding: 7.5,
     shadowColor: LightMode.black,
     shadowOffset: {
@@ -223,9 +270,8 @@ const s = StyleSheet.create({
     fontSize: 24,
     color: LightMode.black
   },
-  "recipeSection": {
-    fontFamily: "cantarell",
-    fontSize: 16,
-    color: LightMode.black
+  "nestedScroll": {
+    height: Dimensions.get( "window" ).height * 0.625,
+    marginHorizontal: -20,
   }
 })

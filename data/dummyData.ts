@@ -8,6 +8,12 @@ export type ForCalendarOverview = {
   desc: string
 }
 
+export type ForViewCalendar = {
+  id: number,
+  image: ImageSourcePropType,
+  heading: string
+}
+
 export const forCalendarOverview: ForCalendarOverview[] = [
   {
     "id": 1,
@@ -50,5 +56,38 @@ export const forCalendarOverview: ForCalendarOverview[] = [
     "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "sub": "Est. Cooking Time", 
     "desc": "30 mins"
+  },
+]
+
+export const forViewCalendar: ForViewCalendar[] = [
+  {
+    "id": 1,
+    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
+  },
+  {
+    "id": 2,
+    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
+  },
+  {
+    "id": 3,
+    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
+  },
+  {
+    "id": 4,
+    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
+  },
+  {
+    "id": 5,
+    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
+  },
+  {
+    "id": 6,
+    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
   },
 ]

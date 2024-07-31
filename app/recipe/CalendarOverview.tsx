@@ -25,7 +25,7 @@ export default function CalendarOverview( { navigation }: any ) {
     }
   }
 
-  const cookItem = ( { item, index }: any ) => (
+  const CookItem = ( { item, index }: any ) => (
     <HoriSwipeCard 
       onPress={ () => console.log( "Recipe Detail" ) }
       onBookmark={ () => console.log( "Bookmark" ) }
@@ -66,7 +66,11 @@ export default function CalendarOverview( { navigation }: any ) {
 
         <Spacer size={ 15 } />
 
-        <ScrollView contentContainerStyle={{ padding: 20 }} horizontal={ true } style={ s.scroll }>
+        <ScrollView 
+          contentContainerStyle={{ padding: 20 }} 
+          horizontal={ true } 
+          style={ s.scroll }
+        >
           {
             mealCategories.map(( data: MealCategory, index: number ) => {
               const animatedStyle = useAnimatedStyle(() => ({
@@ -101,7 +105,7 @@ export default function CalendarOverview( { navigation }: any ) {
         <View style={ s.headingContainer }>
           <Text style={ s.heading2 }>Recipes to Cook</Text>
 
-          <Pressable onPress={ () => console.log( "To Recipe Manager" ) }>
+          <Pressable onPress={ () => navigation.navigate( "RecipeManager" ) }>
             <IconMA 
               name="edit-note"
               color={ LightMode.blue }
@@ -113,10 +117,10 @@ export default function CalendarOverview( { navigation }: any ) {
         <Spacer size={ 15 } />
 
         <FlatList
-          style={{ height: Dimensions.get( "window" ).height * 0.5, margin: -15, marginTop: -7.5 }}
+          style={ s.flatList }
           showsVerticalScrollIndicator= { false }
           data={ forCalendarOverview }
-          renderItem={ cookItem }
+          renderItem={ CookItem }
           keyExtractor={ data => data.id.toString() }
           ListFooterComponent={ () => <Spacer size={ 75 } /> }
         />
@@ -184,5 +188,10 @@ const s = StyleSheet.create({
     fontFamily: "fjalla",
     fontSize: 24,
     color: LightMode.black
+  },
+  "flatList": {
+    height: Dimensions.get( "window" ).height * 0.5, 
+    margin: -15, 
+    marginTop: -7.5
   }
 })
