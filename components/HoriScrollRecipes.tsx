@@ -50,12 +50,10 @@ export default function HoriScrollRecipes( { title, data, onPressAddRecipe }: an
 
 const s = StyleSheet.create({
   "recipeSection": {
-    paddingLeft: 10,
     fontFamily: "cantarell",
     fontSize: 16,
-    color: LightMode.black,
-    borderLeftWidth: 5,
-    borderLeftColor: LightMode.darkGreen
+    color: LightMode.darkGreen,
+    textTransform: "uppercase"
   },
   "flatList": {
     margin: -20, // Counter scroll view content container style due to drop shadow issue

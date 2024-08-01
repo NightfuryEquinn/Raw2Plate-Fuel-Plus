@@ -1,4 +1,4 @@
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker'
+import DatePicker from 'react-native-ui-datepicker';
 import { LightMode } from 'assets/colors/LightMode'
 import HoriScrollRecipes from 'components/HoriScrollRecipes'
 import Spacer from 'components/Spacer'
@@ -7,7 +7,7 @@ import { useFontFromContext } from 'context/FontProvider'
 import { forViewCalendar } from 'data/dummyData'
 import dayjs from 'dayjs'
 import React, { useEffect, useRef, useState } from 'react'
-import { Dimensions, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
 
@@ -20,21 +20,13 @@ export default function ViewCalendar( { navigation }: any ) {
   const today = dayjs()
   const [ currentMonth, setCurrentMonth ] = useState( dayjs() )
   const [ selectedDate, setSelectedDate ] = useState( dayjs().date() )
-  const [ pickerDate, setPickerDate ] = useState( dayjs().toDate() )
-  const [ isPickerVisible, setPickerVisible ] = useState( false )
   const scrollRef = useRef<ScrollView>( null )
 
-  const showPicker = () => {
-    setPickerVisible( true )
-  }
+  const [ modal, setModal ] = useState( false )
+  const [ modalDate, setModalDate ] = useState( new Date() )
 
-  const onChangePicker = ( event: DateTimePickerEvent, eventSelectedDate: Date | undefined ) => {
-    const currentDate = eventSelectedDate || pickerDate
-    
-    setPickerVisible( false )
-    setPickerDate( currentDate )
-    setSelectedDate( dayjs( currentDate ).date() )
-    setCurrentMonth( dayjs( currentDate ) )
+  const showModal = () => {
+    setModal( !modal )
   }
 
   const changeMonth = ( direction: number ) => {
@@ -120,7 +112,7 @@ export default function ViewCalendar( { navigation }: any ) {
             </TouchableOpacity>
           </View>
           
-          <Pressable onPress={ showPicker }>
+          <Pressable onPress={ showModal }>
             <Text style={[ s.sub, s.blue ]}>Select Date</Text>
           </Pressable>
         </View>
@@ -187,16 +179,45 @@ export default function ViewCalendar( { navigation }: any ) {
         </ScrollView>
       </View>
 
-      {
-        isPickerVisible && (
-          <DateTimePicker 
-            value={ pickerDate }
-            mode="date"
-            display="default"
-            onChange={ onChangePicker }
-          />
-        )
-      }
+      <Modal
+        animationType="fade"
+        transparent={ true }
+        visible={ modal }
+        onRequestClose={ showModal }
+      >
+        <View style={ s.modalContainer }>
+          <View style={ s.modalContent }>
+            <DatePicker
+              mode="single"
+              date={ modalDate }
+              onChange={ ( { date }: any ) => {
+                setModalDate( date )
+                setCurrentMonth( date )
+                setSelectedDate( dayjs( date ).date() )
+              }}
+              calendarTextStyle={{ fontFamily: "fjalla" }}
+              selectedTextStyle={{ fontFamily: "fjalla" }}
+              selectedItemColor={ LightMode.black }
+              headerTextStyle={{ fontFamily: "fjalla", fontSize: 24 }}
+              headerButtonSize={ 20 }
+              headerButtonColor={ LightMode.black }
+              todayTextStyle={{ fontFamily: "fjalla" }}
+              weekDaysTextStyle={{ fontFamily: "fjalla" }}
+            />
+
+            <TouchableOpacity
+              activeOpacity={ 0.5 }
+              onPress={ showModal }
+            >
+              <IconMA 
+                name="close"
+                size={ 36 }
+                color={ LightMode.black }
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   )
 }
@@ -273,5 +294,20 @@ const s = StyleSheet.create({
   "nestedScroll": {
     height: Dimensions.get( "window" ).height * 0.625,
     marginHorizontal: -20,
+  },
+  "modalContainer": {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: LightMode.halfBlack
+  },
+  "modalContent": {
+    flex: 0.5,
+    margin: 20,
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    backgroundColor: LightMode.white,
+    gap: 10,
   }
 })
