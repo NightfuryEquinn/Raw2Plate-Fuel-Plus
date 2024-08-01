@@ -129,4 +129,18 @@ export const forRecipeManager: ForRecipeManager[] = [
     "meal": "Lunch",
     "date": "31-07-2024"
   },
+  {
+    "id": 5,
+    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
+    "meal": "Tea Time",
+    "date": "01-08-2024"
+  },
+  {
+    "id": 6,
+    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
+    "meal": "Dinner",
+    "date": "01-08-2024"
+  },
 ]

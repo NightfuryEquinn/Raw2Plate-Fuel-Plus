@@ -1,15 +1,15 @@
+import { LightMode } from 'assets/colors/LightMode';
+import HoriScrollRecipes from 'components/HoriScrollRecipes';
+import Spacer from 'components/Spacer';
+import TopBar from 'components/TopBar';
+import { useFontFromContext } from 'context/FontProvider';
+import { forViewCalendar } from 'data/dummyData';
+import dayjs from 'dayjs';
+import React, { useEffect, useRef, useState } from 'react';
+import { Dimensions, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import DatePicker from 'react-native-ui-datepicker';
-import { LightMode } from 'assets/colors/LightMode'
-import HoriScrollRecipes from 'components/HoriScrollRecipes'
-import Spacer from 'components/Spacer'
-import TopBar from 'components/TopBar'
-import { useFontFromContext } from 'context/FontProvider'
-import { forViewCalendar } from 'data/dummyData'
-import dayjs from 'dayjs'
-import React, { useEffect, useRef, useState } from 'react'
-import { Dimensions, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import IconMA from 'react-native-vector-icons/MaterialIcons'
+import IconMA from 'react-native-vector-icons/MaterialIcons';
 
 interface DateItem {
   dayOfWeek: string,
@@ -18,12 +18,12 @@ interface DateItem {
 
 export default function ViewCalendar( { navigation }: any ) {
   const today = dayjs()
-  const [ currentMonth, setCurrentMonth ] = useState( dayjs() )
-  const [ selectedDate, setSelectedDate ] = useState( dayjs().date() )
+  const [ currentMonth, setCurrentMonth ] = useState( today )
+  const [ selectedDate, setSelectedDate ] = useState( today.date() )
   const scrollRef = useRef<ScrollView>( null )
 
   const [ modal, setModal ] = useState( false )
-  const [ modalDate, setModalDate ] = useState( new Date() )
+  const [ modalDate, setModalDate ] = useState( today )
 
   const showModal = () => {
     setModal( !modal )
@@ -129,7 +129,14 @@ export default function ViewCalendar( { navigation }: any ) {
             <TouchableOpacity
               key={ date.dayOfMonth }
               activeOpacity={ 0.5 }
-              onPress={ () => setSelectedDate( date.dayOfMonth ) }
+              onPress={ () => {
+                const year = currentMonth.year()
+                const month = currentMonth.month() + 1
+                const selectedDate = dayjs().year( year ).month( month - 1 ).date( date.dayOfMonth )
+
+                setSelectedDate( date.dayOfMonth )
+                setModalDate( selectedDate )
+              }}
               style={[ 
                 s.date, 
                 selectedDate === date.dayOfMonth ? s.greenBack : s.whiteBack,
@@ -204,10 +211,11 @@ export default function ViewCalendar( { navigation }: any ) {
               todayTextStyle={{ fontFamily: "fjalla" }}
               weekDaysTextStyle={{ fontFamily: "fjalla" }}
             />
-
+            
             <TouchableOpacity
               activeOpacity={ 0.5 }
               onPress={ showModal }
+              style={ s.modalButton }
             >
               <IconMA 
                 name="close"
@@ -309,5 +317,10 @@ const s = StyleSheet.create({
     alignItems: "center",
     backgroundColor: LightMode.white,
     gap: 10,
+  },
+  "modalButton": {
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: LightMode.white
   }
 })

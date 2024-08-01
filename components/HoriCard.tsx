@@ -1,41 +1,52 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from 'react-native'
-import React from 'react'
-import PropTypes from 'prop-types'
 import { LightMode } from 'assets/colors/LightMode'
 import { useFontFromContext } from 'context/FontProvider'
+import PropTypes from 'prop-types'
+import React, { useEffect } from 'react'
+import { Image, StyleSheet, Text, TouchableOpacity } from 'react-native'
+import Animated, { EntryExitTransition, FadingTransition, LinearTransition, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 export default function HoriCard( { onPress, data, active }: any ) {
+  const width = useSharedValue( 200 )
+  const animatedStyle = useAnimatedStyle(() => ({
+    width: active ? width.value : 200
+  }))
+  
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
     return null
   }
+
+  useEffect(() => {
+    width.value = withTiming( 235, { duration: 250 } )
+  }, [ active ])
   
   return (
     <TouchableOpacity
       activeOpacity={ 0.5 }
       onPress={ onPress }
-      style={[ s.container, active ? { width: 225 } : { width: 200 } ]} // Animated width
     >
-      <Image 
-        resizeMode="cover"
-        source={ data.image }
-        style={ s.image }
-      />
+      <Animated.View layout={ LinearTransition } style={[ s.container, active ? { backgroundColor: LightMode.black } : { backgroundColor: LightMode.lightBlack }, animatedStyle ]}>
+        <Image 
+          resizeMode="cover"
+          source={ data.image }
+          style={ s.image }
+        />
 
-      <Text numberOfLines={ 1 } style={ s.heading }>{ data.heading }</Text>
+        <Text numberOfLines={ 1 } style={ s.heading }>{ data.heading }</Text>
+      </Animated.View>
     </TouchableOpacity>
   )
 }
 
 const s = StyleSheet.create({
   "container": {
+    marginLeft: "auto",
     width: 200,
     height: 40,
     borderRadius: 10,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: LightMode.black,
     shadowColor: LightMode.black,
     shadowOffset: {
       width: 4,
@@ -63,4 +74,5 @@ const s = StyleSheet.create({
 HoriCard.propTypes = {
   onPress: PropTypes.func.isRequired,
   data: PropTypes.any.isRequired,
+  active: PropTypes.bool.isRequired
 }

@@ -82,7 +82,7 @@ export default function CalendarOverview( { navigation }: any ) {
                   <TouchableWithoutFeedback 
                     onPress={ () => zoomPress( index ) }
                   >
-                    <Animated.View layout={ LinearTransition }  style={[ s.vertContainer, animatedStyle ]}>
+                    <Animated.View layout={ LinearTransition } style={[ s.vertContainer, animatedStyle ]}>
                       <Image 
                         resizeMode="cover"
                         style={ s.vertImage }
