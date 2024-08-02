@@ -1,12 +1,11 @@
 import { LightMode } from 'assets/colors/LightMode'
 import HoriCard from 'components/HoriCard'
-import LinedTextField from 'components/LinedTextField'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
-import { forRecipeManager } from 'data/dummyData'
+import { ForRecipeManager, forRecipeManager } from 'data/dummyData'
 import dayjs from 'dayjs'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import DatePicker from 'react-native-ui-datepicker'
@@ -15,12 +14,23 @@ import IconMA from 'react-native-vector-icons/MaterialIcons'
 export default function RecipeManager() {
   const [ modal, setModal ] = useState( false )
   const [ modalDate, setModalDate ] = useState( dayjs() )
-  
+
+  const [ recipeModal, setRecipeModal ] = useState( false )
+  const [ changeOrAdd, setChangeOrAdd ] = useState( "" )
+
   const [ selectedRecipe, setSelectedRecipe ] = useState( 0 )
   const [ selectedMeal, setSelectedMeal ] = useState( 0 )
+  const [ mealIncluded, setMealIncluded ] = useState<any[]>( [] )
+
+  const mealTypes = [ "BKF", "BRH", "LUN", "TEA", "DIN" ];
 
   const showModal = () => {
     setModal( !modal )
+  }
+
+  const showRecipeModal = ( mode: string ) => {
+    setRecipeModal( !recipeModal )
+    setChangeOrAdd( mode )
   }
 
   const CookItem = ( { item, index }: any ) => (
@@ -36,6 +46,16 @@ export default function RecipeManager() {
   if ( !fontsLoaded ) {
     return null
   }
+
+  useEffect(() => {
+    const mealsToInclude = forRecipeManager.filter(( item: ForRecipeManager ) => (
+      dayjs( item.date, "DD-MM-YYYY" ).isSame( dayjs( modalDate ).format( "DD-MM-YYYY" ), 'day' ) &&
+      item.meal === mealTypes[ selectedMeal ]
+    ))
+
+    setMealIncluded( mealsToInclude )
+    setSelectedRecipe( 0 )
+  }, [ selectedMeal, modalDate ])
   
   return (
     <SafeAreaView style={ s.container }>
@@ -53,7 +73,7 @@ export default function RecipeManager() {
           onPress={ showModal }
           style={ s.changeDate }
         >
-          <Text style={ s.dateText }>{ dayjs( modalDate ).format( "D MMMM YYYY" ) }</Text>
+          <Text style={ s.dateText }>{ dayjs( modalDate ).format( "DD-MM-YYYY" ) }</Text>
         </TouchableOpacity>
 
         <Spacer size={ 15 } />
@@ -61,7 +81,7 @@ export default function RecipeManager() {
         <View style={ s.manager }>
           <View style={ s.leftManager }>
             {
-              [ "BKF", "BRH", "LUN", "TEA", "DIN" ].map(( meal: string, index: number ) => (
+              mealTypes.map(( meal: string, index: number ) => (
                 <TouchableOpacity
                   activeOpacity={ 0.5 } 
                   onPress={ () => setSelectedMeal( index ) }
@@ -73,20 +93,52 @@ export default function RecipeManager() {
             }
           </View>
           
-          <View style={ s.rightManager }>
-            <FlatList
-              style={ s.flatList }
-              contentContainerStyle={{ padding: 20, paddingTop: 0 }}
-              showsVerticalScrollIndicator= { false }
-              data={ forRecipeManager }
-              renderItem={ CookItem }
-              keyExtractor={ data => data.id.toString() }
-              ItemSeparatorComponent={ () => <Spacer size={ 10 } /> }
-            />
-          </View>
+          <FlatList
+            style={ s.flatList }
+            contentContainerStyle={{ padding: 20, paddingTop: 0 }}
+            showsVerticalScrollIndicator= { false }
+            data={ mealIncluded }
+            renderItem={ CookItem }
+            keyExtractor={ data => data.id.toString() }
+            ItemSeparatorComponent={ () => <Spacer size={ 10 } /> }
+          />
         </View>
 
-        
+        <Spacer size={ 25 } />
+
+        <TouchableOpacity
+          activeOpacity={ 0.5 }
+          onPress={ () => showRecipeModal( "change" ) }
+          style={ s.cta }
+        >
+          <IconMA 
+            name="change-circle"
+            size={ 24 }
+            color={ LightMode.black }
+          />
+
+          <Text style={ s.ctaText }>{ selectedRecipe ? selectedRecipe : "Change Recipe" }</Text>
+        </TouchableOpacity>
+
+        <Spacer size={ 15 } />
+
+        <TouchableOpacity
+          activeOpacity={ 0.5 }
+          onPress={ () => showRecipeModal( "add" ) }
+          style={[ s.cta, { backgroundColor: LightMode.yellow } ]}
+        >
+          <IconMA 
+            name="add-circle"
+            size={ 24 }
+            color={ LightMode.white }
+          />
+
+          <Text style={[ s.ctaText, { color: LightMode.white } ]}>Add Recipe</Text>
+        </TouchableOpacity>
+
+        <Spacer size={ 15 } />
+
+        <Text style={ s.hint }>Your meal planner will auto-save.</Text>
       </View>
 
       <Modal
@@ -125,6 +177,21 @@ export default function RecipeManager() {
           </View>
         </View>
       </Modal>
+
+      <Modal
+        animationType="fade"
+        transparent={ true }
+        visible={ recipeModal }
+        onRequestClose={ () => showRecipeModal( "" ) }
+      >
+        <View style={[ s.modalContainer, { justifyContent: "flex-end" } ]}>
+          <View style={[ s.modalContent, { margin: 0, flex: 0.75, borderBottomLeftRadius: 0, borderBottomRightRadius: 0 } ]}>
+            <View style={ s.modalWrapper }>
+
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   )
 }
@@ -160,7 +227,8 @@ const s = StyleSheet.create({
   "dateText": {
     fontFamily: "cantarell",
     fontSize: 12,
-    color: LightMode.black
+    color: LightMode.black,
+    textAlign: "center"
   },
   "modalContainer": {
     flex: 1,
@@ -189,11 +257,8 @@ const s = StyleSheet.create({
   "leftManager": {
     gap: 10
   },
-  "rightManager": {
-
-  },
   "flatList": {
-    height: 225,
+    height: 300,
     margin: -20,
     marginTop: 0,
   },
@@ -213,5 +278,36 @@ const s = StyleSheet.create({
     fontFamily: "cantarell",
     fontSize: 12,
     color: LightMode.black
+  },
+  "cta": {
+    paddingVertical: 7.5, 
+    paddingHorizontal: 20,
+    gap: 20,
+    alignItems: "center",
+    flexDirection: "row",
+    backgroundColor: LightMode.white,
+    shadowColor: LightMode.black,
+    shadowOffset: {
+      width: 4,
+      height: 4
+    },
+    shadowOpacity: 0.375,
+    shadowRadius: 6,
+    elevation: 10,
+    borderRadius: 10,
+  },
+  "ctaText": {
+    fontFamily: "cantarell",
+    fontSize: 16,
+    color: LightMode.black
+  },
+  "hint": {
+    fontFamily: "cantarell",
+    fontSize: 12,
+    color: LightMode.lightBlack,
+    textAlign: "center"
+  },
+  "modalWrapper": {
+    alignItems: "center"
   }
 })
