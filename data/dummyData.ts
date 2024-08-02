@@ -19,7 +19,8 @@ export type ForRecipeManager = {
   image: ImageSourcePropType,
   meal: string,
   heading: string,
-  date: string
+  date: string,
+  author: string
 }
 
 export const forCalendarOverview: ForCalendarOverview[] = [
@@ -106,41 +107,47 @@ export const forRecipeManager: ForRecipeManager[] = [
     "image": require( "../assets/images/garlic_salmon.jpg" ), 
     "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "meal": "BKF",
-    "date": "29-07-2024"
+    "date": "29-07-2024",
+    "author": "Sacrilegious Anonymous Illegal Horse"
   },
   {
     "id": 2,
     "image": require( "../assets/images/garlic_salmon.jpg" ), 
     "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "meal": "BKF",
-    "date": "31-07-2024"
+    "date": "31-07-2024",
+    "author": "Sacrilegious Anonymous Illegal Horse"
   },
   {
     "id": 3,
     "image": require( "../assets/images/garlic_salmon.jpg" ), 
     "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "meal": "LUN",
-    "date": "31-07-2024"
+    "date": "31-07-2024",
+    "author": "Sacrilegious Anonymous Illegal Horse"
   },
   {
     "id": 4,
     "image": require( "../assets/images/garlic_salmon.jpg" ), 
     "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "meal": "LUN",
-    "date": "31-07-2024"
+    "date": "31-07-2024",
+    "author": "Sacrilegious Anonymous Illegal Horse"
   },
   {
     "id": 5,
     "image": require( "../assets/images/garlic_salmon.jpg" ), 
     "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "meal": "TEA",
-    "date": "02-08-2024"
+    "date": "02-08-2024",
+    "author": "Sacrilegious Anonymous Illegal Horse"
   },
   {
     "id": 6,
     "image": require( "../assets/images/garlic_salmon.jpg" ), 
     "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "meal": "DIN",
-    "date": "02-08-2024"
+    "date": "02-08-2024",
+    "author": "Sacrilegious Anonymous Illegal Horse"
   },
 ]

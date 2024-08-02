@@ -25,13 +25,13 @@ export default function RoundedBorderButton( { onPress, disabled, icon, name, te
           icon === "MA" ?
           <IconMA 
             name={ name }
-            color={ LightMode.white }
+            color={ textColor }
             size={ 20 }
           />
           : 
           <IconFA
             name={ name }
-            color={ LightMode.white }
+            color={ textColor }
             size={ 20 }
           />
           ) : null

@@ -1,14 +1,16 @@
 import { LightMode } from 'assets/colors/LightMode'
+import CalendarModal from 'components/CalendarModal'
 import HoriCard from 'components/HoriCard'
+import RecipeSelectionModal from 'components/RecipeSelectionModal'
+import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
 import { ForRecipeManager, forRecipeManager } from 'data/dummyData'
 import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
-import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import DatePicker from 'react-native-ui-datepicker'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
 
 export default function RecipeManager() {
@@ -17,12 +19,14 @@ export default function RecipeManager() {
 
   const [ recipeModal, setRecipeModal ] = useState( false )
   const [ changeOrAdd, setChangeOrAdd ] = useState( "" )
+  const [ recipe, setRecipe ] = useState( "" )
+  const [ searchData, setSearchData ] = useState( [] )
 
   const [ selectedRecipe, setSelectedRecipe ] = useState( 0 )
   const [ selectedMeal, setSelectedMeal ] = useState( 0 )
   const [ mealIncluded, setMealIncluded ] = useState<any[]>( [] )
 
-  const mealTypes = [ "BKF", "BRH", "LUN", "TEA", "DIN" ];
+  const mealTypes = [ "BKF", "BRH", "LUN", "TEA", "DIN" ]
 
   const showModal = () => {
     setModal( !modal )
@@ -104,94 +108,63 @@ export default function RecipeManager() {
           />
         </View>
 
-        <Spacer size={ 25 } />
+        <Spacer size={ 45 } />
 
-        <TouchableOpacity
-          activeOpacity={ 0.5 }
+        <RoundedBorderButton 
+          onPress={ () => console.log( "Remove" ) }
+          icon="MA"
+          name="delete"
+          text="Remove Selected Recipe"
+          color={ LightMode.red }
+          textColor={ LightMode.white }
+          borderRadius={ 10 }
+        />
+
+        <Spacer size={ 10 } />
+
+        <RoundedBorderButton 
           onPress={ () => showRecipeModal( "change" ) }
-          style={ s.cta }
-        >
-          <IconMA 
-            name="change-circle"
-            size={ 24 }
-            color={ LightMode.black }
-          />
+          icon="MA"
+          name="change-circle"
+          text="Change Selected Recipe"
+          color={ LightMode.white }
+          textColor={ LightMode.black }
+          borderRadius={ 10 }
+        />
 
-          <Text style={ s.ctaText }>{ selectedRecipe ? selectedRecipe : "Change Recipe" }</Text>
-        </TouchableOpacity>
+        <Spacer size={ 10 } />
 
-        <Spacer size={ 15 } />
-
-        <TouchableOpacity
-          activeOpacity={ 0.5 }
+        <RoundedBorderButton 
           onPress={ () => showRecipeModal( "add" ) }
-          style={[ s.cta, { backgroundColor: LightMode.yellow } ]}
-        >
-          <IconMA 
-            name="add-circle"
-            size={ 24 }
-            color={ LightMode.white }
-          />
-
-          <Text style={[ s.ctaText, { color: LightMode.white } ]}>Add Recipe</Text>
-        </TouchableOpacity>
+          icon="MA"
+          name="add-circle"
+          text="Add New Recipe"
+          color={ LightMode.yellow }
+          textColor={ LightMode.white }
+          borderRadius={ 10 }
+        />
 
         <Spacer size={ 15 } />
 
+        <Text style={ s.hint }>Select meal before adding new recipes.</Text>
         <Text style={ s.hint }>Your meal planner will auto-save.</Text>
       </View>
 
-      <Modal
-        animationType="fade"
-        transparent={ true }
-        visible={ modal }
-        onRequestClose={ showModal }
-      >
-        <View style={ s.modalContainer }>
-          <View style={ s.modalContent }>
-            <DatePicker
-              mode="single"
-              date={ modalDate }
-              onChange={ ( { date }: any ) => setModalDate( date ) }
-              calendarTextStyle={{ fontFamily: "fjalla" }}
-              selectedTextStyle={{ fontFamily: "fjalla" }}
-              selectedItemColor={ LightMode.black }
-              headerTextStyle={{ fontFamily: "fjalla", fontSize: 24 }}
-              headerButtonSize={ 20 }
-              headerButtonColor={ LightMode.black }
-              todayTextStyle={{ fontFamily: "fjalla" }}
-              weekDaysTextStyle={{ fontFamily: "fjalla" }}
-            />
-            
-            <TouchableOpacity
-              activeOpacity={ 0.5 }
-              onPress={ showModal }
-              style={ s.modalButton }
-            >
-              <IconMA 
-                name="close"
-                size={ 36 }
-                color={ LightMode.black }
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <CalendarModal 
+        modal={ modal }
+        showModal={ showModal }
+        modalDate={ modalDate }
+        setModalDate={ setModalDate }
+      />
 
-      <Modal
-        animationType="fade"
-        transparent={ true }
-        visible={ recipeModal }
-        onRequestClose={ () => showRecipeModal( "" ) }
-      >
-        <View style={[ s.modalContainer, { justifyContent: "flex-end" } ]}>
-          <View style={[ s.modalContent, { margin: 0, flex: 0.75, borderBottomLeftRadius: 0, borderBottomRightRadius: 0 } ]}>
-            <View style={ s.modalWrapper }>
-
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <RecipeSelectionModal 
+        changeOrAdd={ changeOrAdd }
+        recipeModal={ recipeModal }
+        showRecipeModal={ showRecipeModal }
+        recipe={ recipe }
+        setRecipe={ setRecipe }
+        searchData={ searchData }
+      />
     </SafeAreaView>
   )
 }
@@ -230,35 +203,16 @@ const s = StyleSheet.create({
     color: LightMode.black,
     textAlign: "center"
   },
-  "modalContainer": {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: LightMode.halfBlack
-  },
-  "modalContent": {
-    flex: 0.5,
-    margin: 20,
-    padding: 20,
-    borderRadius: 10,
-    alignItems: "center",
-    backgroundColor: LightMode.white,
-    gap: 10,
-  },
-  "modalButton": {
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: LightMode.white
-  },
   "manager": {
     flexDirection: "row",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    gap: 25
   },
   "leftManager": {
     gap: 10
   },
   "flatList": {
-    height: 300,
+    height: 225,
     margin: -20,
     marginTop: 0,
   },
@@ -307,7 +261,5 @@ const s = StyleSheet.create({
     color: LightMode.lightBlack,
     textAlign: "center"
   },
-  "modalWrapper": {
-    alignItems: "center"
-  }
+
 })

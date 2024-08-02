@@ -3,7 +3,7 @@ import { useFontFromContext } from 'context/FontProvider'
 import PropTypes from 'prop-types'
 import React, { useEffect } from 'react'
 import { Image, Platform, StyleSheet, Text, TouchableOpacity } from 'react-native'
-import Animated, { EntryExitTransition, FadingTransition, LinearTransition, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, { LinearTransition, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 export default function HoriCard( { onPress, data, active }: any ) {
   const width = useSharedValue( 200 )
