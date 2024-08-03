@@ -63,7 +63,7 @@ export default function RecipeManager() {
   
   return (
     <SafeAreaView style={ s.container }>
-      <View>
+      <View style={{ flex: 1 }}>
         <TopBar />
 
         <Spacer size={ 25 } />
@@ -171,6 +171,7 @@ export default function RecipeManager() {
 
 const s = StyleSheet.create({
   "container": {
+    flex: 1,
     padding: 30,
     backgroundColor: LightMode.white
   },
@@ -261,5 +262,4 @@ const s = StyleSheet.create({
     color: LightMode.lightBlack,
     textAlign: "center"
   },
-
 })

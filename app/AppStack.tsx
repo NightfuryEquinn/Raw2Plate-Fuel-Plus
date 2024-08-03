@@ -13,6 +13,8 @@ import Reset from './landing/Reset'
 import CalendarOverview from './recipe/CalendarOverview'
 import ViewCalendar from './recipe/ViewCalendar'
 import RecipeManager from './recipe/RecipeManager'
+import RecipeDetail from './recipe/RecipeDetail'
+import RecipeNarration from './recipe/RecipeNarration'
 
 const Tab = createMaterialBottomTabNavigator()
 const Drawer = createDrawerNavigator()
@@ -50,12 +52,14 @@ const LandingStack = () => {
 
 const RecipeStack = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="RecipeManager">
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="RecipeDetail">
       <Stack.Screen name="Profile" component={ Profile } />
       <Stack.Screen name="Settings" component={ Settings } />
       <Stack.Screen name="CalendarOverview" component={ CalendarOverview } />
       <Stack.Screen name="ViewCalendar" component={ ViewCalendar } />
       <Stack.Screen name="RecipeManager" component={ RecipeManager } />
+      <Stack.Screen name="RecipeDetail" component={ RecipeDetail } />
+      <Stack.Screen name="RecipeNarration" component={ RecipeNarration } />
     </Stack.Navigator>
   )
 }

@@ -46,53 +46,71 @@ export default function Profile() {
   
   return (
     <SafeAreaView style={ s.container }>
-        <TouchableWithoutFeedback onPress={ Keyboard.dismiss }>
-          <View>
-            <ScrollView showsVerticalScrollIndicator={ false }>
-              <TopBar />
+      <TouchableWithoutFeedback onPress={ Keyboard.dismiss }>
+        <View style={{ flex: 1 }}>
+          <TopBar />
 
-              <Spacer size={ 20 } />
+          <Spacer size={ 20 } />
 
-              <Text style={ s.heading }>Profile</Text>
+          <Text style={ s.heading }>Profile</Text>
 
-              <Spacer size={ 30 } />
+          <Spacer size={ 20 } />
 
-              <View style={ s.profileContainer }>
-                <TouchableOpacity activeOpacity={ 0.5 } onPress={ pickImage }>
-                  <Image
-                    resizeMode="cover"
-                    style={ s.image }
-                    source={ 
-                      image ? { uri: image } : require( "../assets/images/profile_placeholder.jpg" ) }
-                  />
-                </TouchableOpacity>
-
-                <View style={ s.profileWrapper }>
-                  <Text style={ s.profileHeading }>John Doe</Text>
-                  <Text style={ s.profileSub }>Joined since 14 July 2024</Text>
-                </View>
-              </View>
-
-              <Spacer size={ 30 } />
-
-              <View style={ s.detailContainer }>
-                <Text style={ s.detailHeading }>Email Address</Text>
-                <TextInput 
-                  style={ s.textInput }
-                  textColor={ LightMode.black }
-                  cursorColor={ LightMode.black }
-                  underlineColor="transparent"
-                  activeUnderlineColor="transparent"
-                  dense={ true }
-                  value={ email }
-                  onChangeText={ text => setEmail( text ) }
+          <ScrollView showsVerticalScrollIndicator={ false }>
+            <View style={ s.profileContainer }>
+              <TouchableOpacity activeOpacity={ 0.5 } onPress={ pickImage }>
+                <Image
+                  resizeMode="cover"
+                  style={ s.image }
+                  source={ 
+                    image ? { uri: image } : require( "../assets/images/profile_placeholder.jpg" ) }
                 />
+              </TouchableOpacity>
+
+              <View style={ s.profileWrapper }>
+                <Text style={ s.profileHeading }>John Doe</Text>
+                <Text style={ s.profileSub }>Joined since 14 July 2024</Text>
               </View>
+            </View>
 
-              <Spacer size={ 15 } />
+            <Spacer size={ 30 } />
 
+            <View style={ s.detailContainer }>
+              <Text style={ s.detailHeading }>Email Address</Text>
+              <TextInput 
+                style={ s.textInput }
+                textColor={ LightMode.black }
+                cursorColor={ LightMode.black }
+                underlineColor="transparent"
+                activeUnderlineColor="transparent"
+                dense={ true }
+                value={ email }
+                onChangeText={ text => setEmail( text ) }
+              />
+            </View>
+
+            <Spacer size={ 15 } />
+
+            <View style={ s.detailContainer }>
+              <Text style={ s.detailHeading }>Contact Number</Text>
+              <TextInput 
+                style={ s.textInput }
+                textColor={ LightMode.black }
+                cursorColor={ LightMode.black }
+                underlineColor="transparent"
+                activeUnderlineColor="transparent"
+                dense={ true }
+                value={ contact }
+                onChangeText={ text => setContact( text ) }
+                keyboardType="number-pad"
+              />
+            </View>
+
+            <Spacer size={ 15 } />
+
+            <View style={ s.detailWrapper }>
               <View style={ s.detailContainer }>
-                <Text style={ s.detailHeading }>Contact Number</Text>
+                <Text style={ s.detailHeading }>Height (cm)</Text>
                 <TextInput 
                   style={ s.textInput }
                   textColor={ LightMode.black }
@@ -100,94 +118,77 @@ export default function Profile() {
                   underlineColor="transparent"
                   activeUnderlineColor="transparent"
                   dense={ true }
-                  value={ contact }
-                  onChangeText={ text => setContact( text ) }
+                  value={ height }
+                  onChangeText={ text => setHeight( text ) }
                   keyboardType="number-pad"
                 />
               </View>
 
-              <Spacer size={ 15 } />
-
-              <View style={ s.detailWrapper }>
-                <View style={ s.detailContainer }>
-                  <Text style={ s.detailHeading }>Height (cm)</Text>
-                  <TextInput 
-                    style={ s.textInput }
-                    textColor={ LightMode.black }
-                    cursorColor={ LightMode.black }
-                    underlineColor="transparent"
-                    activeUnderlineColor="transparent"
-                    dense={ true }
-                    value={ height }
-                    onChangeText={ text => setHeight( text ) }
-                    keyboardType="number-pad"
-                  />
-                </View>
-
-                <View style={ s.detailContainer }>
-                  <Text style={ s.detailHeading }>Weight (kg)</Text>
-                  <TextInput 
-                    style={ s.textInput }
-                    textColor={ LightMode.black }
-                    cursorColor={ LightMode.black }
-                    underlineColor="transparent"
-                    activeUnderlineColor="transparent"
-                    dense={ true }
-                    value={ weight }
-                    onChangeText={ text => setWeight( text ) }
-                    keyboardType="number-pad"
-                  />
-                </View>
-
-                <View style={ s.detailContainer }>
-                  <Text style={ s.detailHeading }>Age</Text>
-                  <TextInput 
-                    style={ s.textInput }
-                    textColor={ LightMode.black }
-                    selectionColor={ LightMode.black }
-                    cursorColor={ LightMode.black }
-                    underlineColor="transparent"
-                    activeUnderlineColor="transparent"
-                    dense={ true }
-                    value={ age }
-                    onChangeText={ text => setAge( text ) }
-                    keyboardType="number-pad"
-                  />
-                </View>
-              </View>
-            </ScrollView>
-
-            <Spacer size={ 80 } />
-
-            <KeyboardAvoidingView behavior={ Platform.OS === "ios" ? "padding" : "height" }>
-              <View style={ s.buttonContainer }>
-                <RoundedBorderButton 
-                  onPress={ () => console.log( "Log Out" ) }
-                  text="Log Out"
-                  color={ LightMode.black }
-                  textColor={ LightMode.white }
-                  borderRadius={ 10 }
-                  marginHori={ 0 }
-                />
-
-                <RoundedBorderButton 
-                  onPress={ () => console.log( "Save Changes" ) }
-                  text="Save Changes"
-                  color={ LightMode.yellow }
-                  textColor={ LightMode.white }
-                  borderRadius={ 10 }
-                  marginHori={ 0 }
+              <View style={ s.detailContainer }>
+                <Text style={ s.detailHeading }>Weight (kg)</Text>
+                <TextInput 
+                  style={ s.textInput }
+                  textColor={ LightMode.black }
+                  cursorColor={ LightMode.black }
+                  underlineColor="transparent"
+                  activeUnderlineColor="transparent"
+                  dense={ true }
+                  value={ weight }
+                  onChangeText={ text => setWeight( text ) }
+                  keyboardType="number-pad"
                 />
               </View>
-            </KeyboardAvoidingView>
-          </View>
-        </TouchableWithoutFeedback>
+
+              <View style={ s.detailContainer }>
+                <Text style={ s.detailHeading }>Age</Text>
+                <TextInput 
+                  style={ s.textInput }
+                  textColor={ LightMode.black }
+                  selectionColor={ LightMode.black }
+                  cursorColor={ LightMode.black }
+                  underlineColor="transparent"
+                  activeUnderlineColor="transparent"
+                  dense={ true }
+                  value={ age }
+                  onChangeText={ text => setAge( text ) }
+                  keyboardType="number-pad"
+                />
+              </View>
+            </View>
+          </ScrollView>
+
+          <Spacer size={ 30 } />
+
+          <KeyboardAvoidingView behavior={ Platform.OS === "ios" ? "padding" : "height" }>
+            <View style={ s.buttonContainer }>
+              <RoundedBorderButton 
+                onPress={ () => console.log( "Log Out" ) }
+                text="Log Out"
+                color={ LightMode.black }
+                textColor={ LightMode.white }
+                borderRadius={ 10 }
+                marginHori={ 0 }
+              />
+
+              <RoundedBorderButton 
+                onPress={ () => console.log( "Save Changes" ) }
+                text="Save Changes"
+                color={ LightMode.yellow }
+                textColor={ LightMode.white }
+                borderRadius={ 10 }
+                marginHori={ 0 }
+              />
+            </View>
+          </KeyboardAvoidingView>
+        </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   )
 }
 
 const s = StyleSheet.create({
   "container": {
+    flex: 1,
     padding: 30,
     backgroundColor: LightMode.white,
   },

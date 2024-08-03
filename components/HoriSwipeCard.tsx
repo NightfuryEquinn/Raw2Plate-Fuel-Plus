@@ -133,7 +133,7 @@ const s = StyleSheet.create({
     borderBottomLeftRadius: 10,
   },
   "swipeButton": {
-    margin: "auto",
+    marginTop: 35,
     width: 44,
     height: 44,
     borderRadius: 10,

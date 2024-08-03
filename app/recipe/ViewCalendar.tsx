@@ -78,7 +78,7 @@ export default function ViewCalendar( { navigation }: any ) {
   
   return (
     <SafeAreaView style={ s.container }>
-      <View>
+      <View style={{ flex: 1 }}>
         <TopBar />
 
         <Spacer size={ 25 } />
@@ -149,7 +149,7 @@ export default function ViewCalendar( { navigation }: any ) {
           ))}
         </ScrollView>
 
-        <Spacer size={ 20 } />
+        <Spacer size={ 30 } />
 
         <View style={ s.headingContainer }>
           <Text style={ s.recipeHeading }>Recipes to Cook</Text>
@@ -179,7 +179,7 @@ export default function ViewCalendar( { navigation }: any ) {
                   onPressAddRecipe={ () => console.log( "Add Recipe" ) }
                 />
 
-                { meal === "Dinner" ? <Spacer size={ 85 } /> : <Spacer size={ 20 } /> }
+                <Spacer size={ 20 } />
               </View>
             ))
           }
@@ -232,6 +232,7 @@ export default function ViewCalendar( { navigation }: any ) {
 
 const s = StyleSheet.create({
   "container": {
+    flex: 1,
     padding: 30,
     backgroundColor: LightMode.white
   },
@@ -261,6 +262,7 @@ const s = StyleSheet.create({
     color: LightMode.blue
   },
   "scroll": {
+    height: 115,
     margin: -20, // Counter scroll view content container style due to drop shadow issue
     flexDirection: "row",
   },

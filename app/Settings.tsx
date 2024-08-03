@@ -56,7 +56,7 @@ export default function Settings() {
 
   return (
     <SafeAreaView style={ s.container }>
-      <View>
+      <View style={{ flex: 1 }}>
         <TopBar />
 
         <Spacer size={ 20 } />
@@ -97,6 +97,7 @@ export default function Settings() {
 
 const s = StyleSheet.create({
   "container": {
+    flex: 1,
     padding: 30,
     backgroundColor: LightMode.white
   },

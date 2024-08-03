@@ -50,7 +50,7 @@ export default function HoriCardWithCTA( { changeOrAdd, onPress, data }: any ) {
 
 const s = StyleSheet.create({
   "container": {
-    height: 90,
+    height: 100,
     flexDirection: "row",
     borderRadius: 10,
     backgroundColor: LightMode.white,
@@ -90,7 +90,7 @@ const s = StyleSheet.create({
   },
   "image": {
     width: 90,
-    height: 90,
+    height: 100,
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
   },

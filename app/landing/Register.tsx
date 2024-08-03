@@ -22,63 +22,63 @@ export default function Register() {
   return (
     <SafeAreaView style={ s.container }>
       <TouchableWithoutFeedback onPress={ Keyboard.dismiss }>
-        <View>
+        <View style={{ flex: 1 }}>
+          <ScrollView showsVerticalScrollIndicator={ false }>
+            <Image 
+              style={ s.image }
+              source={ require( "../../assets/images/white_no_text.png" ) } 
+            />
+
+            <Text style={ s.heading }>Explore our Recipes</Text>
+            <Text style={ s.sub }>With meal planner, calories tracker, grocery shopping and more!</Text>
+            
+            <LinedTextField 
+              name="email" 
+              placeholder="Email Address" 
+              text={ email } 
+              setText={ setEmail } 
+            />
+
+            <LinedTextField 
+              name="password" 
+              placeholder="Password" 
+              secure={ true } 
+              text={ password } 
+              setText={ setPassword } 
+            />
+
+            <LinedTextField 
+              name="password" 
+              placeholder="Confirm Password" 
+              secure={ true } 
+              text={ confirm } 
+              setText={ setConfirm } 
+            />
+
+            <LinedTextField 
+              name="alternate-email" 
+              placeholder="Username" 
+              secure={ true } 
+              text={ username } 
+              setText={ setUsername } 
+            />
+
+            <Spacer size={ 10 } />
+
+            <Text style={ s.subLeft }>You can add more information to your profile later for better recipe suggestion.</Text>
+          </ScrollView>
+
           <KeyboardAvoidingView behavior={ Platform.OS === "ios" ? "padding" : "height" }>
-            <ScrollView showsVerticalScrollIndicator={ false }>
-              <Image 
-                style={ s.image }
-                source={ require( "../../assets/images/white_no_text.png" ) } 
-              />
+            <Spacer size={ 20 } />
 
-              <Text style={ s.heading }>Explore our Recipes</Text>
-              <Text style={ s.sub }>With meal planner, calories tracker, grocery shopping and more!</Text>
-              
-              <LinedTextField 
-                name="email" 
-                placeholder="Email Address" 
-                text={ email } 
-                setText={ setEmail } 
-              />
-
-              <LinedTextField 
-                name="password" 
-                placeholder="Password" 
-                secure={ true } 
-                text={ password } 
-                setText={ setPassword } 
-              />
-
-              <LinedTextField 
-                name="password" 
-                placeholder="Confirm Password" 
-                secure={ true } 
-                text={ confirm } 
-                setText={ setConfirm } 
-              />
-
-              <LinedTextField 
-                name="alternate-email" 
-                placeholder="Username" 
-                secure={ true } 
-                text={ username } 
-                setText={ setUsername } 
-              />
-
-              <Spacer size={ 10 } />
-
-              <Text style={ s.subLeft }>You can add more information to your profile later for better recipe suggestion.</Text>
-
-              <Spacer size={ 20 } />
-            </ScrollView>
+            <RoundedBorderButton
+              onPress={ () => console.log( "Pressed" ) }
+              text="Start Exploring!"
+              color={ LightMode.yellow }
+              textColor={ LightMode.white }
+              borderRadius={ 10 }
+            />
           </KeyboardAvoidingView>
-
-          <RoundedBorderButton
-            onPress={ () => console.log( "Pressed" ) }
-            text="Start Exploring!"
-            color={ LightMode.yellow }
-            textColor={ LightMode.white }
-            borderRadius={ 10 }
-          />
         </View>
       </TouchableWithoutFeedback>
     </SafeAreaView>
@@ -87,6 +87,7 @@ export default function Register() {
 
 const s = StyleSheet.create({
   "container": {
+    flex: 1,
     padding: 30,
     backgroundColor: LightMode.white
   },

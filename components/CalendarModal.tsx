@@ -1,11 +1,10 @@
-import { View, Modal, TouchableOpacity, StyleSheet } from 'react-native'
-import React, { useState } from 'react'
-import DatePicker from 'react-native-ui-datepicker'
-import { useFontFromContext } from 'context/FontProvider'
-import dayjs from 'dayjs'
 import { LightMode } from 'assets/colors/LightMode'
-import IconMA from 'react-native-vector-icons/MaterialIcons'
+import { useFontFromContext } from 'context/FontProvider'
 import PropTypes from 'prop-types'
+import React from 'react'
+import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native'
+import DatePicker from 'react-native-ui-datepicker'
+import IconMA from 'react-native-vector-icons/MaterialIcons'
 
 export default function CalendarModal( { modal, showModal, modalDate, setModalDate }: any ) {
   const { fontsLoaded } = useFontFromContext()
@@ -30,8 +29,8 @@ export default function CalendarModal( { modal, showModal, modalDate, setModalDa
             calendarTextStyle={{ fontFamily: "fjalla" }}
             selectedTextStyle={{ fontFamily: "fjalla" }}
             selectedItemColor={ LightMode.black }
-            headerTextStyle={{ fontFamily: "fjalla", fontSize: 24 }}
-            headerButtonSize={ 20 }
+            headerTextStyle={{ fontFamily: "fjalla", fontSize: 16 }}
+            headerButtonSize={ 16 }
             headerButtonColor={ LightMode.black }
             todayTextStyle={{ fontFamily: "fjalla" }}
             weekDaysTextStyle={{ fontFamily: "fjalla" }}
@@ -44,8 +43,8 @@ export default function CalendarModal( { modal, showModal, modalDate, setModalDa
           >
             <IconMA 
               name="close"
-              size={ 36 }
-              color={ LightMode.black }
+              size={ 24 }
+              color={ LightMode.white }
             />
           </TouchableOpacity>
         </View>
@@ -62,7 +61,6 @@ const s = StyleSheet.create({
     backgroundColor: LightMode.halfBlack
   },
   "modalContent": {
-    flex: 0.5,
     margin: 20,
     padding: 20,
     borderRadius: 10,
@@ -73,7 +71,7 @@ const s = StyleSheet.create({
   "modalButton": {
     padding: 10,
     borderRadius: 10,
-    backgroundColor: LightMode.white
+    backgroundColor: LightMode.black
   },
 })
 

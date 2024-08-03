@@ -27,60 +27,73 @@ export default function Login( { navigation }: any ) {
   
   return (
     <SafeAreaView style={ s.container }>
-        <TouchableWithoutFeedback onPress={ Keyboard.dismiss }>
-          <View>
-            <ScrollView showsVerticalScrollIndicator={ false }>
-              <Image 
-                style={ s.image }
-                source={ require( "../../assets/images/white_no_text.png" ) } 
-              />
+      <TouchableWithoutFeedback onPress={ Keyboard.dismiss }>
+        <View style={{ flex: 1 }}>
+          <ScrollView showsVerticalScrollIndicator={ false }>
+            <Image 
+              style={ s.image }
+              source={ require( "../../assets/images/white_no_text.png" ) } 
+            />
 
-              <Text style={ s.heading }>Explore our Recipes</Text>
-              <Text style={ s.sub }>With meal planner, calories tracker, grocery shopping and more!</Text>
+            <Text style={ s.heading }>Explore our Recipes</Text>
+            <Text style={ s.sub }>With meal planner, calories tracker, grocery shopping and more!</Text>
 
-              <LinedTextField 
-                name="email" 
-                placeholder="Email Address" 
-                text={ email } 
-                setText={ setEmail } 
-              />
+            <LinedTextField 
+              name="email" 
+              placeholder="Email Address" 
+              text={ email } 
+              setText={ setEmail } 
+            />
 
-              <LinedTextField 
-                name="password" 
-                placeholder="Password" 
-                secure={ true } 
-                text={ password } 
-                setText={ setPassword } 
-              />
+            <LinedTextField 
+              name="password" 
+              placeholder="Password" 
+              secure={ true } 
+              text={ password } 
+              setText={ setPassword } 
+            />
 
-              <Pressable style={ s.minorWrapper } onPress={ () => toReset() }>
-                <Text style={ s.minor }>Forgot Password?</Text>
-              </Pressable>
-            </ScrollView>
+            <Pressable style={ s.minorWrapper } onPress={ () => toReset() }>
+              <Text style={ s.minor }>Forgot Password?</Text>
+            </Pressable>
+          </ScrollView>
 
-            <KeyboardAvoidingView behavior={ Platform.OS === "ios" ? "padding" : "height" }>
+          <KeyboardAvoidingView behavior={ Platform.OS === "ios" ? "padding" : "height" }>
+            <Spacer size={ 20 } />
+
+            <RoundedBorderButton
+              onPress={ () => console.log( "Pressed" ) }
+              name="apple"
+              text="Login with Apple"
+              color={ LightMode.black }
+              textColor={ LightMode.white }
+              borderRadius={ 10 }
+            />
+
+            <Spacer size={ 25 } />
+
+            <RoundedBorderButton
+              onPress={ () => console.log( "Pressed" ) }
+              name="google"
+              text="Login with Google"
+              color={ LightMode.black }
+              textColor={ LightMode.white }
+              borderRadius={ 10 }
+            />
+
+            <Spacer size={ 25 } />
+
+            { email ?
               <RoundedBorderButton
-                onPress={ () => console.log( "Pressed" ) }
-                name="apple"
-                text="Login with Apple"
-                color={ LightMode.black }
-                textColor={ LightMode.white }
+                onPress={ () => console.log( "Login" ) }
+                icon="MA"
+                name="account-circle"
+                text="Proceed with Login"
+                color={ LightMode.green }
+                textColor={ LightMode.black }
                 borderRadius={ 10 }
               />
-
-              <Spacer size={ 25 } />
-
-              <RoundedBorderButton
-                onPress={ () => console.log( "Pressed" ) }
-                name="google"
-                text="Login with Google"
-                color={ LightMode.black }
-                textColor={ LightMode.white }
-                borderRadius={ 10 }
-              />
-
-              <Spacer size={ 25 } />
-
+              :
               <RoundedBorderButton
                 onPress={ () => toRegister() }
                 icon="MA"
@@ -90,15 +103,17 @@ export default function Login( { navigation }: any ) {
                 textColor={ LightMode.white }
                 borderRadius={ 10 }
               />
-            </KeyboardAvoidingView>
-          </View>
-        </TouchableWithoutFeedback>
+            }
+          </KeyboardAvoidingView>
+        </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   )
 }
 
 const s = StyleSheet.create({
   "container": {
+    flex: 1,
     padding: 30,
     backgroundColor: LightMode.white
   },
@@ -123,7 +138,7 @@ const s = StyleSheet.create({
   },
   "minorWrapper": {
     marginLeft: "auto",
-    marginBottom: 40,
+
   },
   "minor": {
     fontSize: 12,

@@ -34,7 +34,7 @@ export default function Reset() {
   return (
     <SafeAreaView style={ s.container }>
       <TouchableWithoutFeedback onPress={ Keyboard.dismiss }>
-        <View>
+        <View style={{ flex: 1 }}>
           <ScrollView showsVerticalScrollIndicator={ false }>
             <Image 
               style={ s.image }
@@ -68,11 +68,10 @@ export default function Reset() {
               }
               
             </Text>
-
-            <Spacer size={ 100 } />
           </ScrollView>
           
           <KeyboardAvoidingView behavior={ Platform.OS === "ios" ? "padding" : "height" }>
+            <Spacer size={ 20 } />
             {
               timer !== 0 ? (
                 <RoundedBorderButton
@@ -102,6 +101,7 @@ export default function Reset() {
 
 const s = StyleSheet.create({
   "container": {
+    flex: 1,
     padding: 30,
     backgroundColor: LightMode.white
   },

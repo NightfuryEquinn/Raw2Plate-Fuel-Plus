@@ -13,7 +13,7 @@ export default function RecipeSelectionModal( { changeOrAdd, recipeModal, showRe
   const SearchItem = ( { item, index }: any ) => (
     <HoriCardWithCTA 
       changeOrAdd={ changeOrAdd }
-      onPress={ () => console.log( "Selected" ) }
+      onPress={ showRecipeModal }
       data={ item }
     />
   )

@@ -47,7 +47,7 @@ export default function CalendarOverview( { navigation }: any ) {
   
   return (
     <SafeAreaView style={ s.container }>        
-      <View>
+      <View style={{ flex: 1 }}>
         <TopBar />
 
         <Spacer size={ 20 } />
@@ -100,9 +100,7 @@ export default function CalendarOverview( { navigation }: any ) {
           }
         </ScrollView>
 
-        <Spacer size={ 20 } />
-
-        <View style={ s.headingContainer }>
+        <View style={[ s.headingContainer, { marginTop: 40 } ]}>
           <Text style={ s.heading2 }>Recipes to Cook</Text>
 
           <Pressable onPress={ () => navigation.navigate( "RecipeManager" ) }>
@@ -122,7 +120,6 @@ export default function CalendarOverview( { navigation }: any ) {
           data={ forCalendarOverview }
           renderItem={ CookItem }
           keyExtractor={ data => data.id.toString() }
-          ListFooterComponent={ () => <Spacer size={ 75 } /> }
         />
       </View>
     </SafeAreaView>
@@ -131,6 +128,7 @@ export default function CalendarOverview( { navigation }: any ) {
 
 const s = StyleSheet.create({
   "container": {
+    flex: 1,
     padding: 30,
     backgroundColor: LightMode.white
   },
@@ -153,6 +151,7 @@ const s = StyleSheet.create({
     color: LightMode.blue
   },
   "scroll": {
+    height: 325,
     margin: -20, // Counter scroll view content container style due to drop shadow issue
     flexDirection: "row",
   },
@@ -190,7 +189,6 @@ const s = StyleSheet.create({
     color: LightMode.black
   },
   "flatList": {
-    height: Dimensions.get( "window" ).height * 0.5, 
     margin: -15, 
     marginTop: -7.5
   }
