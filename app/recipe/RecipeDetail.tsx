@@ -236,7 +236,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
           </View>
           
           <RoundedBorderButton 
-            onPress={ () => navigation.navigate( "RecipeNarration" ) }
+            onPress={ () => navigation.navigate( "RecipeNarration", { recipeSteps: steps } ) }
             color={ LightMode.yellow }
             text="Start Cooking"
             textColor={ LightMode.white }      
@@ -268,8 +268,14 @@ export default function RecipeDetail( { navigation, route }: any ) {
         showModal={ showTrackModal }
         modalDate={ trackModalDate }
         setModalDate={ setTrackModalDate }
+        openDrop={ openDrop }
+        dropValue={ dropValue }
+        dropItems={ dropItems }
+        setOpenDrop={ setOpenDrop }
+        setDropValue={ setDropValue }
         save={ () => {
           console.log( "Save to Tracker" )
+          console.log( dropValue )
           showTrackModal()
         }}
       />

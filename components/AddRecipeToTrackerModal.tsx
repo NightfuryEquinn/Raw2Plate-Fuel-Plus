@@ -5,8 +5,9 @@ import { LightMode } from 'assets/colors/LightMode'
 import DatePicker from 'react-native-ui-datepicker'
 import PropTypes from 'prop-types'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
+import DropDownPicker from 'react-native-dropdown-picker'
 
-export default function AddRecipeToTrackerModal( { modal, showModal, modalDate, setModalDate, save }: any ) {
+export default function AddRecipeToTrackerModal( { modal, showModal, modalDate, setModalDate, openDrop, dropValue, dropItems, setOpenDrop, setDropValue, save }: any ) {
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
@@ -26,6 +27,18 @@ export default function AddRecipeToTrackerModal( { modal, showModal, modalDate, 
             <Text style={ s.modalHeading }>Track Recipe Calories?</Text>
             <Text style={ s.hint }>Select a date to record the calories of this recipe.</Text>
           </View>
+
+          <DropDownPicker 
+            open={ openDrop }
+            value={ dropValue }
+            items={ dropItems }
+            setOpen={ setOpenDrop }
+            setValue={ setDropValue }
+            placeholder="Choose Meal"
+            textStyle={{
+              fontFamily: "cantarell"
+            }}
+          />
           
           <DatePicker
             mode="single"
@@ -121,5 +134,10 @@ AddRecipeToTrackerModal.propTypes = {
   showModal: PropTypes.func.isRequired,
   modalDate: PropTypes.any.isRequired,
   setModalDate: PropTypes.func.isRequired,
+  openDrop: PropTypes.bool.isRequired,
+  dropValue: PropTypes.string.isRequired,
+  dropItems: PropTypes.any.isRequired,
+  setOpenDrop: PropTypes.func.isRequired,
+  setDropValue: PropTypes.func.isRequired,
   save: PropTypes.func.isRequired
 }

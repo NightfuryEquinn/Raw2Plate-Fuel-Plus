@@ -35,7 +35,9 @@ export default function RecipeSelectionModal( { changeOrAdd, recipeModal, showRe
         <View style={[ s.modalContent, { margin: 0, flex: 0.85, borderBottomLeftRadius: 0, borderBottomRightRadius: 0 } ]}>
           <View style={ s.modalWrapper }>
             <View style={ s.modalHeadingWrapper }>
-              <Text style={ s.modalHeading }>{ changeOrAdd === "change" ? "Change Selected Recipe" : "Add New Recipe" }</Text>
+              <View style={ s.modalHeading }>
+                <Text style={ s.modalHeadingTitle }>{ changeOrAdd === "change" ? "Change Selected Recipe" : "Add New Recipe" }</Text>
+              </View>
             </View>
 
             <LinedTextField 
@@ -104,13 +106,15 @@ const s = StyleSheet.create({
   },
   "modalHeading": {
     flex: 1,
+    paddingBottom: 10,
+    borderBottomWidth: 2,
+    borderBottomColor: LightMode.darkGrey, 
+  },
+  "modalHeadingTitle": {
     textAlign: "center",
     fontFamily: "fjalla",
     fontSize: 24,
     color: LightMode.black,
-    paddingBottom: 10,
-    borderBottomWidth: 2,
-    borderColor: LightMode.darkGrey,
   },
   "flatListWrapper": {
     flexDirection: "row"
