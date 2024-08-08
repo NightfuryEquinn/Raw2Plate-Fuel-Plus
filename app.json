@@ -3,7 +3,10 @@
     "name": "Raw2Plate-Fuel-Plus",
     "slug": "Raw2Plate-Fuel-Plus",
     "scheme": "raw2platefuelplus",
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "backgroundColor": "#FAFAFA",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -15,16 +18,26 @@
       "backgroundColor": "#fafafa"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSSpeechRecognitionUsageDescription": "This app uses speech recognition to convert your speech to text."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/white_no_text.png",
         "backgroundColor": "#fafafa"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.nightfuryequinn.Raw2PlateFuelPlus"
     },
     "web": {
       "favicon": "./assets/images/white_no_text.png"
-    }
+    },
+    "plugins": [
+      "@wdragon/react-native-voice"
+    ]
   }
 }

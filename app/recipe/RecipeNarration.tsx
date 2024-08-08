@@ -6,11 +6,14 @@ import React, { useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import * as Speech from 'expo-speech'
+import Voice from '@wdragon/react-native-voice'
 
 export default function RecipeNarration( { navigation, route }: any ) {
   const { recipeSteps } = route.params
 
   const [ numberSteps, setNumberSteps ] = useState( 0 )
+  const [ isRecord, setIsRecord ] = useState( false )
+  const [ vts, setVts ] = useState( "" )
 
   const { fontsLoaded } = useFontFromContext()
 
@@ -18,8 +21,42 @@ export default function RecipeNarration( { navigation, route }: any ) {
     return null
   }
 
+  const onSpeechStart = () => {
+    console.log( "Speech Start" )
+    setVts( "" )
+  }
+
+  const onSpeechEnd = () => {
+    setIsRecord( false )
+  }
+
+  const onSpeechResults = ( e: any ) => {
+    console.log( "Speech Result" )
+    console.log( e.value[0] )
+    setVts( e.value[0] )
+  }
+
+  const onRecord = () => {
+    if ( isRecord ) {
+      Voice.stop()
+    } else {
+      Voice.start( "en-US" )
+    }
+
+    setIsRecord( !isRecord )
+  }
+
   useEffect(() => {
     // Speech.speak( recipeSteps[ numberSteps ] )
+    Voice.onSpeechStart = onSpeechStart
+    Voice.onSpeechEnd = onSpeechEnd
+    Voice.onSpeechResults = onSpeechResults
+
+    onRecord()
+
+    return () => {
+      Voice.destroy().then( Voice.removeAllListeners )
+    }
   }, [])
   
   return (
