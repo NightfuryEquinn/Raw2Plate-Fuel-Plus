@@ -78,7 +78,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
 
         <Text style={ s.heading }>Parmesan Garlic Linguine Pasta</Text>
 
-        <Spacer size={ 10 } />
+        <Spacer size={ 20 } />
 
         <ScrollView
           style={{ margin: -20, marginTop: -7.5, }}

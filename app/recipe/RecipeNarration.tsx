@@ -1,44 +1,97 @@
+import Voice from '@wdragon/react-native-voice'
 import { LightMode } from 'assets/colors/LightMode'
+import ConfirmationModal from 'components/ConfirmationModal'
 import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
 import { useFontFromContext } from 'context/FontProvider'
+import * as Speech from 'expo-speech'
 import React, { useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import * as Speech from 'expo-speech'
-import Voice from '@wdragon/react-native-voice'
 
 export default function RecipeNarration( { navigation, route }: any ) {
   const { recipeSteps } = route.params
 
   const [ numberSteps, setNumberSteps ] = useState( 0 )
   const [ isRecord, setIsRecord ] = useState( false )
-  const [ vts, setVts ] = useState( "" )
+  const [ modal, setModal ] = useState( false )
 
-  const { fontsLoaded } = useFontFromContext()
+  const showModal = () => { 
+    setModal( !modal )
+  }
 
-  if ( !fontsLoaded ) {
-    return null
+  const backStep = () => {
+    Voice.destroy().then( Voice.removeAllListeners )
+
+    if ( numberSteps !== 0 ) {
+      setNumberSteps( numberSteps - 1 )
+      Speech.stop()
+      Speech.speak( recipeSteps[ numberSteps - 1 ], {
+        pitch: 0.95,
+        rate: 0.95,
+        onDone: onRecord
+      })
+    } else {
+      Speech.stop()
+      Speech.speak( recipeSteps[ numberSteps ], {
+        pitch: 0.95,
+        rate: 0.95,
+        onDone: onRecord
+      })
+    }
+  }
+
+  const nextStep = () => {
+    Voice.destroy().then( Voice.removeAllListeners )
+
+    setNumberSteps( numberSteps + 1 )
+    Speech.stop()
+    Speech.speak( recipeSteps[ numberSteps + 1 ], {
+      pitch: 0.95,
+      rate: 0.95,
+      onDone: onRecord
+    })
+  }
+
+  const endStep = () => {
+    Speech.stop()
+    Voice.destroy().then( Voice.removeAllListeners )
+    navigation.goBack() 
   }
 
   const onSpeechStart = () => {
     console.log( "Speech Start" )
-    setVts( "" )
+  }
+
+  const onSpeechRecognized = () => {
+    console.log( "Speech Recognizing" )
   }
 
   const onSpeechEnd = () => {
+    console.log( "Speech End" )
     setIsRecord( false )
+
+    // Auto start if didn't go to next step, avoid recalling onRecord if gone to next step
   }
 
   const onSpeechResults = ( e: any ) => {
     console.log( "Speech Result" )
-    console.log( e.value[0] )
-    setVts( e.value[0] )
+    console.log( e.value[ 0 ] )
+
+    const speechText = e.value[ 0 ].toLowerCase()
+
+    if ( speechText.includes( "next" ) ) {
+      nextStep()
+    } else if ( speechText.includes( "back" ) ) {
+      backStep()
+    } else if ( speechText.includes( "stop" ) ) {
+      endStep()
+    }
   }
 
   const onRecord = () => {
     if ( isRecord ) {
-      Voice.stop()
+      Voice.destroy().then( Voice.removeAllListeners )
     } else {
       Voice.start( "en-US" )
     }
@@ -46,13 +99,23 @@ export default function RecipeNarration( { navigation, route }: any ) {
     setIsRecord( !isRecord )
   }
 
+  const { fontsLoaded } = useFontFromContext()
+
+  if ( !fontsLoaded ) {
+    return null
+  }
+
   useEffect(() => {
-    // Speech.speak( recipeSteps[ numberSteps ] )
+    Speech.speak( recipeSteps[ numberSteps ], {
+      pitch: 0.95,
+      rate: 0.95,
+      onDone: onRecord
+    })
+
     Voice.onSpeechStart = onSpeechStart
+    Voice.onSpeechRecognized = onSpeechRecognized
     Voice.onSpeechEnd = onSpeechEnd
     Voice.onSpeechResults = onSpeechResults
-
-    onRecord()
 
     return () => {
       Voice.destroy().then( Voice.removeAllListeners )
@@ -63,10 +126,7 @@ export default function RecipeNarration( { navigation, route }: any ) {
     <SafeAreaView style={ s.container }>        
       <View style={{ flex: 1 }}>
         <RoundedBorderButton 
-          onPress={ () => {
-            Speech.stop()
-            navigation.goBack() 
-          }}
+          onPress={ endStep }
           text="Stop"
           color={ LightMode.red }
           textColor={ LightMode.white }
@@ -95,16 +155,7 @@ export default function RecipeNarration( { navigation, route }: any ) {
         <View style={ s.buttonContainer }>
           <TouchableOpacity
             activeOpacity={ 0.5 }
-            onPress={ () => {
-              if ( numberSteps !== 0 ) {
-                setNumberSteps( numberSteps - 1 )
-                Speech.stop()
-                Speech.speak( recipeSteps[ numberSteps - 1 ] )
-              } else {
-                Speech.stop()
-                Speech.speak( recipeSteps[ numberSteps ] )
-              }
-            }}
+            onPress={ backStep }
             style={ s.stepButton }
           >
             <Text style={ s.stepText }>Back</Text>
@@ -113,7 +164,7 @@ export default function RecipeNarration( { navigation, route }: any ) {
           { numberSteps + 1 === recipeSteps.length ?
             <TouchableOpacity
               activeOpacity={ 0.5 }
-              onPress={ () => console.log( "Done" ) }
+              onPress={ showModal }
               style={[ s.stepButton, { backgroundColor: LightMode.green } ]}
             >
               <Text style={ s.stepText }>Done</Text>
@@ -121,11 +172,7 @@ export default function RecipeNarration( { navigation, route }: any ) {
             :
             <TouchableOpacity
               activeOpacity={ 0.5 }
-              onPress={ () => {
-                setNumberSteps( numberSteps + 1 )
-                Speech.stop()
-                Speech.speak( recipeSteps[ numberSteps + 1 ] )
-              }}
+              onPress={ nextStep }
               style={ s.stepButton }
             >
               <Text style={ s.stepText }>Next</Text>
@@ -138,6 +185,22 @@ export default function RecipeNarration( { navigation, route }: any ) {
         <Text style={ s.hint }>You can voice-control for recipe narration.</Text>
         <Text style={ s.hint }>Try saying "Tell", "Stop", "Back", and "Next".</Text>
       </View>
+
+      <ConfirmationModal 
+        modal={ modal }
+        showModal={ showModal }
+        message="Do you wish to add this recipe to your tracker?"
+        onCancel={ () => {
+          console.log( "Cancel" )
+          showModal()
+          endStep()
+        }}
+        onConfirm={ () => {
+          console.log( "Confirm" ) 
+          showModal()
+          endStep()
+        }}
+      />
     </SafeAreaView>
   )
 }

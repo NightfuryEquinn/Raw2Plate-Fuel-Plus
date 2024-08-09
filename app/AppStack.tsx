@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { LightMode } from 'assets/colors/LightMode'
 import React from 'react'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
+import IconEN from 'react-native-vector-icons/Entypo'
 import Profile from './Profile'
 import Settings from './Settings'
 import Login from './landing/Login'
@@ -15,6 +16,7 @@ import ViewCalendar from './recipe/ViewCalendar'
 import RecipeManager from './recipe/RecipeManager'
 import RecipeDetail from './recipe/RecipeDetail'
 import RecipeNarration from './recipe/RecipeNarration'
+import DiscoverRecipe from './recipe/DiscoverRecipe'
 
 const Tab = createMaterialBottomTabNavigator()
 const Drawer = createDrawerNavigator()
@@ -35,6 +37,9 @@ export default function AppStack() {
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="BottomTab">
         <Stack.Screen name="LandingStack" component={ LandingStack } />
         <Stack.Screen name="BottomTab" component={ BottomTab } />
+        
+        <Stack.Screen name="Profile" component={ Profile } />
+        <Stack.Screen name="Settings" component={ Settings } />
       </Stack.Navigator>
     </NavigationContainer>
   )
@@ -50,11 +55,9 @@ const LandingStack = () => {
   )
 }
 
-const RecipeStack = () => {
+const PlannerStack = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="RecipeDetail">
-      <Stack.Screen name="Profile" component={ Profile } />
-      <Stack.Screen name="Settings" component={ Settings } />
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="CalendarOverview">
       <Stack.Screen name="CalendarOverview" component={ CalendarOverview } />
       <Stack.Screen name="ViewCalendar" component={ ViewCalendar } />
       <Stack.Screen name="RecipeManager" component={ RecipeManager } />
@@ -64,26 +67,45 @@ const RecipeStack = () => {
   )
 }
 
+const RecipeStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="DiscoverRecipe">
+      <Stack.Screen name="DiscoverRecipe" component={ DiscoverRecipe } />
+    </Stack.Navigator>
+  )
+}
+
 const BottomTab = () => {
   return (
     <Tab.Navigator 
-      initialRouteName="Planner"
+      initialRouteName="RECIPES"
       activeColor={ LightMode.blue }
       inactiveColor={ LightMode.black }
       barStyle={{ 
         backgroundColor: `${ LightMode.white }`
       }}
-      screenOptions={{
-        
-      }}
     >
       <Tab.Screen 
         name="PLANNER" 
-        component={ RecipeStack } 
+        component={ PlannerStack } 
         options={{
           tabBarIcon: ({ color }) => (
             <IconMA 
               name="calendar-month"
+              color={ color }
+              size={ 28 }
+            />
+          )
+        }}
+      />
+
+      <Tab.Screen 
+        name="RECIPES" 
+        component={ RecipeStack } 
+        options={{
+          tabBarIcon: ({ color }) => (
+            <IconEN 
+              name="bowl"
               color={ color }
               size={ 28 }
             />

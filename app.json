@@ -18,10 +18,7 @@
       "backgroundColor": "#fafafa"
     },
     "ios": {
-      "supportsTablet": true,
-      "infoPlist": {
-        "NSSpeechRecognitionUsageDescription": "This app uses speech recognition to convert your speech to text."
-      }
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {

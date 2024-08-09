@@ -1,6 +1,7 @@
 import { LightMode } from 'assets/colors/LightMode'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
+import { Audio } from 'expo-av'
 import * as Location from 'expo-location'
 import React, { useEffect, useState } from 'react'
 import { Alert, Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
@@ -10,6 +11,7 @@ export default function Settings() {
   const pkg = require( "../package.json" )
   const [ foreground, setForeground ] = useState( false )
   const [ background, setBackground ] = useState( false )
+  const [ microphone, setMicrophone ] = useState( false )
 
   const getPreciseLocationImage = () => {
     return foreground || background 
@@ -17,10 +19,16 @@ export default function Settings() {
       : require( "../assets/images/cancel.png" ) 
   }
 
-  const openDeviceSettings = () => {
+  const getMicrophoneImage = () => {
+    return microphone
+    ? require( "../assets/images/checked.png" )
+    : require( "../assets/images/cancel.png" ) 
+  }
+
+  const openDeviceSettings = ( text: string ) => {
     Alert.alert(
       "Permission Required",
-      "To disable location permissions, please go to your device settings.",
+      `To disable ${ text } permissions, please go to your device settings.`,
       [
         { text: "Cancel", style: "cancel" },
         { text: "Open Settings", onPress: () => Linking.openSettings() }
@@ -30,7 +38,7 @@ export default function Settings() {
 
   const toggleLocation = async () => {
     if ( foreground || background ) {
-      openDeviceSettings()
+      openDeviceSettings( "location" )
     } else {
       const { status: foregroundStatus } = await Location.requestForegroundPermissionsAsync()
       setForeground( foregroundStatus === Location.PermissionStatus.GRANTED )
@@ -39,6 +47,15 @@ export default function Settings() {
         const { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync()
         setBackground( backgroundStatus === Location.PermissionStatus.GRANTED )
       }
+    }
+  }
+
+  const toggleMicrophone = async () => {
+    const { status } = await Audio.requestPermissionsAsync()
+      if ( microphone ) {
+      openDeviceSettings( "microphone" )
+    } else {
+      setMicrophone( status === Audio.PermissionStatus.GRANTED )
     }
   }
 
@@ -51,7 +68,12 @@ export default function Settings() {
         const { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync()
         setBackground( backgroundStatus === Location.PermissionStatus.GRANTED )
       }
-    })()
+    })();
+
+    (async() => {
+      const { status: micStatus } = await Audio.requestPermissionsAsync()
+      setMicrophone( micStatus === Audio.PermissionStatus.GRANTED )
+    })();
   }, [])
 
   return (
@@ -85,6 +107,26 @@ export default function Settings() {
               />
             </TouchableOpacity>
           </View>
+
+          <View style={ s.setting }>
+            <View style={ s.leftSetting }>
+              <Image 
+                resizeMode="cover"
+                style={ s.image }
+                source={ require( "../assets/images/microphone.png" ) }
+              />
+
+              <Text style={ s.sub }>Microphone Access for Voice Recognition</Text>
+            </View>
+
+            <TouchableOpacity activeOpacity={ 0.5 } onPress={ toggleMicrophone }>
+              <Image 
+                resizeMode="cover"
+                style={ s.image }
+                source={ getMicrophoneImage() }
+              />
+            </TouchableOpacity>
+          </View>
         </View>
 
         <Spacer size={ 30 } />
@@ -110,13 +152,13 @@ const s = StyleSheet.create({
     gap: 15
   },
   "setting": {
-    paddingVertical: "auto",
+    paddingVertical: 10,
     paddingHorizontal: 15,
-    height: 40,
     borderRadius: 10,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    gap: 20,
     backgroundColor: LightMode.white,
     shadowColor: LightMode.black,
     shadowOffset: {
@@ -128,11 +170,13 @@ const s = StyleSheet.create({
     elevation: 10,
   },
   "leftSetting": {
+    flex: 1,
     flexDirection: "row",
     gap: 15,
     alignItems: "center"
   },
   "sub": {
+    flex: 1,
     fontFamily: "cantarell",
     fontSize: 12,
     color: LightMode.black
