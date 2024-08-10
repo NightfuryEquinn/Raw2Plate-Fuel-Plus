@@ -31,8 +31,8 @@ export default function RecipeSelectionModal( { changeOrAdd, recipeModal, showRe
       visible={ recipeModal }
       onRequestClose={ () => showRecipeModal( "" ) }
     >
-      <View style={[ s.modalContainer, { justifyContent: "flex-end" } ]}>
-        <View style={[ s.modalContent, { margin: 0, flex: 0.85, borderBottomLeftRadius: 0, borderBottomRightRadius: 0 } ]}>
+      <View style={ s.modalContainer }>
+        <View style={ s.modalContent }>
           <View style={ s.modalWrapper }>
             <View style={ s.modalHeadingWrapper }>
               <View style={ s.modalHeading }>

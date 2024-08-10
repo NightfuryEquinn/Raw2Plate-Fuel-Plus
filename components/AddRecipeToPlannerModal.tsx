@@ -27,6 +27,7 @@ export default function AddRecipeToPlannerModal( { modal, showModal, modalDate, 
             <Text style={ s.modalHeading }>Add this Recipe to Planner?</Text>
             <Text style={ s.hint }>Select a meal and date for this recipe to be included.</Text>
           </View>
+          
           <DropDownPicker 
             open={ openDrop }
             value={ dropValue }

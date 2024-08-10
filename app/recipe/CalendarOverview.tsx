@@ -7,7 +7,7 @@ import { forCalendarOverview } from 'data/dummyData';
 import { mealCategories, MealCategory } from 'data/mealCategory';
 import dayjs from 'dayjs';
 import React, { Fragment, useEffect, useState } from 'react';
-import { Dimensions, FlatList, Image, Pressable, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { FlatList, Image, Pressable, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import Animated, { LinearTransition, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import IconMA from 'react-native-vector-icons/MaterialIcons';

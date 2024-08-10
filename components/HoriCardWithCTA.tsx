@@ -35,9 +35,15 @@ export default function HoriCardWithCTA( { changeOrAdd, onPress, data }: any ) {
             color={ LightMode.white }
             size={ 24 }
           />
-          :
+          : changeOrAdd === "add" ?
           <IconMA 
             name="add"
+            color={ LightMode.white }
+            size={ 24 }
+          />
+          : 
+          <IconMA 
+            name="chevron-right"
             color={ LightMode.white }
             size={ 24 }
           />
@@ -115,4 +121,8 @@ HoriCardWithCTA.propTypes = {
   changeOrAdd: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
   data: PropTypes.any.isRequired
+}
+
+HoriCardWithCTA.defaultProps = {
+  changeOrAdd: ""
 }

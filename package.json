@@ -11,6 +11,7 @@
   "dependencies": {
     "@expo-google-fonts/cantarell": "^0.2.3",
     "@expo-google-fonts/fjalla-one": "^0.2.3",
+    "@ptomasroos/react-native-multi-slider": "^2.2.2",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-navigation/drawer": "^6.7.2",
     "@react-navigation/material-bottom-tabs": "^6.2.29",
@@ -58,7 +59,6 @@
     "@types/jest": "^29.5.12",
     "@types/react": "~18.2.45",
     "@types/react-test-renderer": "^18.3.0",
-    "expo-dev-client": "^4.0.22",
     "typescript": "^5.3.3"
   },
   "private": true

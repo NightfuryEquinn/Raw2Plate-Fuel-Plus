@@ -71,6 +71,7 @@ const RecipeStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="DiscoverRecipe">
       <Stack.Screen name="DiscoverRecipe" component={ DiscoverRecipe } />
+      <Stack.Screen name="RecipeDetail" component={ RecipeDetail } />
     </Stack.Navigator>
   )
 }
