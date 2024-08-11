@@ -1,4 +1,4 @@
-import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
+import { DrawerActions, NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
 import { LightMode } from 'assets/colors/LightMode';
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -10,7 +10,7 @@ export default function TopBar() {
   return (
     <View>
       <View style={ s.topBar }>
-        <Pressable onPress={ () => console.log( "Open Drawer" ) }>
+        <Pressable onPress={ () => navigation.dispatch( DrawerActions.toggleDrawer() ) }>
           <IconMA 
             name="menu"
             color={ LightMode.black }

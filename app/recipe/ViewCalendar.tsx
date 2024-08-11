@@ -205,8 +205,8 @@ export default function ViewCalendar( { navigation }: any ) {
               calendarTextStyle={{ fontFamily: "fjalla" }}
               selectedTextStyle={{ fontFamily: "fjalla" }}
               selectedItemColor={ LightMode.black }
-              headerTextStyle={{ fontFamily: "fjalla", fontSize: 24 }}
-              headerButtonSize={ 20 }
+              headerTextStyle={{ fontFamily: "fjalla", fontSize: 16 }}
+              headerButtonSize={ 16 }
               headerButtonColor={ LightMode.black }
               todayTextStyle={{ fontFamily: "fjalla" }}
               weekDaysTextStyle={{ fontFamily: "fjalla" }}
@@ -219,8 +219,8 @@ export default function ViewCalendar( { navigation }: any ) {
             >
               <IconMA 
                 name="close"
-                size={ 36 }
-                color={ LightMode.black }
+                size={ 24 }
+                color={ LightMode.white }
               />
             </TouchableOpacity>
           </View>
@@ -312,7 +312,6 @@ const s = StyleSheet.create({
     backgroundColor: LightMode.halfBlack
   },
   "modalContent": {
-    flex: 0.5,
     margin: 20,
     padding: 20,
     borderRadius: 10,
@@ -323,6 +322,6 @@ const s = StyleSheet.create({
   "modalButton": {
     padding: 10,
     borderRadius: 10,
-    backgroundColor: LightMode.white
+    backgroundColor: LightMode.black
   }
 })
