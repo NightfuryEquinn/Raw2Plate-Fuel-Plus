@@ -71,7 +71,7 @@ export default function RecipeNarration( { navigation, route }: any ) {
     console.log( "Speech End" )
     setIsRecord( false )
 
-    // Auto start if didn't go to next step, avoid recalling onRecord if gone to next step
+    // TODO: Auto start if didn't go to next step, avoid recalling onRecord if gone to next step
   }
 
   const onSpeechResults = ( e: any ) => {

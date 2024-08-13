@@ -23,11 +23,18 @@ export type ForRecipeManager = {
   author: string
 }
 
+export type ForTimer = {
+  id: number,
+  heading: string,
+  timeInSec: number,
+  isRunning: boolean
+}
+
 export const forCalendarOverview: ForCalendarOverview[] = [
   {
     "id": 1,
     "image": require( "../assets/images/garlic_salmon.jpg" ), 
-    "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
+    "heading": "Brill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "sub": "Est. Cooking Time", 
     "desc": "30 mins"
   },
@@ -41,7 +48,7 @@ export const forCalendarOverview: ForCalendarOverview[] = [
   {
     "id": 3,
     "image": require( "../assets/images/garlic_salmon.jpg" ), 
-    "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
+    "heading": "Drill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "sub": "Est. Cooking Time", 
     "desc": "30 mins"
   },
@@ -72,7 +79,7 @@ export const forViewCalendar: ForViewCalendar[] = [
   {
     "id": 1,
     "image": require( "../assets/images/garlic_salmon.jpg" ), 
-    "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
+    "heading": "Brill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
   },
   {
     "id": 2,
@@ -82,7 +89,7 @@ export const forViewCalendar: ForViewCalendar[] = [
   {
     "id": 3,
     "image": require( "../assets/images/garlic_salmon.jpg" ), 
-    "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
+    "heading": "Drill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
   },
   {
     "id": 4,
@@ -105,7 +112,7 @@ export const forRecipeManager: ForRecipeManager[] = [
   {
     "id": 1,
     "image": require( "../assets/images/garlic_salmon.jpg" ), 
-    "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
+    "heading": "Brill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "meal": "BKF",
     "date": "29-07-2024",
     "author": "Sacrilegious Anonymous Illegal Horse"
@@ -121,7 +128,7 @@ export const forRecipeManager: ForRecipeManager[] = [
   {
     "id": 3,
     "image": require( "../assets/images/garlic_salmon.jpg" ), 
-    "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
+    "heading": "Drill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "meal": "LUN",
     "date": "31-07-2024",
     "author": "Sacrilegious Anonymous Illegal Horse"
@@ -149,5 +156,56 @@ export const forRecipeManager: ForRecipeManager[] = [
     "meal": "DIN",
     "date": "02-08-2024",
     "author": "Sacrilegious Anonymous Illegal Horse"
+  },
+]
+
+export const forTimer: ForTimer[] = [
+  {
+    "id": 1,
+    "heading": "Boiling",
+    "timeInSec": 360,
+    "isRunning": true
+  },
+  {
+    "id": 2,
+    "heading": "Baking",
+    "timeInSec": 380,
+    "isRunning": true
+  },
+  {
+    "id": 3,
+    "heading": "Marinating",
+    "timeInSec": 1080,
+    "isRunning": true
+  },
+  {
+    "id": 4,
+    "heading": "Resting Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables",
+    "timeInSec": 200,
+    "isRunning": true
+  },
+  {
+    "id": 5,
+    "heading": "Simmering",
+    "timeInSec": 680,
+    "isRunning": true
+  },
+  {
+    "id": 6,
+    "heading": "Resting",
+    "timeInSec": 305,
+    "isRunning": true
+  },
+  {
+    "id": 7,
+    "heading": "Resting Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables",
+    "timeInSec": 1080,
+    "isRunning": true
+  },
+  {
+    "id": 8,
+    "heading": "Proofing",
+    "timeInSec": 455,
+    "isRunning": true
   },
 ]

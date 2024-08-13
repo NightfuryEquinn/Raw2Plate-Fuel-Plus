@@ -7,11 +7,16 @@ import { useFontFromContext } from 'context/FontProvider'
 import { LightMode } from 'assets/colors/LightMode'
 
 export default function HoriScrollRecipes( { title, data, onPressAddRecipe }: any ) {
+  const cardDimensions = {
+    width: 125,
+    height: 150
+  }
+  
   const CookItem = ( { item, index }: any ) => (
     <VertCard 
       onPress={ () => console.log( "Pressed" ) }
-      width={ 125 }
-      height={ 150 }
+      width={ cardDimensions.width }
+      height={ cardDimensions.height }
       data={ item }
       fontSize={ 14 }
       textAlign="left"
@@ -39,8 +44,8 @@ export default function HoriScrollRecipes( { title, data, onPressAddRecipe }: an
         ListFooterComponent={ 
           <AddRecipeVertCard
             onPress={ onPressAddRecipe }
-            width={ 125 } 
-            height={ 150 } 
+            width={ cardDimensions.width } 
+            height={ cardDimensions.height } 
           /> 
         }
       />

@@ -19,6 +19,8 @@ import RecipeNarration from './recipe/RecipeNarration'
 import DiscoverRecipe from './recipe/DiscoverRecipe'
 import Bookmark from './recipe/Bookmark'
 import Timer from './recipe/Timer'
+import AppDrawer from './AppDrawer'
+import { useFontFromContext } from 'context/FontProvider'
 
 const Tab = createMaterialBottomTabNavigator()
 const Drawer = createDrawerNavigator()
@@ -35,6 +37,12 @@ export default function AppStack() {
       secondaryContainer: LightMode.white
     }
   }
+
+  const { fontsLoaded } = useFontFromContext()
+
+  if ( !fontsLoaded ) {
+    return null
+  }
   
   return (
     <NavigationContainer theme={ theme }>
@@ -45,15 +53,121 @@ export default function AppStack() {
 
 const MainStack = () => {
   return (
-    <Drawer.Navigator screenOptions={{ headerShown: false }} initialRouteName="BottomTab">
-      <Drawer.Screen name="BottomTab" component={ BottomTab } />
-      <Drawer.Screen name="Recipe Manager" component={ RecipeManager } />
-      <Drawer.Screen name="View Calendar" component={ ViewCalendar } />
-      <Drawer.Screen name="Discover" component={ DiscoverRecipe } />
-      <Drawer.Screen name="Bookmarks" component={ Bookmark } />
-      <Drawer.Screen name="Timers" component={ Timer } />
-      <Drawer.Screen name="Profile" component={ Profile } />
-      <Drawer.Screen name="Settings" component={ Settings } />
+    <Drawer.Navigator 
+      drawerContent={ props => <AppDrawer { ...props } /> } 
+      screenOptions={{ headerShown: false }} 
+      initialRouteName="Home"
+    >
+      <Drawer.Screen 
+        name="Home" 
+        component={ BottomTab }
+        options={{
+          drawerLabelStyle: {
+            marginLeft: -10,
+            fontFamily: "cantarell", 
+            fontWeight: 900, 
+            fontSize: 14
+          },
+          drawerActiveBackgroundColor: LightMode.darkGrey,
+          drawerActiveTintColor: LightMode.black,
+          drawerInactiveTintColor: LightMode.halfBlack,
+          drawerIcon: ({ color }) => (
+            <IconEN 
+              name="home"
+              color={ color }
+              size={ 24 }
+            />
+          )
+        }}
+      />
+      <Drawer.Screen 
+        name="Bookmarks" 
+        component={ Bookmark } 
+        options={{
+          drawerLabelStyle: {
+            marginLeft: -10,
+            fontFamily: "cantarell", 
+            fontWeight: 900, 
+            fontSize: 14 
+          },
+          drawerActiveBackgroundColor: LightMode.darkGrey,
+          drawerActiveTintColor: LightMode.black,
+          drawerInactiveTintColor: LightMode.halfBlack,
+          drawerIcon: ({ color }) => (
+            <IconMA 
+              name="bookmark"
+              color={ color }
+              size={ 24 }
+            />
+          )
+        }}
+      />
+      <Drawer.Screen 
+        name="Timers" 
+        component={ Timer } 
+        options={{
+          drawerLabelStyle: {
+            marginLeft: -10,
+            fontFamily: "cantarell", 
+            fontWeight: 900, 
+            fontSize: 14 
+          },
+          drawerActiveBackgroundColor: LightMode.darkGrey,
+          drawerActiveTintColor: LightMode.black,
+          drawerInactiveTintColor: LightMode.halfBlack,
+          drawerIcon: ({ color }) => (
+            <IconMA 
+              name="timer"
+              color={ color }
+              size={ 24 }
+            />
+          )
+        }}
+      />
+      <Drawer.Screen 
+        name="Profile" 
+        component={ Profile } 
+        options={{
+          drawerLabelStyle: {
+            marginLeft: -10,
+            fontFamily: "cantarell", 
+            fontWeight: 900, 
+            fontSize: 14 
+          },
+          drawerActiveBackgroundColor: LightMode.darkGrey,
+          drawerActiveTintColor: LightMode.black,
+          drawerInactiveTintColor: LightMode.halfBlack,
+          drawerIcon: ({ color }) => (
+            <IconMA 
+              name="account-circle"
+              color={ color }
+              size={ 24 }
+            />
+          )
+        }}
+      />
+      <Drawer.Screen 
+        name="Settings" 
+        component={ Settings } 
+        options={{
+          drawerLabelStyle: {
+            marginLeft: -10,
+            fontFamily: "cantarell", 
+            fontWeight: 900, 
+            fontSize: 14 
+          },
+          drawerActiveBackgroundColor: LightMode.darkGrey,
+          drawerActiveTintColor: LightMode.black,
+          drawerInactiveTintColor: LightMode.halfBlack,
+          drawerIcon: ({ color }) => (
+            <IconMA 
+              name="settings"
+              color={ color }
+              size={ 24 }
+            />
+          )
+        }}
+      />
     </Drawer.Navigator>
   )
 }
@@ -61,7 +175,7 @@ const MainStack = () => {
 const BottomTab = () => {
   return (
     <Tab.Navigator 
-      initialRouteName="RECIPES"
+      initialRouteName="PLANNER"
       activeColor={ LightMode.blue }
       inactiveColor={ LightMode.black }
       barStyle={{ 

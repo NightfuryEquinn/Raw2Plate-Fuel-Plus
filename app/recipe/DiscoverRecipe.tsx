@@ -1,18 +1,17 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, FlatList } from 'react-native'
-import React, { useRef, useState } from 'react'
-import { useFontFromContext } from 'context/FontProvider'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import TopBar from 'components/TopBar'
-import Spacer from 'components/Spacer'
 import { LightMode } from 'assets/colors/LightMode'
-import IconMA from 'react-native-vector-icons/MaterialIcons';
-import LinedTextField from 'components/LinedTextField'
-import { mealCategories, MealCategory } from 'data/mealCategory'
-import PagerView from 'react-native-pager-view';
-import HoriCardWithCTA from 'components/HoriCardWithCTA'
-import { ForRecipeManager, forRecipeManager } from 'data/dummyData'
 import FilterRecipeSelectionModal from 'components/FilterRecipeSelectionModal'
-import { useSharedValue } from 'react-native-reanimated'
+import HoriCardWithCTA from 'components/HoriCardWithCTA'
+import LinedTextField from 'components/LinedTextField'
+import Spacer from 'components/Spacer'
+import TopBar from 'components/TopBar'
+import { useFontFromContext } from 'context/FontProvider'
+import { forRecipeManager } from 'data/dummyData'
+import { mealCategories, MealCategory } from 'data/mealCategory'
+import React, { useRef, useState } from 'react'
+import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import PagerView from 'react-native-pager-view'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import IconMA from 'react-native-vector-icons/MaterialIcons'
 
 export default function DiscoverRecipe( { navigation }: any ) {
   const pagerView = useRef<any>()
