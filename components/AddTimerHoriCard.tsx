@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import { useFontFromContext } from 'context/FontProvider';
 import Spacer from './Spacer';
 
-export default function AddTimerHoriCard( {}: any ) {
+export default function AddTimerHoriCard( { onPress }: any ) {
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
@@ -16,7 +16,7 @@ export default function AddTimerHoriCard( {}: any ) {
   return (
     <TouchableOpacity
       activeOpacity={ 0.5 }
-      onPress={ () => console.log( "Add Timer" ) }
+      onPress={ onPress }
       style={ s.container }
     >
       <View style={ s.wrapper }>
@@ -59,3 +59,7 @@ const s = StyleSheet.create({
     color: LightMode.black
   }
 })
+
+AddTimerHoriCard.propTypes = {
+  onPress: PropTypes.func.isRequired
+}

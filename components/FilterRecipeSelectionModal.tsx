@@ -163,7 +163,6 @@ export default function FilterRecipeSelectionModal( {
                 <Text style={ s.checkboxText }>Match Ingredients Included & Excluded</Text>
               </View>
               
-
               <RoundedBorderButton 
                 onPress={ save }
                 text="Apply Filter"

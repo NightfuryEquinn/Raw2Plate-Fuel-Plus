@@ -1,15 +1,23 @@
 import { LightMode } from 'assets/colors/LightMode'
 import AddTimerHoriCard from 'components/AddTimerHoriCard'
+import AddTimerModal from 'components/AddTimerModal'
 import Spacer from 'components/Spacer'
 import TimerHoriCard from 'components/TimerHoriCard'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
 import { forTimer } from 'data/dummyData'
-import React from 'react'
+import React, { useState } from 'react'
 import { FlatList, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function Timer() {
+  const [ modal, setModal ] = useState( false )
+  const [ hour, setHour ] = useState( 0 )
+  const [ min, setMin ] = useState( 0 )
+  const [ sec, setSec ] = useState( 0 )
+  const [ purpose, setPurpose ] = useState( "Baking" )
+  const [ active, setActive ] = useState( 0 )
+  
   const TimerItem = ( { item, index }: any ) => (
     <TimerHoriCard 
       heading={ item.heading }
@@ -17,6 +25,10 @@ export default function Timer() {
       isRunning={ item.isRunning }
     />
   )
+
+  const showModal = () => {
+    setModal( !modal )
+  }
 
   const { fontsLoaded } = useFontFromContext()
 
@@ -49,11 +61,26 @@ export default function Timer() {
           ItemSeparatorComponent={ () => <Spacer size={ 15 } /> }
           ListHeaderComponent={
             <AddTimerHoriCard 
-            
+              onPress={ showModal }
             />
           }
         />
       </View>
+
+      <AddTimerModal 
+        modal={ modal }
+        showModal={ showModal }
+        hour={ hour }
+        min={ min }
+        sec={ sec }
+        purpose={ purpose }
+        active={ active }
+        setHour={ setHour }
+        setMin={ setMin }
+        setSec={ setSec }
+        setPurpose={ setPurpose }
+        setActive={ setActive }
+      />
     </SafeAreaView>
   )
 }

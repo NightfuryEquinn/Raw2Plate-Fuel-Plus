@@ -138,7 +138,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
               <Text style={ s.sectionHeading }>Allergy Information</Text>
             </View>
 
-            <View style={[ s.sectionContent, { flexDirection: "row", columnGap: 5, rowGap: 10 } ]}>
+            <View style={[ s.sectionContent, { flexDirection: "row", gap: 10 } ]}>
               {
                 allergy.map(( name: string, index: number ) => (
                   <View key={ index } style={ s.box }>
