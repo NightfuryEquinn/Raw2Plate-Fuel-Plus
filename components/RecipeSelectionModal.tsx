@@ -12,6 +12,7 @@ import Spacer from './Spacer'
 export default function RecipeSelectionModal( { changeOrAdd, recipeModal, showRecipeModal, recipe, setRecipe, searchData }: any ) {
   const SearchItem = ( { item, index }: any ) => (
     <HoriCardWithCTA 
+      key={ index }
       changeOrAdd={ changeOrAdd }
       onPress={ showRecipeModal }
       data={ item }
@@ -47,16 +48,18 @@ export default function RecipeSelectionModal( { changeOrAdd, recipeModal, showRe
               setText={ setRecipe }
             />
 
-            <View style={ s.flatListWrapper }>
-              <FlatList 
-                style={ s.flatList }
-                contentContainerStyle={{ padding: 20, paddingTop: 10 }}
-                showsVerticalScrollIndicator= { false }
-                data={ forRecipeManager }
-                renderItem={ SearchItem }
-                keyExtractor={ data => data.id.toString() }
-                ItemSeparatorComponent={ () => <Spacer size={ 10 } /> }
-              />
+            <View style={{ flex: 1 }}>
+              <View style={ s.flatListWrapper }>
+                <FlatList 
+                  style={ s.flatList }
+                  contentContainerStyle={{ padding: 20, paddingTop: 10 }}
+                  showsVerticalScrollIndicator= { false }
+                  data={ forRecipeManager }
+                  renderItem={ SearchItem }
+                  keyExtractor={ data => data.id.toString() }
+                  ItemSeparatorComponent={ () => <Spacer size={ 10 } /> }
+                />
+              </View>
             </View>
 
             <Spacer size={ 40 } />
@@ -117,10 +120,11 @@ const s = StyleSheet.create({
     color: LightMode.black,
   },
   "flatListWrapper": {
+    flex: 1,
     flexDirection: "row"
   },
   "flatList": {
-    height: Dimensions.get( "window" ).height * 0.535,
+    width: "100%",
     margin: -10,
     marginTop: 0,
   },

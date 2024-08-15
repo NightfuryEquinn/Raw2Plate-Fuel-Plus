@@ -69,56 +69,7 @@ export default function AddTimerModal( { modal, showModal, hour, min, sec, purpo
 
             <Spacer size={ 20 } />
 
-            <View style={ s.content }>
-              <Text style={ s.contentTitle }>Purposes</Text>
-
-              <View style={ s.list }>
-                {
-                  options.map(( data: any, index: number ) => (
-                    <TouchableOpacity 
-                      key={ index } 
-                      activeOpacity={ 0.5 }
-                      onPress={ () => {
-                        setPurpose( data.purpose )
-                        setActive( index )
-                      }}
-                      style={[ s.box, active === index ? { backgroundColor: LightMode.green } : { backgroundColor: LightMode.white } ]}
-                    >
-                      { data.purpose !== "Others" ?
-                        <Image 
-                          resizeMode="contain"
-                          source={ data.icon }
-                          style={ s.image }
-                        />
-                        :
-                        <IconMA 
-                          name="more-horiz"
-                          size={ 20 }
-                          color={ LightMode.black }
-                        />
-                      }
-                    
-                      <Text style={ s.boxText }>{ data.purpose }</Text>
-                    </TouchableOpacity>
-                  ))
-                }
-              </View>
-              
-              <Spacer size={ 5 } />
-
-              {
-                active === options.length - 1 &&
-                <LinedTextField 
-                  name="notes" 
-                  text="" 
-                  placeholder="What's the timer for?" 
-                  setText={ ( text: string ) => setPurpose( text ) }                
-                />
-              }
-            </View>
-
-            <Spacer size={ 20 } />
-
+            
             <View style={ s.content }>
               <Text style={ s.contentTitle }>Duration</Text>
 
@@ -163,6 +114,64 @@ export default function AddTimerModal( { modal, showModal, hour, min, sec, purpo
               </View>
             </View>
 
+            <Spacer size={ 30 } />
+
+            <ScrollView
+              showsVerticalScrollIndicator={ false }
+              contentContainerStyle={{ padding: 20 }}
+              style={{ marginVertical: -10, marginHorizontal: -20, flex: 1 }}
+            >
+              <View style={ s.content }>
+                <Text style={ s.contentTitle }>Purposes</Text>
+
+                <View style={ s.list }>
+                  {
+                    options.map(( data: any, index: number ) => (
+                      <TouchableOpacity 
+                        key={ index } 
+                        activeOpacity={ 0.5 }
+                        onPress={ () => {
+                          setPurpose( data.purpose )
+                          setActive( index )
+                        }}
+                        style={[ s.box, active === index ? { backgroundColor: LightMode.green } : { backgroundColor: LightMode.white } ]}
+                      >
+                        { data.purpose !== "Others" ?
+                          <Image 
+                            resizeMode="contain"
+                            source={ data.icon }
+                            style={ s.image }
+                          />
+                          :
+                          <IconMA 
+                            name="more-horiz"
+                            size={ 20 }
+                            color={ LightMode.black }
+                          />
+                        }
+                      
+                        <Text style={ s.boxText }>{ data.purpose }</Text>
+                      </TouchableOpacity>
+                    ))
+                  }
+                </View>
+                
+                <Spacer size={ 5 } />
+
+                {
+                  active === options.length - 1 &&
+                  <LinedTextField 
+                    name="notes" 
+                    text="" 
+                    placeholder="What's the timer for?" 
+                    setText={ ( text: string ) => setPurpose( text ) }                
+                  />
+                }
+              </View>
+            </ScrollView>
+
+            <Spacer size={ 30 } />
+
             <View style={ s.buttonContainer }>
               <RoundedBorderButton 
                 onPress={ showModal }
@@ -206,8 +215,8 @@ const s = StyleSheet.create({
     gap: 10,
   },
   "modalWrapper": {
-    justifyContent: "center",
-    alignItems: "flex-start"
+    justifyContent: "space-between",
+    alignItems: "center"
   },
   "modalHeadingWrapper": {
     flexDirection: "row"
@@ -225,6 +234,7 @@ const s = StyleSheet.create({
     color: LightMode.black,
   },
   "content": {
+    // flex: 1,
     gap: 10,
   },
   "contentTitle": {
@@ -307,9 +317,7 @@ const s = StyleSheet.create({
     color: LightMode.yellow
   },
   "buttonContainer": {
-    flex: 1,
     marginHorizontal: "auto",
-    justifyContent: "flex-end",
   },
   "button": {
     marginHorizontal: "auto",
