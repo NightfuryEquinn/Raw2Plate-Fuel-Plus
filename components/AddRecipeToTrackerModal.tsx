@@ -1,11 +1,11 @@
-import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native'
-import React from 'react'
-import { useFontFromContext } from 'context/FontProvider'
 import { LightMode } from 'assets/colors/LightMode'
-import DatePicker from 'react-native-ui-datepicker'
+import { useFontFromContext } from 'context/FontProvider'
 import PropTypes from 'prop-types'
-import IconMA from 'react-native-vector-icons/MaterialIcons'
+import React from 'react'
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import DropDownPicker from 'react-native-dropdown-picker'
+import DatePicker from 'react-native-ui-datepicker'
+import IconMA from 'react-native-vector-icons/MaterialIcons'
 
 export default function AddRecipeToTrackerModal( { modal, showModal, modalDate, setModalDate, openDrop, dropValue, dropItems, setOpenDrop, setDropValue, save }: any ) {
   const { fontsLoaded } = useFontFromContext()

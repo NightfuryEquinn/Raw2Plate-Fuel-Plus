@@ -1,14 +1,14 @@
-import { View, Text, Modal, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native'
-import React from 'react'
+import { LightMode } from 'assets/colors/LightMode'
 import { useFontFromContext } from 'context/FontProvider'
 import PropTypes from 'prop-types'
+import React from 'react'
+import { Dimensions, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import DropDownPicker from 'react-native-dropdown-picker'
-import { LightMode } from 'assets/colors/LightMode'
-import Spacer from './Spacer'
 import RoundedBorderButton from './RoundedBorderButton'
+import Spacer from './Spacer'
 
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import MultiSlider from '@ptomasroos/react-native-multi-slider'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Checkbox } from 'react-native-paper'
 
 export default function FilterRecipeSelectionModal( { 

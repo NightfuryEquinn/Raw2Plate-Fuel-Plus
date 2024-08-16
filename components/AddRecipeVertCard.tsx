@@ -1,9 +1,9 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import React from 'react'
-import { useFontFromContext } from 'context/FontProvider'
-import { LightMode } from 'assets/colors/LightMode'
-import IconMA from 'react-native-vector-icons/MaterialIcons';
+import { LightMode } from 'assets/colors/LightMode';
+import { useFontFromContext } from 'context/FontProvider';
 import PropTypes from 'prop-types';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import IconMA from 'react-native-vector-icons/MaterialIcons';
 
 export default function AddRecipeVertCard( { onPress, width, height }: any ) {
   const { fontsLoaded } = useFontFromContext()

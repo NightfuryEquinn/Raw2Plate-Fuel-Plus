@@ -1,13 +1,13 @@
-import { View, Text, StyleSheet, Modal, TouchableOpacity, Image, KeyboardAvoidingView, Platform, ScrollView } from 'react-native'
-import React from 'react'
+import { LightMode } from 'assets/colors/LightMode'
 import { useFontFromContext } from 'context/FontProvider'
 import PropTypes from 'prop-types'
+import React from 'react'
+import { Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
-import { LightMode } from 'assets/colors/LightMode'
-import Spacer from './Spacer'
 import WheelPicker from 'react-native-wheely'
 import LinedTextField from './LinedTextField'
 import RoundedBorderButton from './RoundedBorderButton'
+import Spacer from './Spacer'
 
 export default function AddTimerModal( { modal, showModal, hour, min, sec, purpose, active, setHour, setMin, setSec, setPurpose, setActive }: any ) {
   const options: any[] = [

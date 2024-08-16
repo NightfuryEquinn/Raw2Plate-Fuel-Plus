@@ -1,10 +1,10 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native'
-import IconMA from 'react-native-vector-icons/MaterialIcons';
-import React, { useEffect, useState } from 'react'
 import { LightMode } from 'assets/colors/LightMode';
-import PropTypes from 'prop-types'
 import { useFontFromContext } from 'context/FontProvider';
 import dayjs from 'dayjs';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import IconMA from 'react-native-vector-icons/MaterialIcons';
 
 export default function TimerHoriCard( { heading, timeInSec, isRunning }: any ) {
   const defaultImage: any = {

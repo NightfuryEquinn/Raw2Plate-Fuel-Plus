@@ -1,7 +1,7 @@
-import React, { createContext, ReactNode, useContext } from "react"
-import { useFonts } from 'expo-font';
 import { Cantarell_400Regular as cantarell } from '@expo-google-fonts/cantarell';
 import { FjallaOne_400Regular as fjalla } from '@expo-google-fonts/fjalla-one';
+import { useFonts } from 'expo-font';
+import React, { createContext, ReactNode, useContext } from "react";
 
 type FontContextType = {
   fontsLoaded: boolean

@@ -30,6 +30,20 @@ export type ForTimer = {
   isRunning: boolean
 }
 
+export type ForMainTracker = {
+  id: number,
+  name: string,
+  calories: number,
+  carbo: number,
+  protein: number,
+  fibers: number,
+  fats: number,
+  vitamins: {},
+  minerals: {},
+  image: ImageSourcePropType,
+  date: string,
+}
+
 export const forCalendarOverview: ForCalendarOverview[] = [
   {
     "id": 1,
@@ -208,4 +222,112 @@ export const forTimer: ForTimer[] = [
     "timeInSec": 455,
     "isRunning": true
   },
+]
+
+export const forMainTracker: ForMainTracker[] = [
+  {
+    "id": 1,
+    "name": "Grilled Chicken Salad",
+    "calories": 350,
+    "carbo": 15, 
+    "protein": 30, 
+    "fibers": 5, 
+    "fats": 12, 
+    "vitamins": {
+      "A": 700, 
+      "C": 30, 
+      "D": 2, 
+    },
+    "minerals": {
+      "calcium": 50, 
+      "iron": 2, 
+      "magnesium": 60, 
+    },
+    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "date": "15-08-2024",
+  },
+  {
+    "id": 2,
+    "name": "Quinoa & Avocado Bowl",
+    "calories": 420,
+    "carbo": 55, 
+    "protein": 12, 
+    "fibers": 10, 
+    "fats": 18, 
+    "vitamins": {
+      "A": 180, 
+      "C": 20, 
+      "D": 0, 
+    },
+    "minerals": {
+      "calcium": 40, 
+      "iron": 3, 
+      "magnesium": 90, 
+    },
+    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "date": "15-08-2024",
+  },
+  {
+    "id": 3,
+    "name": "Vegetable Stir-Fry",
+    "calories": 300,
+    "carbo": 40, 
+    "protein": 10, 
+    "fibers": 8, 
+    "fats": 10, 
+    "vitamins": {
+      "A": 900, 
+      "C": 50, 
+      "D": 0, 
+    },
+    "minerals": {
+      "calcium": 100, 
+      "iron": 4, 
+      "magnesium": 80, 
+    },
+    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "date": "16-08-2024",
+  },
+  {
+    "id": 4,
+    "name": "Baked Salmon with Asparagus",
+    "calories": 450,
+    "carbo": 5, 
+    "protein": 40, 
+    "fibers": 4, 
+    "fats": 30, 
+    "vitamins": {
+      "A": 200, 
+      "C": 10, 
+      "D": 20, 
+    },
+    "minerals": {
+      "calcium": 20, 
+      "iron": 1, 
+      "magnesium": 30, 
+    },
+    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "date": "16-08-2024",
+  },
+  {
+    "id": 5,
+    "name": "Fruit Smoothie",
+    "calories": 250,
+    "carbo": 50, 
+    "protein": 5, 
+    "fibers": 10, 
+    "fats": 1, 
+    "vitamins": {
+      "A": 100, 
+      "C": 70, 
+      "D": 0, 
+    },
+    "minerals": {
+      "calcium": 150, 
+      "iron": 0.5, 
+      "magnesium": 20, 
+    },
+    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "date": "17-08-2024",
+  }
 ]

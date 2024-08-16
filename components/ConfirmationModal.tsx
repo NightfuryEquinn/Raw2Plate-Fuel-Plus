@@ -1,9 +1,8 @@
-import { View, Text, Modal, StyleSheet, TouchableOpacity, Image } from 'react-native'
-import React from 'react'
-import { useFontFromContext } from 'context/FontProvider'
 import { LightMode } from 'assets/colors/LightMode'
+import { useFontFromContext } from 'context/FontProvider'
 import PropTypes from 'prop-types'
-import Spacer from './Spacer'
+import React from 'react'
+import { Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 export default function ConfirmationModal( { modal, showModal, message, onCancel, onConfirm }: any ) {
   const { fontsLoaded } = useFontFromContext()

@@ -1,10 +1,10 @@
-import { View, Text, FlatList, StyleSheet } from 'react-native'
-import React from 'react'
-import { forViewCalendar } from 'data/dummyData'
-import VertCard from './VertCard'
-import AddRecipeVertCard from './AddRecipeVertCard'
-import { useFontFromContext } from 'context/FontProvider'
 import { LightMode } from 'assets/colors/LightMode'
+import { useFontFromContext } from 'context/FontProvider'
+import { forViewCalendar } from 'data/dummyData'
+import React from 'react'
+import { FlatList, StyleSheet, Text, View } from 'react-native'
+import AddRecipeVertCard from './AddRecipeVertCard'
+import VertCard from './VertCard'
 
 export default function HoriScrollRecipes( { title, data, onPressAddRecipe }: any ) {
   const cardDimensions = {

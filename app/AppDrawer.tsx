@@ -1,9 +1,9 @@
-import { View, Text, Image, StyleSheet } from 'react-native'
-import React, { useEffect, useState } from 'react'
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer'
 import { LightMode } from 'assets/colors/LightMode'
-import { dykDataArr } from 'data/dykData'
 import { useFontFromContext } from 'context/FontProvider'
+import { dykDataArr } from 'data/dykData'
+import React, { useEffect, useState } from 'react'
+import { Image, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function AppDrawer( props: any ) {
@@ -75,6 +75,6 @@ const s = StyleSheet.create({
   "hintText": {
     fontFamily: "cantarell",
     fontSize: 12,
-    color: LightMode.black
+    color: LightMode.halfBlack
   }
 })

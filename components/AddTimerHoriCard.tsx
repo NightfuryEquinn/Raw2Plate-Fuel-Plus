@@ -1,10 +1,9 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import React from 'react'
-import IconMA from 'react-native-vector-icons/MaterialIcons';
-import { LightMode } from 'assets/colors/LightMode'
-import PropTypes from 'prop-types'
+import { LightMode } from 'assets/colors/LightMode';
 import { useFontFromContext } from 'context/FontProvider';
-import Spacer from './Spacer';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import IconMA from 'react-native-vector-icons/MaterialIcons';
 
 export default function AddTimerHoriCard( { onPress }: any ) {
   const { fontsLoaded } = useFontFromContext()
