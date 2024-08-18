@@ -8,12 +8,12 @@ import IconMA from 'react-native-vector-icons/MaterialIcons';
 
 export default function TimerHoriCard( { heading, timeInSec, isRunning }: any ) {
   const defaultImage: any = {
-    baking: require( "../assets/images/baking.png" ),
-    boiling: require( "../assets/images/boiling.png" ),
-    simmering: require( "../assets/images/simmering.png" ),
-    marinating: require( "../assets/images/marinating.png" ),
-    proofing: require( "../assets/images/proofing.png" ),
-    resting: require( "../assets/images/resting.png" )
+    baking: require( "../assets/images/icons/baking.png" ),
+    boiling: require( "../assets/images/icons/boiling.png" ),
+    simmering: require( "../assets/images/icons/simmering.png" ),
+    marinating: require( "../assets/images/icons/marinating.png" ),
+    proofing: require( "../assets/images/icons/proofing.png" ),
+    resting: require( "../assets/images/icons/resting.png" )
   }
 
   const [ remain, setRemain ] = useState( timeInSec )
@@ -58,7 +58,7 @@ export default function TimerHoriCard( { heading, timeInSec, isRunning }: any ) 
         <View style={ s.iconWrapper }>
           <Image
             resizeMode="cover"
-            source={ defaultImage[ heading.toLowerCase() ] || require( "../assets/images/timer.png" ) }
+            source={ defaultImage[ heading.toLowerCase() ] || require( "../assets/images/icons/timer.png" ) }
             style={ s.image }
           />
         </View>

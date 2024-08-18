@@ -110,7 +110,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
           <View style={ s.imageWrapper }>
             <Image 
               resizeMode="cover"
-              source={ require( "../../assets/images/linguine.jpg" ) }
+              source={ require( "../../assets/images/placeholders/linguine.jpg" ) }
               style={ s.image }
             />
           </View>
@@ -131,7 +131,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
             <View style={ s.sectionContainer }>
               <Image 
                 resizeMode="cover"
-                source={ require( "../../assets/images/warning.png" ) }
+                source={ require( "../../assets/images/icons/warning.png" ) }
                 style={ s.icon }
               />
 
@@ -155,7 +155,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
             <View style={ s.sectionContainer }>
               <Image 
                 resizeMode="cover"
-                source={ require( "../../assets/images/ingredients.png" ) }
+                source={ require( "../../assets/images/icons/ingredients.png" ) }
                 style={ s.icon }
               />
 
@@ -177,7 +177,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
             <View style={ s.sectionContainer }>
               <Image 
                 resizeMode="cover"
-                source={ require( "../../assets/images/recipe.png" ) }
+                source={ require( "../../assets/images/icons/recipe.png" ) }
                 style={ s.icon }
               />
 

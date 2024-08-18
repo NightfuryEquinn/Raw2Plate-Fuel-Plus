@@ -63,7 +63,7 @@ export default function Profile() {
                   resizeMode="cover"
                   style={ s.image }
                   source={ 
-                    image ? { uri: image } : require( "../assets/images/profile_placeholder.jpg" ) }
+                    image ? { uri: image } : require( "../assets/images/placeholders/profile_placeholder.jpg" ) }
                 />
               </TouchableOpacity>
 

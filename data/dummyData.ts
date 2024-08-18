@@ -33,6 +33,7 @@ export type ForTimer = {
 export type ForMainTracker = {
   id: number,
   name: string,
+  meal: string,
   calories: number,
   carbo: number,
   protein: number,
@@ -47,42 +48,42 @@ export type ForMainTracker = {
 export const forCalendarOverview: ForCalendarOverview[] = [
   {
     "id": 1,
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "heading": "Brill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "sub": "Est. Cooking Time", 
     "desc": "30 mins"
   },
   {
     "id": 2,
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "sub": "Est. Cooking Time", 
     "desc": "30 mins"
   },
   {
     "id": 3,
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "heading": "Drill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "sub": "Est. Cooking Time", 
     "desc": "30 mins"
   },
   {
     "id": 4,
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "sub": "Est. Cooking Time", 
     "desc": "30 mins"
   },
   {
     "id": 5,
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "sub": "Est. Cooking Time", 
     "desc": "30 mins"
   },
   {
     "id": 6,
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "sub": "Est. Cooking Time", 
     "desc": "30 mins"
@@ -92,32 +93,32 @@ export const forCalendarOverview: ForCalendarOverview[] = [
 export const forViewCalendar: ForViewCalendar[] = [
   {
     "id": 1,
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "heading": "Brill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
   },
   {
     "id": 2,
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
   },
   {
     "id": 3,
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "heading": "Drill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
   },
   {
     "id": 4,
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
   },
   {
     "id": 5,
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
   },
   {
     "id": 6,
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
   },
 ]
@@ -125,7 +126,7 @@ export const forViewCalendar: ForViewCalendar[] = [
 export const forRecipeManager: ForRecipeManager[] = [
   {
     "id": 1,
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "heading": "Brill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "meal": "BKF",
     "date": "29-07-2024",
@@ -133,7 +134,7 @@ export const forRecipeManager: ForRecipeManager[] = [
   },
   {
     "id": 2,
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "meal": "BKF",
     "date": "31-07-2024",
@@ -141,7 +142,7 @@ export const forRecipeManager: ForRecipeManager[] = [
   },
   {
     "id": 3,
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "heading": "Drill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "meal": "LUN",
     "date": "31-07-2024",
@@ -149,7 +150,7 @@ export const forRecipeManager: ForRecipeManager[] = [
   },
   {
     "id": 4,
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "meal": "LUN",
     "date": "31-07-2024",
@@ -157,7 +158,7 @@ export const forRecipeManager: ForRecipeManager[] = [
   },
   {
     "id": 5,
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "meal": "TEA",
     "date": "02-08-2024",
@@ -165,7 +166,7 @@ export const forRecipeManager: ForRecipeManager[] = [
   },
   {
     "id": 6,
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
     "meal": "DIN",
     "date": "02-08-2024",
@@ -228,6 +229,7 @@ export const forMainTracker: ForMainTracker[] = [
   {
     "id": 1,
     "name": "Grilled Chicken Salad",
+    "meal": "BKF", 
     "calories": 350,
     "carbo": 15, 
     "protein": 30, 
@@ -243,12 +245,13 @@ export const forMainTracker: ForMainTracker[] = [
       "iron": 2, 
       "magnesium": 60, 
     },
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "date": "15-08-2024",
   },
   {
     "id": 2,
     "name": "Quinoa & Avocado Bowl",
+    "meal": "BRU", 
     "calories": 420,
     "carbo": 55, 
     "protein": 12, 
@@ -264,12 +267,13 @@ export const forMainTracker: ForMainTracker[] = [
       "iron": 3, 
       "magnesium": 90, 
     },
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "date": "15-08-2024",
   },
   {
     "id": 3,
     "name": "Vegetable Stir-Fry",
+    "meal": "BRU", 
     "calories": 300,
     "carbo": 40, 
     "protein": 10, 
@@ -285,12 +289,13 @@ export const forMainTracker: ForMainTracker[] = [
       "iron": 4, 
       "magnesium": 80, 
     },
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/linguine.jpg" ), 
     "date": "16-08-2024",
   },
   {
     "id": 4,
     "name": "Baked Salmon with Asparagus",
+    "meal": "LUN", 
     "calories": 450,
     "carbo": 5, 
     "protein": 40, 
@@ -306,12 +311,13 @@ export const forMainTracker: ForMainTracker[] = [
       "iron": 1, 
       "magnesium": 30, 
     },
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "date": "16-08-2024",
   },
   {
     "id": 5,
     "name": "Fruit Smoothie",
+    "meal": "DIN", 
     "calories": 250,
     "carbo": 50, 
     "protein": 5, 
@@ -327,7 +333,7 @@ export const forMainTracker: ForMainTracker[] = [
       "iron": 0.5, 
       "magnesium": 20, 
     },
-    "image": require( "../assets/images/garlic_salmon.jpg" ), 
+    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "date": "17-08-2024",
   }
 ]

@@ -21,10 +21,10 @@ export default function TrackerPieChart( { carbs, proteins, fibers, fats }: any 
   }
 
   const iconsArr: ImageSourcePropType[] = [
-    require( "../assets/images/carbs.png" ),
-    require( "../assets/images/proteins.png" ),
-    require( "../assets/images/fibers.png" ),
-    require( "../assets/images/fats.png" ),
+    require( "../assets/images/nutrients/carb.png" ),
+    require( "../assets/images/nutrients/protein.png" ),
+    require( "../assets/images/nutrients/fiber.png" ),
+    require( "../assets/images/nutrients/fat.png" ),
   ]
   
   const chartData = [ carbs, proteins, fibers, fats ]

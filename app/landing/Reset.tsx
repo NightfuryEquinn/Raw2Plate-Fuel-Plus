@@ -38,7 +38,7 @@ export default function Reset() {
           <ScrollView showsVerticalScrollIndicator={ false }>
             <Image 
               style={ s.image }
-              source={ require( "../../assets/images/white_no_text.png" ) } 
+              source={ require( "../../assets/images/logos/white_no_text.png" ) } 
             />
 
             <Text style={ s.heading }>Explore our Recipes</Text>

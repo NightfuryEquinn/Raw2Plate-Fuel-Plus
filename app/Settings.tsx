@@ -15,14 +15,14 @@ export default function Settings() {
 
   const getPreciseLocationImage = () => {
     return foreground || background 
-      ? require( "../assets/images/checked.png" )
-      : require( "../assets/images/cancel.png" ) 
+      ? require( "../assets/images/icons/checked.png" )
+      : require( "../assets/images/icons/cancel.png" ) 
   }
 
   const getMicrophoneImage = () => {
     return microphone
-    ? require( "../assets/images/checked.png" )
-    : require( "../assets/images/cancel.png" ) 
+    ? require( "../assets/images/icons/checked.png" )
+    : require( "../assets/images/icons/cancel.png" ) 
   }
 
   const openDeviceSettings = ( text: string ) => {
@@ -93,7 +93,7 @@ export default function Settings() {
               <Image 
                 resizeMode="cover"
                 style={ s.image }
-                source={ require( "../assets/images/map.png" ) }
+                source={ require( "../assets/images/icons/map.png" ) }
               />
 
               <Text style={ s.sub }>Precision Location</Text>
@@ -113,7 +113,7 @@ export default function Settings() {
               <Image 
                 resizeMode="cover"
                 style={ s.image }
-                source={ require( "../assets/images/microphone.png" ) }
+                source={ require( "../assets/images/icons/microphone.png" ) }
               />
 
               <Text style={ s.sub }>Microphone Access for Voice Recognition</Text>

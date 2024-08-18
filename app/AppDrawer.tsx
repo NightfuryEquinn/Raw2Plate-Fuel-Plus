@@ -25,7 +25,7 @@ export default function AppDrawer( props: any ) {
       <View style={ s.container }>
         <Image 
           resizeMode="cover"
-          source={ require( "../assets/images/white_text.png" ) }
+          source={ require( "../assets/images/logos/white_text.png" ) }
           style={ s.image }
         />
       </View>

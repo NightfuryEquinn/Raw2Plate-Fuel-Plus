@@ -199,7 +199,6 @@ export default function MainTracker( { navigation }: any ) {
             </View>
           }
           
-          
           <Spacer size={ 20 } />
 
           <View style={ s.mainNutrients }>
@@ -207,7 +206,7 @@ export default function MainTracker( { navigation }: any ) {
               <View style={ s.sectionWrapper }>
                 <Image 
                   resizeMode="contain"
-                  source={ require( "../../assets/images/carbs.png" ) }
+                  source={ require( "../../assets/images/nutrients/carb.png" ) }
                   style={ s.image }
                 />
 
@@ -221,7 +220,7 @@ export default function MainTracker( { navigation }: any ) {
               <View style={ s.sectionWrapper }>
                 <Image 
                   resizeMode="contain"
-                  source={ require( "../../assets/images/proteins.png" ) }
+                  source={ require( "../../assets/images/nutrients/protein.png" ) }
                   style={ s.image }
                 />
 
@@ -235,7 +234,7 @@ export default function MainTracker( { navigation }: any ) {
               <View style={ s.sectionWrapper }>
                 <Image 
                   resizeMode="contain"
-                  source={ require( "../../assets/images/fibers.png" ) }
+                  source={ require( "../../assets/images/nutrients/fiber.png" ) }
                   style={ s.image }
                 />
 
@@ -249,7 +248,7 @@ export default function MainTracker( { navigation }: any ) {
               <View style={ s.sectionWrapper }>
                 <Image 
                   resizeMode="contain"
-                  source={ require( "../../assets/images/fats.png" ) }
+                  source={ require( "../../assets/images/nutrients/fat.png" ) }
                   style={ s.image }
                 />
 

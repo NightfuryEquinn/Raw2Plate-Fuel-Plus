@@ -10,10 +10,10 @@
     "backgroundColor": "#FAFAFA",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/white_no_text.png",
+    "icon": "./assets/images/logos/white_no_text.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/white_text.png",
+      "image": "./assets/images/logos/white_text.png",
       "resizeMode": "contain",
       "backgroundColor": "#fafafa"
     },
@@ -22,7 +22,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/white_no_text.png",
+        "foregroundImage": "./assets/images/logos/white_no_text.png",
         "backgroundColor": "#fafafa"
       },
       "permissions": [
@@ -31,7 +31,7 @@
       "package": "com.nightfuryequinn.Raw2PlateFuelPlus"
     },
     "web": {
-      "favicon": "./assets/images/white_no_text.png"
+      "favicon": "./assets/images/logos/white_no_text.png"
     },
     "plugins": [
       "@wdragon/react-native-voice"

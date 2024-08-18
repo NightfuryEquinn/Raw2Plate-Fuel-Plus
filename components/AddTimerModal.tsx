@@ -13,27 +13,27 @@ export default function AddTimerModal( { modal, showModal, hour, min, sec, purpo
   const options: any[] = [
     { 
       purpose: "Baking",
-      icon: require( "../assets/images/baking.png" ),
+      icon: require( "../assets/images/icons/baking.png" ),
     },
     {
       purpose: "Boiling",
-      icon: require( "../assets/images/boiling.png" ),
+      icon: require( "../assets/images/icons/boiling.png" ),
     },
     {
       purpose: "Simmering",
-      icon: require( "../assets/images/simmering.png" ),
+      icon: require( "../assets/images/icons/simmering.png" ),
     },
     {
       purpose: "Marinating",
-      icon: require( "../assets/images/marinating.png" ),
+      icon: require( "../assets/images/icons/marinating.png" ),
     },
     {
       purpose: "Proofing",
-      icon: require( "../assets/images/proofing.png" ),
+      icon: require( "../assets/images/icons/proofing.png" ),
     },
     {
       purpose: "Resting",
-      icon: require( "../assets/images/resting.png" )
+      icon: require( "../assets/images/icons/resting.png" )
     },
     {
       purpose: "Others",

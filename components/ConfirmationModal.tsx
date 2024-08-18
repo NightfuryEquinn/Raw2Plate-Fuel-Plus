@@ -29,7 +29,7 @@ export default function ConfirmationModal( { modal, showModal, message, onCancel
             >
               <Image 
                 resizeMode="cover"
-                source={ require( "../assets/images/cancel.png" ) }
+                source={ require( "../assets/images/icons/cancel.png" ) }
                 style={ s.image }
               />
             </TouchableOpacity>
@@ -40,7 +40,7 @@ export default function ConfirmationModal( { modal, showModal, message, onCancel
             >
               <Image 
                 resizeMode="cover"
-                source={ require( "../assets/images/checked.png" ) }
+                source={ require( "../assets/images/icons/checked.png" ) }
                 style={ s.image }
               />
             </TouchableOpacity>

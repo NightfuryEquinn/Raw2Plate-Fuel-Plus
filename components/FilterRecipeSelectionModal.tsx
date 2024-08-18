@@ -87,7 +87,7 @@ export default function FilterRecipeSelectionModal( {
 
                 <View style={ s.ingredientContainer }>
                   <Image 
-                    source={ require( "../assets/images/checked.png" ) }
+                    source={ require( "../assets/images/icons/checked.png" ) }
                     style={ s.image }
                   />
 
@@ -117,7 +117,7 @@ export default function FilterRecipeSelectionModal( {
 
                 <View style={ s.ingredientContainer }>
                   <Image 
-                    source={ require( "../assets/images/cancel.png" ) }
+                    source={ require( "../assets/images/icons/cancel.png" ) }
                     style={ s.image }
                   />
 
