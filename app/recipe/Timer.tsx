@@ -34,7 +34,7 @@ export default function Timer() {
 
   if ( !fontsLoaded ) {
     return null
-  }
+  } 
   
   return (
     <SafeAreaView style={ s.container }>        

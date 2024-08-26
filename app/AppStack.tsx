@@ -25,6 +25,13 @@ import AllNutrients from './tracker/AllNutrients'
 import MainTracker from './tracker/MainTracker'
 import ManualAdd from './tracker/ManualAdd'
 import MoreDetails from './tracker/MoreDetails'
+import BrowseStore from './grocery/BrowseStore'
+import InStore from './grocery/InStore'
+import InCart from './grocery/InCart'
+import Payment from './grocery/Payment'
+import GroceryList from './grocery/GroceryList'
+import ActiveOrder from './grocery/ActiveOrder'
+import HistoryOrder from './grocery/HistoryOrder'
 
 const Tab = createMaterialBottomTabNavigator()
 const Drawer = createDrawerNavigator()
@@ -216,6 +223,72 @@ const MainStack = () => {
           )
         }}
       />
+      <Drawer.Screen 
+        name="Grocery List" 
+        component={ GroceryList } 
+        options={{
+          drawerLabelStyle: {
+            marginLeft: -10,
+            fontFamily: "cantarell", 
+            fontWeight: 900, 
+            fontSize: 14 
+          },
+          drawerActiveBackgroundColor: LightMode.darkGrey,
+          drawerActiveTintColor: LightMode.black,
+          drawerInactiveTintColor: LightMode.halfBlack,
+          drawerIcon: ({ color }) => (
+            <IconMA 
+              name="checklist"
+              color={ color }
+              size={ 24 }
+            />
+          )
+        }}
+      />
+      <Drawer.Screen 
+        name="Active Order" 
+        component={ ActiveOrder } 
+        options={{
+          drawerLabelStyle: {
+            marginLeft: -10,
+            fontFamily: "cantarell", 
+            fontWeight: 900, 
+            fontSize: 14 
+          },
+          drawerActiveBackgroundColor: LightMode.darkGrey,
+          drawerActiveTintColor: LightMode.black,
+          drawerInactiveTintColor: LightMode.halfBlack,
+          drawerIcon: ({ color }) => (
+            <IconMA 
+              name="delivery-dining"
+              color={ color }
+              size={ 24 }
+            />
+          )
+        }}
+      />
+      <Drawer.Screen 
+        name="Order History" 
+        component={ HistoryOrder } 
+        options={{
+          drawerLabelStyle: {
+            marginLeft: -10,
+            fontFamily: "cantarell", 
+            fontWeight: 900, 
+            fontSize: 14 
+          },
+          drawerActiveBackgroundColor: LightMode.darkGrey,
+          drawerActiveTintColor: LightMode.black,
+          drawerInactiveTintColor: LightMode.halfBlack,
+          drawerIcon: ({ color }) => (
+            <IconMA 
+              name="history"
+              color={ color }
+              size={ 24 }
+            />
+          )
+        }}
+      />
     </Drawer.Navigator>
   )
 }
@@ -271,6 +344,20 @@ const BottomTab = () => {
           )
         }}
       />
+
+      <Tab.Screen 
+        name="GROCERY"
+        component={ GroceryStack }
+        options={{
+          tabBarIcon: ({ color }) => (
+            <IconMA 
+              name="shopping-bag"
+              color={ color }
+              size={ 28 }
+            />
+          )
+        }}
+      />
     </Tab.Navigator>
   )
 }
@@ -311,6 +398,17 @@ const TrackerStack = () => {
     <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="MainTracker">
       <Stack.Screen name="MainTracker" component={ MainTracker } />
       <Stack.Screen name="ManualAdd" component={ ManualAdd } />
+    </Stack.Navigator>
+  )
+}
+
+const GroceryStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="BrowseStore">
+      <Stack.Screen name="BrowseStore" component={ BrowseStore } />
+      <Stack.Screen name="InStore" component={ InStore } />
+      <Stack.Screen name="InCart" component={ InCart } />
+      <Stack.Screen name="Payment" component={ Payment } />
     </Stack.Navigator>
   )
 }

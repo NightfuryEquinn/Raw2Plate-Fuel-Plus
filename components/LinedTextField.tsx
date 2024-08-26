@@ -5,7 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import IconMA from 'react-native-vector-icons/MaterialIcons';
 
-export default function LinedTextField( { name, placeholder, secure, text, setText }: any ) {  
+export default function LinedTextField( { name, placeholder, secure, text, setText, number }: any ) {  
   return (
     <View style={ s.container }>
       <View style={ s.wrapper }>
@@ -28,6 +28,7 @@ export default function LinedTextField( { name, placeholder, secure, text, setTe
           value={ text }
           onChangeText={ text => setText( text ) }
           secureTextEntry={ secure }
+          keyboardType={ number ? "number-pad" : "default" }
         />
       </View>
     </View>
@@ -57,10 +58,12 @@ LinedTextField.propTypes = {
   name: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
   secure: PropTypes.bool,
+  number: PropTypes.bool,
   text: PropTypes.string.isRequired,
   setText: PropTypes.func.isRequired
 }
 
 LinedTextField.defaultProps = {
-  secure: false
+  secure: false,
+  number: false,
 }
