@@ -1,4 +1,4 @@
-export const dykDataArr: string[] = [
+export const doYouKnowArr: string[] = [
   "You can use a trouser hanger to hold your recipe book.",
   "You can use toilet paper tubes to make seed starter pots.",
   "You can freeze grapes to chill wine without watering it down.",

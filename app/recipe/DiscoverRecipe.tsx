@@ -62,6 +62,7 @@ export default function DiscoverRecipe( { navigation }: any ) {
 
   const SearchItem = ( { item, index }: any ) => (
     <HoriCardWithCTA 
+      key={ index }
       onPress={ () => navigation.navigate( "RecipeDetail" ) }
       data={ item }
     />
@@ -155,7 +156,7 @@ export default function DiscoverRecipe( { navigation }: any ) {
               <FlatList
                 key={ index }
                 contentContainerStyle={{ padding: 20 }}
-                showsVerticalScrollIndicator= { false }
+                showsVerticalScrollIndicator={ false }
                 data={ forRecipeManager }
                 renderItem={ SearchItem }
                 keyExtractor={ data => data.id.toString() }

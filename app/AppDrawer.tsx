@@ -1,7 +1,7 @@
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer'
 import { LightMode } from 'assets/colors/LightMode'
 import { useFontFromContext } from 'context/FontProvider'
-import { dykDataArr } from 'data/dykData'
+import { doYouKnowArr } from 'data/doYouKnow'
 import React, { useEffect, useState } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -16,8 +16,8 @@ export default function AppDrawer( props: any ) {
   }
   
   useEffect(() => {
-    const randomIndex = Math.floor( Math.random() * dykDataArr.length )
-    setRandomText( dykDataArr[ randomIndex ] )
+    const randomIndex = Math.floor( Math.random() * doYouKnowArr.length )
+    setRandomText( doYouKnowArr[ randomIndex ] )
   }, [])
 
   return (
