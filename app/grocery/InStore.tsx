@@ -1,9 +1,12 @@
 import { LightMode } from 'assets/colors/LightMode'
 import AbsoluteIcon from 'components/AbsoluteIcon'
+import FilterGroceryCategoryModal from 'components/FilterGroceryCategoryModal'
+import GroceryCard from 'components/GroceryCard'
 import LinedTextField from 'components/LinedTextField'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
+import { GroceryItemCategory, groceryItemCategory } from 'data/groceryItemCategory'
 import React, { useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Animated, { Extrapolation, interpolate, useAnimatedRef, useAnimatedStyle, useScrollViewOffset } from 'react-native-reanimated'
@@ -16,13 +19,27 @@ export default function InStore( { navigation, route }: any ) {
   const { storeData } = route.params
 
   const [ search, setSearch ] = useState( "" )
+  const [ category, setCategory ] = useState( "" )
+  const [ quantity, setQuantity ] = useState( 1 )
+
   const [ modal, setModal ] = useState( false )
+  const [ singleModal, setSingleModal ] = useState( false )
+
+  const filteredItems = groceryItemCategory.filter( data => 
+    data.name.toLowerCase().includes( search.toLowerCase() )
+  ).filter( data => 
+    category === "" || data.category.toLowerCase() === category.toLowerCase()
+  )
 
   const scrollRef = useAnimatedRef<Animated.ScrollView>()
   const scrollOffset = useScrollViewOffset( scrollRef )
 
   const showModal = () => {
     setModal( !modal )
+  }
+
+  const showCategory = ( theCategory: string ) => {
+    setCategory( theCategory )
   }
 
   const imageAnimatedStyle = useAnimatedStyle(() => {
@@ -32,7 +49,7 @@ export default function InStore( { navigation, route }: any ) {
           translateY: interpolate(
             scrollOffset.value,
             [ -IMG_HEIGHT, 0, IMG_HEIGHT ],
-            [ -IMG_HEIGHT / 2, 0, IMG_HEIGHT * 0.75 ]
+            [ -IMG_HEIGHT / 2, 0, IMG_HEIGHT * 1.25 ]
           )
         },
         { scale: interpolate(
@@ -50,20 +67,20 @@ export default function InStore( { navigation, route }: any ) {
     return {
       height: interpolate(
         scrollOffset.value,
-        [ 0, IMG_HEIGHT / 0.5 ],
+        [ 0, IMG_HEIGHT ],
         [ 0, 35 ],
         Extrapolation.CLAMP
       ),
       opacity: interpolate(
         scrollOffset.value,
-        [ 0, IMG_HEIGHT / 0.25 ],
+        [ 0, IMG_HEIGHT ],
         [ 0, 1 ]
       ),
       transform: [
         {
           translateY: interpolate(
             scrollOffset.value,
-            [ 0, IMG_HEIGHT / 0.5 ],
+            [ 0, IMG_HEIGHT ],
             [ -35, 0 ],
             Extrapolation.CLAMP
           )
@@ -121,6 +138,8 @@ export default function InStore( { navigation, route }: any ) {
             ref={ scrollRef }
             scrollEventThrottle={ 16 }
             showsVerticalScrollIndicator={ false }
+            contentContainerStyle={{ paddingHorizontal: 20 }}
+            style={ s.scroll }
           >
             <Animated.Image 
               resizeMode="cover"
@@ -128,8 +147,16 @@ export default function InStore( { navigation, route }: any ) {
               style={[ s.image, imageAnimatedStyle ]}
             />
 
-            <View style={{ height: 2000 }}>
-
+            <View style={ s.itemContainer }>
+              {
+                filteredItems.map(( data: GroceryItemCategory, index: number ) => (
+                  <GroceryCard
+                    key={ index }
+                    data={ data }
+                    onPress={ () => console.log( "Show modal" ) }
+                  />
+                ))
+              }
             </View>
           </Animated.ScrollView>
         </View>
@@ -138,6 +165,13 @@ export default function InStore( { navigation, route }: any ) {
       <AbsoluteIcon 
         name="shopping-cart"
         onPress={ () => navigation.navigate( "InCart" ) }
+      />
+
+      <FilterGroceryCategoryModal 
+        modal={ modal }
+        showModal={ showModal }
+        category={ category }
+        showCategory={ showCategory }
       />
     </SafeAreaView>
   )
@@ -157,10 +191,14 @@ const s = StyleSheet.create({
   "parallaxContainer": {
     flex: 1,
   },
+  "scroll": {
+    marginHorizontal: -20,
+  },
   "image": {
     width: "auto",
     height: IMG_HEIGHT,
     borderRadius: 10,
+    
   },
   "searchContainer": {
     flexDirection: "row",
@@ -182,5 +220,14 @@ const s = StyleSheet.create({
     shadowOpacity: 0.375,
     shadowRadius: 6,
     elevation: 10,
-  }, 
+  },
+  "itemContainer": {
+    paddingTop: 20,
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    columnGap: 30,
+    rowGap: 20,
+    backgroundColor: LightMode.white
+  }
 })
