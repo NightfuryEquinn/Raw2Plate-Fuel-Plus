@@ -58,7 +58,6 @@ const s = StyleSheet.create({
     height: 100,
     borderRadius: 10,
     backgroundColor: "#FFFFFF",
-    
   },
   "price": {
     fontFamily: "cantarell",

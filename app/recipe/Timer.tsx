@@ -19,7 +19,8 @@ export default function Timer() {
   const [ active, setActive ] = useState( 0 )
   
   const TimerItem = ( { item, index }: any ) => (
-    <TimerHoriCard 
+    <TimerHoriCard
+      key={ index }
       heading={ item.heading }
       timeInSec={ item.timeInSec }
       isRunning={ item.isRunning }

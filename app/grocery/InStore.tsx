@@ -3,12 +3,13 @@ import AbsoluteIcon from 'components/AbsoluteIcon'
 import FilterGroceryCategoryModal from 'components/FilterGroceryCategoryModal'
 import GroceryCard from 'components/GroceryCard'
 import LinedTextField from 'components/LinedTextField'
+import SingleGroceryCardModal from 'components/SingleGroceryCardModal'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
 import { GroceryItemCategory, groceryItemCategory } from 'data/groceryItemCategory'
 import React, { useState } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Animated, { Extrapolation, interpolate, useAnimatedRef, useAnimatedStyle, useScrollViewOffset } from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
@@ -23,6 +24,8 @@ export default function InStore( { navigation, route }: any ) {
   const [ quantity, setQuantity ] = useState( 1 )
 
   const [ modal, setModal ] = useState( false )
+
+  const [ singleData, setSingleData ] = useState( [] )
   const [ singleModal, setSingleModal ] = useState( false )
 
   const filteredItems = groceryItemCategory.filter( data => 
@@ -40,6 +43,11 @@ export default function InStore( { navigation, route }: any ) {
 
   const showCategory = ( theCategory: string ) => {
     setCategory( theCategory )
+  }
+
+  const showSingleModal = ( theSingleData: any ) => {
+    setSingleModal( !singleModal )
+    setSingleData( theSingleData )
   }
 
   const imageAnimatedStyle = useAnimatedStyle(() => {
@@ -148,14 +156,26 @@ export default function InStore( { navigation, route }: any ) {
             />
 
             <View style={ s.itemContainer }>
-              {
-                filteredItems.map(( data: GroceryItemCategory, index: number ) => (
-                  <GroceryCard
-                    key={ index }
-                    data={ data }
-                    onPress={ () => console.log( "Show modal" ) }
+              { 
+                filteredItems.length !== 0 ? (
+                  filteredItems.map(( data: GroceryItemCategory, index: number ) => (
+                    <GroceryCard
+                      key={ index }
+                      data={ data }
+                      onPress={ () => showSingleModal( data ) }
+                    />
+                  ))
+                )  
+                :
+                <View style={ s.emptyContainer }>
+                  <Image 
+                    source={ require( "../../assets/images/icons/cancel.png" ) }
+                    resizeMode="cover"
+                    style={ s.emptyIcon }
                   />
-                ))
+
+                  <Text style={ s.emptyText }>No products of this category available in this store...</Text>
+                </View>
               }
             </View>
           </Animated.ScrollView>
@@ -172,6 +192,17 @@ export default function InStore( { navigation, route }: any ) {
         showModal={ showModal }
         category={ category }
         showCategory={ showCategory }
+      />
+
+      <SingleGroceryCardModal
+        data={ singleData }
+        modal={ singleModal }
+        showModal={ () => {
+          showSingleModal( singleData )
+          setQuantity( 1 )
+        }}
+        quantity={ quantity }
+        setQuantity={ setQuantity }
       />
     </SafeAreaView>
   )
@@ -198,7 +229,6 @@ const s = StyleSheet.create({
     width: "auto",
     height: IMG_HEIGHT,
     borderRadius: 10,
-    
   },
   "searchContainer": {
     flexDirection: "row",
@@ -229,5 +259,25 @@ const s = StyleSheet.create({
     columnGap: 30,
     rowGap: 20,
     backgroundColor: LightMode.white
+  },
+  "emptyContainer": {
+    flex: 1,
+    gap: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    backgroundColor: LightMode.darkGrey,
+    borderRadius: 10
+  },
+  "emptyIcon": {
+    height: 44,
+    width: 44
+  },
+  "emptyText": {
+    paddingHorizontal: 20,
+    fontFamily: "cantarell",
+    fontSize: 16,
+    color: LightMode.black,
+    textAlign: "center"
   }
 })
