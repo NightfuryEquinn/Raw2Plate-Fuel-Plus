@@ -5,6 +5,7 @@ export const LightMode = {
   lightYellow: "#FFE099",
   yellow: "#FFB200",
   blue: "#87D4E9",
+  visaBlue: "#1434CB",
   green: "#D7F498",
   darkGreen: "#96BA49",
   red: "#EB4335",

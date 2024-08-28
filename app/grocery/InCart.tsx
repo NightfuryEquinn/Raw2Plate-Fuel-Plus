@@ -78,7 +78,7 @@ export default function InCart( { navigation, route }: any ) {
 
         <TouchableOpacity
           activeOpacity={ 0.5 }
-          onPress={ () => navigation.navigate( "Payment" ) }
+          onPress={ () => navigation.navigate( "Payment", { theCart: theCart, total: total } ) }
           style={ s.paymentContainer }
         >
           <Text style={ s.payment }>Proceed to Payment</Text>
