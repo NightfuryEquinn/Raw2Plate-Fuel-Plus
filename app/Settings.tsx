@@ -9,9 +9,16 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function Settings() {
   const pkg = require( "../package.json" )
+  const [ darkMode, setDarkMode ] = useState( false )
   const [ foreground, setForeground ] = useState( false )
   const [ background, setBackground ] = useState( false )
   const [ microphone, setMicrophone ] = useState( false )
+
+  const getDarkMode = () => {
+    return darkMode
+      ? require( "../assets/images/icons/checked.png" )
+      : require( "../assets/images/icons/cancel.png" ) 
+  }
 
   const getPreciseLocationImage = () => {
     return foreground || background 
@@ -34,6 +41,14 @@ export default function Settings() {
         { text: "Open Settings", onPress: () => Linking.openSettings() }
       ]
     )
+  }
+
+  const toggleDarkMode = () => {
+    if ( darkMode ) {
+      setDarkMode( false )
+    } else {
+      setDarkMode( true )
+    }
   }
 
   const toggleLocation = async () => {
@@ -88,6 +103,26 @@ export default function Settings() {
         <Spacer size={ 20 } />
 
         <View style={ s.settingContainer }>
+          <View style={ s.setting }>
+            <View style={ s.leftSetting }>
+              <Image 
+                resizeMode="cover"
+                style={ s.image }
+                source={ require( "../assets/images/icons/dark_mode.png" ) }
+              />
+
+              <Text style={ s.sub }>Dark Mode</Text>
+            </View>
+
+            <TouchableOpacity activeOpacity={ 0.5 } onPress={ toggleDarkMode }>
+              <Image 
+                resizeMode="cover"
+                style={ s.image }
+                source={ getDarkMode() }
+              />
+            </TouchableOpacity>
+          </View>
+
           <View style={ s.setting }>
             <View style={ s.leftSetting }>
               <Image 

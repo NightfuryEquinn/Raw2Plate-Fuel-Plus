@@ -7,6 +7,7 @@ import SingleGroceryCardModal from 'components/SingleGroceryCardModal'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
+import { forInCart } from 'data/dummyData'
 import { GroceryItemCategory, groceryItemCategory } from 'data/groceryItemCategory'
 import React, { useState } from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
@@ -184,7 +185,7 @@ export default function InStore( { navigation, route }: any ) {
 
       <AbsoluteIcon 
         name="shopping-cart"
-        onPress={ () => navigation.navigate( "InCart" ) }
+        onPress={ () => navigation.navigate( "InCart", { theCart: forInCart[ 1 ] } ) }
       />
 
       <FilterGroceryCategoryModal 

@@ -6,6 +6,7 @@ import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
 import { browseStoreCategories } from 'data/browseStoreCategory'
+import { forInCart } from 'data/dummyData'
 import React, { useState } from 'react'
 import { FlatList, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -64,7 +65,7 @@ export default function BrowseStore( { navigation }: any ) {
 
       <AbsoluteIcon 
         name="shopping-cart"
-        onPress={ () => navigation.navigate( "InCart" ) }
+        onPress={ () => navigation.navigate( "InCart", { theCart: forInCart[ 0 ] } ) }
       />
     </SafeAreaView>
   )

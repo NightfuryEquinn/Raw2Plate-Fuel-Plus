@@ -1,4 +1,6 @@
 import { ImageSourcePropType } from "react-native";
+import { browseStoreCategories, BrowseStoreCategory } from "./browseStoreCategory";
+import { groceryItemCategory, GroceryItemCategory } from "./groceryItemCategory";
 
 export type ForCalendarOverview = {
   id: number,
@@ -43,6 +45,24 @@ export type ForMainTracker = {
   minerals: {},
   image: ImageSourcePropType,
   date: string,
+}
+
+export type ForGroceryList = {
+  id: number,
+  name: string,
+  checked: boolean
+}
+
+export type CartItem = {
+  id: number,
+  item: GroceryItemCategory,
+  quantity: number
+}
+
+export type ForInCart = {
+  id: number,
+  theStore: BrowseStoreCategory,
+  items: CartItem[]
 }
 
 export const forCalendarOverview: ForCalendarOverview[] = [
@@ -335,5 +355,93 @@ export const forMainTracker: ForMainTracker[] = [
     },
     "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "date": "17-08-2024",
+  }
+]
+
+export const forGroceryList: ForGroceryList[] = [
+  {
+    id: 1,
+    name: "Bread",
+    checked: true
+  },
+  {
+    id: 2,
+    name: "Grill Garlic Salmon with Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables",
+    checked: false
+  },
+  {
+    id: 3,
+    name: "Bread",
+    checked: true
+  },
+  {
+    id: 4,
+    name: "Bread",
+    checked: true
+  }
+]
+
+export const forInCart: ForInCart[] = [
+  {
+    id: 1,
+    theStore: browseStoreCategories[ 0 ],
+    items: [
+      {
+        id: 1,
+        item: groceryItemCategory[ 0 ],
+        quantity: 2
+      },
+      {
+        id: 2,
+        item: groceryItemCategory[ 3 ],
+        quantity: 1
+      },
+      {
+        id: 3,
+        item: groceryItemCategory[ 6 ],
+        quantity: 8
+      },
+      {
+        id: 4,
+        item: groceryItemCategory[ 8 ],
+        quantity: 5
+      },
+      {
+        id: 5,
+        item: groceryItemCategory[ 10 ],
+        quantity: 34
+      }
+    ]
+  },
+  {
+    id: 2,
+    theStore: browseStoreCategories[ 3 ],
+    items: [
+      {
+        id: 1,
+        item: groceryItemCategory[ 0 ],
+        quantity: 2
+      },
+      {
+        id: 2,
+        item: groceryItemCategory[ 3 ],
+        quantity: 1
+      },
+      {
+        id: 3,
+        item: groceryItemCategory[ 6 ],
+        quantity: 8
+      },
+      {
+        id: 4,
+        item: groceryItemCategory[ 8 ],
+        quantity: 5
+      },
+      {
+        id: 5,
+        item: groceryItemCategory[ 10 ],
+        quantity: 34
+      }
+    ]
   }
 ]
