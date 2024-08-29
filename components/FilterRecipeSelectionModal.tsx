@@ -62,6 +62,7 @@ export default function FilterRecipeSelectionModal( {
                   }}
                   zIndex={ 3000 }
                   zIndexInverse={ 1000 }
+                  searchable={ true }
                 />
               </View>
 
@@ -83,6 +84,7 @@ export default function FilterRecipeSelectionModal( {
                   }}
                   zIndex={ 2000 }
                   zIndexInverse={ 2000 }
+                  searchable={ true }
                 />
 
                 <View style={ s.ingredientContainer }>
@@ -113,6 +115,7 @@ export default function FilterRecipeSelectionModal( {
                   }}
                   zIndex={ 1000 }
                   zIndexInverse={ 3000 }
+                  searchable={ true }
                 />
 
                 <View style={ s.ingredientContainer }>

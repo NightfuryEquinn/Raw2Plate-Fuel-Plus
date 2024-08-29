@@ -1,14 +1,12 @@
-import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
-import { useFontFromContext } from 'context/FontProvider'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import TopBar from 'components/TopBar'
-import Spacer from 'components/Spacer'
 import { LightMode } from 'assets/colors/LightMode'
-import InCartHoriCard from 'components/InCartHoriCard'
 import ConfirmationModal from 'components/ConfirmationModal'
-import SingleGroceryCardModal from 'components/SingleGroceryCardModal'
-import { ForInCart } from 'data/dummyData'
+import InCartHoriCard from 'components/InCartHoriCard'
+import Spacer from 'components/Spacer'
+import TopBar from 'components/TopBar'
+import { useFontFromContext } from 'context/FontProvider'
+import React, { useState } from 'react'
+import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function InCart( { navigation, route }: any ) {
   const { theCart } = route.params

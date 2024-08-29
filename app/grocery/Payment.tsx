@@ -1,14 +1,15 @@
+import { MAPS_API_KEY } from "@env"
 import { LightMode } from 'assets/colors/LightMode'
 import axios from 'axios'
 import LinedTextField from 'components/LinedTextField'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
+import { methodCategory } from 'data/methodCategory'
 import React, { useState } from 'react'
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import IconFA from "react-native-vector-icons/FontAwesome"
-import { MAPS_API_KEY } from "@env"
 
 export default function Payment( { route }: any ) {
   const { theCart, total } = route.params
@@ -17,11 +18,23 @@ export default function Payment( { route }: any ) {
   const [ contact, setContact ] = useState( "" )
   const [ address, setAddress ] = useState( "" )
 
+  const [ method, setMethod ] = useState( 0 )
+
+  const toggleMethod = () => {
+    if ( method !== methodCategory.length - 1 ) {
+      setMethod( method + 1 )
+    } else {
+      setMethod( 0 )
+    }
+  }
+
   const locationSearch = async () => {
     try {
       const res = await axios.get(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${ address }&key=${ MAPS_API_KEY }`
       )
+
+      console.log( res )
 
       if ( res.data.status === "OK" ) {
         const theAddress = res.data.results[ 0 ].formatted_address
@@ -133,20 +146,20 @@ export default function Payment( { route }: any ) {
 
         <TouchableOpacity 
           activeOpacity={ 0.5 }
-          onPress={ () => console.log( "Change Method" ) }
+          onPress={ toggleMethod }
           style={ s.methodContainer }
         >
           <View style={ s.methodWrapper }>
             <IconFA 
-              name="cc-visa"
+              name={ methodCategory[ method ].iconName }
               size={ 24 }
-              color={ LightMode.visaBlue }
+              color={ methodCategory[ method ].color }
             />
 
             <Text style={ s.methodText }>Payment Method</Text>
           </View>
 
-          <Text style={[ s.methodText, s.halfBlack ]}>5638 **** **** ****</Text>
+          <Text style={[ s.methodText, s.halfBlack ]}>{ methodCategory[ method ].placeholder }</Text>
         </TouchableOpacity>
         
         <TouchableOpacity
