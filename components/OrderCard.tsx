@@ -38,6 +38,10 @@ export default function OrderCard( { title }: any ) {
           </View>
         </View>
 
+        <Spacer size={ 10 } />
+
+        <Text style={ s.completed }>Completed at 2:40 pm by <Text style={ s.grey }>Mr. Jason Doe</Text></Text>
+
         <View style={ s.emptyDivider }></View>
 
         <View style={ s.middleContainer }>
@@ -194,6 +198,14 @@ const s = StyleSheet.create({
   },
   "yellow": {
     color: LightMode.yellow
+  },
+  "completed": {
+    fontFamily: "cantarell",
+    fontSize: 14,
+    color: LightMode.halfBlack
+  },
+  "grey": {
+    color: LightMode.black
   }
 })
 
