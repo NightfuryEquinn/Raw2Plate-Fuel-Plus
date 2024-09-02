@@ -1,4 +1,3 @@
-import auth from '@react-native-firebase/auth'
 import { LightMode } from 'assets/colors/LightMode'
 import LinedTextField from 'components/LinedTextField'
 import RoundedBorderButton from 'components/RoundedBorderButton'
@@ -16,56 +15,7 @@ export default function Reset() {
     setTimer( 15 )
   }
 
-  const firebaseReset = () => {
-    if ( !email ) {
-      Alert.alert(
-        "Email address is empty!",
-        "Please enter your email address to have the reset link sent to your account!",
-        [
-          { text: "I Understood", style: "default" },
-        ]
-      )
-
-      return
-    }
-
-    sendEmail()
-
-    auth()
-      .sendPasswordResetEmail( email )
-      .then(() => {
-        Alert.alert(
-          "Reset link sent!",
-          "A password reset link has been sent to your email address, please check!",
-          [
-            { text: "I Understood", style: "default" },
-          ]
-        )
-      })
-      .catch( error => {
-        if ( error.code === "auth/invalid-email" ) {
-          Alert.alert(
-            "Invalid email format!",
-            "Email address format is badly written!",
-            [
-              { text: "I Understood", style: "default" },
-            ]
-          )
-        }
-
-        if ( error.code === "auth/user-not-found" ) {
-          Alert.alert(
-            "User not found!",
-            "No user found with this email, please register a new account!",
-            [
-              { text: "I Understood", style: "default" },
-            ]
-          )
-        }
-
-        console.log( "Error reseting: ", error )
-      })
-  }
+  // TODO: Reset password
 
   const { fontsLoaded } = useFontFromContext()
 
@@ -136,7 +86,7 @@ export default function Reset() {
                 />
               ) : (
                 <RoundedBorderButton
-                  onPress={ firebaseReset }
+                  onPress={ () => null }
                   text="Send Link"
                   color={ LightMode.yellow }
                   textColor={ LightMode.white }

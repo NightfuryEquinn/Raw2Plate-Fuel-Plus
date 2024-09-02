@@ -1,4 +1,3 @@
-import auth from '@react-native-firebase/auth'
 import Loading from 'app/Loading'
 import { LightMode } from 'assets/colors/LightMode'
 import LinedTextField from 'components/LinedTextField'
@@ -50,62 +49,6 @@ export default function Register( { navigation }: any ) {
     } catch ( error: any ) {
       dispatch( userRegisterFailure( error.message ) )
     }
-  }
-
-  const firebaseRegister = () => {
-    if ( password !== confirm ) {
-      Alert.alert(
-        "Passwords doesn't match!",
-        "Please ensure both passwords are correctly typed!",
-        [
-          { text: "I Understood", style: "default" },
-        ]
-      )
-
-      return
-    }
-
-    auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(( userCredentials ) => {
-        userCredentials.user.updateProfile({
-          displayName: username
-        })
-
-        awsRegister()
-
-        Alert.alert(
-          "Success!",
-          "User account created successfully!",
-          [
-            { text: "Cancel", style: "cancel" },
-            { text: "Proceed to Login", onPress: () => navigation.goBack() }
-          ]
-        )
-      })
-      .catch( error => {
-        if ( error.code === "auth/email-already-in-use" ) {
-          Alert.alert(
-            "Existing email address!",
-            "That email address is already in use!",
-            [
-              { text: "I Understood", style: "default" },
-            ]
-          )
-        }
-
-        if ( error.code === "auth/invalid-email" ) {
-          Alert.alert(
-            "Invalid email address!",
-            "That email address is invalid!",
-            [
-              { text: "I Understood", style: "default" },
-            ]
-          )
-        }
-
-        console.log( "Error registering: ", error )
-      })
   }
 
   const { fontsLoaded } = useFontFromContext()
@@ -167,7 +110,7 @@ export default function Register( { navigation }: any ) {
             <Spacer size={ 20 } />
 
             <RoundedBorderButton
-              onPress={ firebaseRegister }
+              onPress={ awsRegister }
               text="Start Exploring!"
               color={ LightMode.yellow }
               textColor={ LightMode.white }

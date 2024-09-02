@@ -1,4 +1,3 @@
-import auth from '@react-native-firebase/auth'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
@@ -58,8 +57,7 @@ export default function AppStack() {
   }
 
   // Check existing user session
-  // Set new user session
-  // Remove existing user session
+  // Set new user session if session is empty
   useEffect(() => {
     const checkExistingSession = async () => {
       try {
@@ -77,30 +75,6 @@ export default function AppStack() {
     }
 
     checkExistingSession()
-
-    const unsubscribe = auth().onAuthStateChanged( async ( user ) => {
-      if ( user ) {
-        setIsLoggedIn( true )
-
-        try {
-          // TODO: using aws to set user session
-        } catch ( error ) {
-          console.log( "Error creating session: ", error )
-        }
-      } else {
-        setIsLoggedIn( false )
-
-        try {
-          await AsyncStorage.removeItem( "user" )
-        } catch ( error ) {
-          console.log( "Error remove existing session: ", error )
-        }
-      }
-
-      console.log( "Logged in as: ", user )
-    })
-
-    return () => unsubscribe()
   }, [])
   
   return (

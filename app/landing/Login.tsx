@@ -1,4 +1,3 @@
-import auth from '@react-native-firebase/auth'
 import Loading from 'app/Loading'
 import { LightMode } from 'assets/colors/LightMode'
 import LinedTextField from 'components/LinedTextField'
@@ -22,50 +21,7 @@ export default function Login( { navigation }: any ) {
     navigation.navigate( "Reset" )
   }
 
-  const firebaseLogin = () => {
-    setLoading( true )
-
-    auth()
-      .signInWithEmailAndPassword( email, password )
-      .then(() => {
-        setLoading( false )
-      })
-      .catch( error => {
-        setLoading( false )
-
-        if ( error.code === "auth/invalid-credential" ) {
-          Alert.alert(
-            "Invalid credentials!",
-            "Email address or password is incorrect or user not exist!",
-            [
-              { text: "I Understood", style: "default" },
-            ]
-          )
-        }
-
-        if ( error.code === "auth/user-not-found" ) {
-          Alert.alert(
-            "User not found!",
-            "No user found with this email, please register a new account!",
-            [
-              { text: "I Understood", style: "default" },
-            ]
-          )
-        }
-
-        if ( error.code === "auth/wrong-password" ) {
-          Alert.alert(
-            "Incorrect password!",
-            "Password doesn't match, please check again!",
-            [
-              { text: "I Understood", style: "default" },
-            ]
-          )
-        }
-
-        console.log( "Error login: ", error )
-      })
-  }
+  // TODO: Login user
 
   const { fontsLoaded } = useFontFromContext()
 
@@ -150,7 +106,7 @@ export default function Login( { navigation }: any ) {
 
             { email ?
               <RoundedBorderButton
-                onPress={ firebaseLogin }
+                onPress={ () => null }
                 icon="MA"
                 name="account-circle"
                 text="Proceed with Login"
