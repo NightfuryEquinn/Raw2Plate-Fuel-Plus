@@ -1,17 +1,112 @@
+import auth from '@react-native-firebase/auth'
+import Loading from 'app/Loading'
 import { LightMode } from 'assets/colors/LightMode'
 import LinedTextField from 'components/LinedTextField'
 import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
 import { useFontFromContext } from 'context/FontProvider'
+import dayjs from 'dayjs'
 import React, { useState } from 'react'
-import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useDispatch, useSelector } from 'react-redux'
+import { userRegisterFailure, userRegisterLoading, userRegisterSuccess } from 'redux/actions/userAction'
+import { AppDispatch, RootState } from 'redux/reducers/store'
+import { postUser } from 'redux/services/userServices'
 
-export default function Register() {
+export default function Register( { navigation }: any ) {
+  const dispatch: AppDispatch = useDispatch()
+  const { loading } = useSelector(( state: RootState ) => state.user )
+
   const [ email, setEmail ] = useState( "" )
   const [ password, setPassword ] = useState( "" )
   const [ confirm, setConfirm ] = useState( "" )
   const [ username, setUsername ] = useState( "" )
+
+  const awsRegister = async () => {
+    dispatch( userRegisterLoading() )
+
+    try {
+      const res = await postUser(
+        {
+          UserId: 0,
+          Username: username,
+          Password: password,
+          Image: undefined,
+          Email: email,
+          Contact: undefined,
+          DateOfBirth: undefined,
+          Height: undefined,
+          Weight: undefined,
+          Age: undefined,
+          RegisteredDate: dayjs().toString(),
+          IsDarkMode: false,
+          IsAppleAuth: false,
+          IsGoogleAuth: false
+        }
+      )
+
+      dispatch( userRegisterSuccess( res ) )
+    } catch ( error: any ) {
+      dispatch( userRegisterFailure( error.message ) )
+    }
+  }
+
+  const firebaseRegister = () => {
+    if ( password !== confirm ) {
+      Alert.alert(
+        "Passwords doesn't match!",
+        "Please ensure both passwords are correctly typed!",
+        [
+          { text: "I Understood", style: "default" },
+        ]
+      )
+
+      return
+    }
+
+    auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(( userCredentials ) => {
+        userCredentials.user.updateProfile({
+          displayName: username
+        })
+
+        awsRegister()
+
+        Alert.alert(
+          "Success!",
+          "User account created successfully!",
+          [
+            { text: "Cancel", style: "cancel" },
+            { text: "Proceed to Login", onPress: () => navigation.goBack() }
+          ]
+        )
+      })
+      .catch( error => {
+        if ( error.code === "auth/email-already-in-use" ) {
+          Alert.alert(
+            "Existing email address!",
+            "That email address is already in use!",
+            [
+              { text: "I Understood", style: "default" },
+            ]
+          )
+        }
+
+        if ( error.code === "auth/invalid-email" ) {
+          Alert.alert(
+            "Invalid email address!",
+            "That email address is invalid!",
+            [
+              { text: "I Understood", style: "default" },
+            ]
+          )
+        }
+
+        console.log( "Error registering: ", error )
+      })
+  }
 
   const { fontsLoaded } = useFontFromContext()
 
@@ -20,6 +115,7 @@ export default function Register() {
   }
 
   return (
+    loading ? <Loading /> :
     <SafeAreaView style={ s.container }>
       <TouchableWithoutFeedback onPress={ Keyboard.dismiss }>
         <View style={{ flex: 1 }}>
@@ -58,7 +154,6 @@ export default function Register() {
             <LinedTextField 
               name="alternate-email" 
               placeholder="Username" 
-              secure={ true } 
               text={ username } 
               setText={ setUsername } 
             />
@@ -72,11 +167,12 @@ export default function Register() {
             <Spacer size={ 20 } />
 
             <RoundedBorderButton
-              onPress={ () => console.log( "Pressed" ) }
+              onPress={ firebaseRegister }
               text="Start Exploring!"
               color={ LightMode.yellow }
               textColor={ LightMode.white }
               borderRadius={ 10 }
+              disabled={ ( password !== confirm ) || password === "" || confirm === "" }
             />
           </KeyboardAvoidingView>
         </View>

@@ -1,3 +1,4 @@
+import auth from '@react-native-firebase/auth'
 import { LightMode } from 'assets/colors/LightMode'
 import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
@@ -9,7 +10,7 @@ import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet
 import { TextInput } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-export default function Profile() {
+export default function Profile( { navigation }: any ) {
   const [ image, setImage ] = useState( "" )
   const [ email, setEmail ] = useState( "john.doe@gmail.com" )
   const [ contact, setContact ] = useState( "012 892 4254" )
@@ -36,6 +37,18 @@ export default function Profile() {
     if ( !result.canceled ) {
       setImage( result.assets[ 0 ].uri )
     }
+  }
+
+  const firebaseLogout = () => {
+    auth().signOut().then(() => {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "LandingStack" }]
+      })
+    })
+    .catch(( error ) => {
+      console.log( "Error logging out: ", error )
+    })
   }
 
   const { fontsLoaded } = useFontFromContext()
@@ -162,7 +175,7 @@ export default function Profile() {
           <KeyboardAvoidingView behavior={ Platform.OS === "ios" ? "padding" : "height" }>
             <View style={ s.buttonContainer }>
               <RoundedBorderButton 
-                onPress={ () => console.log( "Log Out" ) }
+                onPress={ firebaseLogout }
                 text="Log Out"
                 color={ LightMode.black }
                 textColor={ LightMode.white }

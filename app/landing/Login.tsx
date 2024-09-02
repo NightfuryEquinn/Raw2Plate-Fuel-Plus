@@ -1,15 +1,18 @@
+import auth from '@react-native-firebase/auth'
+import Loading from 'app/Loading'
 import { LightMode } from 'assets/colors/LightMode'
 import LinedTextField from 'components/LinedTextField'
 import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
 import { useFontFromContext } from 'context/FontProvider'
 import React, { useState } from 'react'
-import { Image, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function Login( { navigation }: any ) {
   const [ email, setEmail ] = useState( "" )
   const [ password, setPassword ] = useState( "" )
+  const [ loading, setLoading ] = useState( false )
 
   const toRegister = () => {
     navigation.navigate( "Register" )
@@ -19,6 +22,51 @@ export default function Login( { navigation }: any ) {
     navigation.navigate( "Reset" )
   }
 
+  const firebaseLogin = () => {
+    setLoading( true )
+
+    auth()
+      .signInWithEmailAndPassword( email, password )
+      .then(() => {
+        setLoading( false )
+      })
+      .catch( error => {
+        setLoading( false )
+
+        if ( error.code === "auth/invalid-credential" ) {
+          Alert.alert(
+            "Invalid credentials!",
+            "Email address or password is incorrect or user not exist!",
+            [
+              { text: "I Understood", style: "default" },
+            ]
+          )
+        }
+
+        if ( error.code === "auth/user-not-found" ) {
+          Alert.alert(
+            "User not found!",
+            "No user found with this email, please register a new account!",
+            [
+              { text: "I Understood", style: "default" },
+            ]
+          )
+        }
+
+        if ( error.code === "auth/wrong-password" ) {
+          Alert.alert(
+            "Incorrect password!",
+            "Password doesn't match, please check again!",
+            [
+              { text: "I Understood", style: "default" },
+            ]
+          )
+        }
+
+        console.log( "Error login: ", error )
+      })
+  }
+
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
@@ -26,6 +74,7 @@ export default function Login( { navigation }: any ) {
   }
   
   return (
+    loading ? <Loading /> :
     <SafeAreaView style={ s.container }>
       <TouchableWithoutFeedback onPress={ Keyboard.dismiss }>
         <View style={{ flex: 1 }}>
@@ -62,7 +111,15 @@ export default function Login( { navigation }: any ) {
             <Spacer size={ 20 } />
 
             <RoundedBorderButton
-              onPress={ () => console.log( "Pressed" ) }
+              onPress={ () => {
+                Alert.alert(
+                  "Not yet available!",
+                  "Apple authentication will be integrated in the future. Please use the default email-password sign-in method!",
+                  [
+                    { text: "I Understood", style: "default" },
+                  ]
+                )
+              }}
               name="apple"
               text="Login with Apple"
               color={ LightMode.black }
@@ -73,7 +130,15 @@ export default function Login( { navigation }: any ) {
             <Spacer size={ 25 } />
 
             <RoundedBorderButton
-              onPress={ () => console.log( "Pressed" ) }
+              onPress={ () => {
+                Alert.alert(
+                  "Not yet available!",
+                  "Google authentication will be integrated in the future. Please use the default email-password sign-in method!",
+                  [
+                    { text: "I Understood", style: "default" },
+                  ]
+                )
+              }}
               name="google"
               text="Login with Google"
               color={ LightMode.black }
@@ -85,7 +150,7 @@ export default function Login( { navigation }: any ) {
 
             { email ?
               <RoundedBorderButton
-                onPress={ () => console.log( "Login" ) }
+                onPress={ firebaseLogin }
                 icon="MA"
                 name="account-circle"
                 text="Proceed with Login"

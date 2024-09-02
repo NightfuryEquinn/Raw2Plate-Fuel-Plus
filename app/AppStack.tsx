@@ -1,15 +1,23 @@
+import auth from '@react-native-firebase/auth'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { LightMode } from 'assets/colors/LightMode'
 import { useFontFromContext } from 'context/FontProvider'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import IconEN from 'react-native-vector-icons/Entypo'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
 import AppDrawer from './AppDrawer'
 import Profile from './Profile'
 import Settings from './Settings'
+import ActiveOrder from './grocery/ActiveOrder'
+import BrowseStore from './grocery/BrowseStore'
+import GroceryList from './grocery/GroceryList'
+import HistoryOrder from './grocery/HistoryOrder'
+import InCart from './grocery/InCart'
+import InStore from './grocery/InStore'
+import Payment from './grocery/Payment'
 import Login from './landing/Login'
 import Register from './landing/Register'
 import Reset from './landing/Reset'
@@ -25,20 +33,14 @@ import AllNutrients from './tracker/AllNutrients'
 import MainTracker from './tracker/MainTracker'
 import ManualAdd from './tracker/ManualAdd'
 import MoreDetails from './tracker/MoreDetails'
-import BrowseStore from './grocery/BrowseStore'
-import InStore from './grocery/InStore'
-import InCart from './grocery/InCart'
-import Payment from './grocery/Payment'
-import GroceryList from './grocery/GroceryList'
-import ActiveOrder from './grocery/ActiveOrder'
-import HistoryOrder from './grocery/HistoryOrder'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Tab = createMaterialBottomTabNavigator()
 const Drawer = createDrawerNavigator()
 const Stack = createNativeStackNavigator()
 
 export default function AppStack() {
-  const [ isLoggedIn, setIsLoggedIn ] = useState( true )
+  const [ isLoggedIn, setIsLoggedIn ] = useState( false )
 
   const theme = {
     ...DefaultTheme,
@@ -54,6 +56,52 @@ export default function AppStack() {
   if ( !fontsLoaded ) {
     return null
   }
+
+  // Check existing user session
+  // Set new user session
+  // Remove existing user session
+  useEffect(() => {
+    const checkExistingSession = async () => {
+      try {
+        const sessionUser = await AsyncStorage.getItem( "user" )
+
+        if ( sessionUser ) {
+          setIsLoggedIn( true )
+        } else {
+          setIsLoggedIn( false )
+        }
+      } catch ( error ) {
+        console.log( "Error check existing session: ", error )
+        setIsLoggedIn( false )
+      }
+    }
+
+    checkExistingSession()
+
+    const unsubscribe = auth().onAuthStateChanged( async ( user ) => {
+      if ( user ) {
+        setIsLoggedIn( true )
+
+        try {
+          await AsyncStorage.setItem( "user", JSON.stringify( user ) )
+        } catch ( error ) {
+          console.log( "Error creating session: ", error )
+        }
+      } else {
+        setIsLoggedIn( false )
+
+        try {
+          await AsyncStorage.removeItem( "user" )
+        } catch ( error ) {
+          console.log( "Error remove existing session: ", error )
+        }
+      }
+
+      console.log( "Logged in as: ", user )
+    })
+
+    return () => unsubscribe()
+  }, [])
   
   return (
     <NavigationContainer theme={ theme }>

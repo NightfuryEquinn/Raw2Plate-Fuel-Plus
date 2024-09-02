@@ -1,10 +1,11 @@
+import auth from '@react-native-firebase/auth'
 import { LightMode } from 'assets/colors/LightMode'
 import LinedTextField from 'components/LinedTextField'
 import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
 import { useFontFromContext } from 'context/FontProvider'
 import React, { useEffect, useState } from 'react'
-import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function Reset() {
@@ -12,7 +13,58 @@ export default function Reset() {
   const [ timer, setTimer ] = useState( 0 )
 
   const sendEmail = () => {
-    setTimer( 60 )
+    setTimer( 15 )
+  }
+
+  const firebaseReset = () => {
+    if ( !email ) {
+      Alert.alert(
+        "Email address is empty!",
+        "Please enter your email address to have the reset link sent to your account!",
+        [
+          { text: "I Understood", style: "default" },
+        ]
+      )
+
+      return
+    }
+
+    sendEmail()
+
+    auth()
+      .sendPasswordResetEmail( email )
+      .then(() => {
+        Alert.alert(
+          "Reset link sent!",
+          "A password reset link has been sent to your email address, please check!",
+          [
+            { text: "I Understood", style: "default" },
+          ]
+        )
+      })
+      .catch( error => {
+        if ( error.code === "auth/invalid-email" ) {
+          Alert.alert(
+            "Invalid email format!",
+            "Email address format is badly written!",
+            [
+              { text: "I Understood", style: "default" },
+            ]
+          )
+        }
+
+        if ( error.code === "auth/user-not-found" ) {
+          Alert.alert(
+            "User not found!",
+            "No user found with this email, please register a new account!",
+            [
+              { text: "I Understood", style: "default" },
+            ]
+          )
+        }
+
+        console.log( "Error reseting: ", error )
+      })
   }
 
   const { fontsLoaded } = useFontFromContext()
@@ -84,7 +136,7 @@ export default function Reset() {
                 />
               ) : (
                 <RoundedBorderButton
-                  onPress={ () => sendEmail() }
+                  onPress={ firebaseReset }
                   text="Send Link"
                   color={ LightMode.yellow }
                   textColor={ LightMode.white }

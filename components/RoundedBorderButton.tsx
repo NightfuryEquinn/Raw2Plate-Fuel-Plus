@@ -18,7 +18,11 @@ export default function RoundedBorderButton( { onPress, disabled, icon, name, te
       activeOpacity={ 0.5 }
       disabled={ disabled }
       onPress={ onPress } 
-      style={[ s.container, { backgroundColor: color, borderRadius: borderRadius, marginHorizontal: marginHori } ]}
+      style={[ 
+        s.container, 
+        disabled ? { backgroundColor: LightMode.lightYellow } : { backgroundColor: color },
+        { borderRadius: borderRadius, marginHorizontal: marginHori } 
+      ]}
     >
       <View style={ s.wrapper }>
         { name ? (
