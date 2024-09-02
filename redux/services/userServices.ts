@@ -12,6 +12,7 @@ export const postUser = async( theUser: User ): Promise<UserRegisterState[]> => 
   try {
     const res: ApiRes<UserRegisterState[]> = await awsInstance.post( "/user", theUser )
 
+    console.log( "postUser: ", res.data )
     return res.data
   } catch ( error ) {
     console.log( "Post user: ", error )

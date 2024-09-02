@@ -83,7 +83,7 @@ export default function AppStack() {
         setIsLoggedIn( true )
 
         try {
-          await AsyncStorage.setItem( "user", JSON.stringify( user ) )
+          // TODO: using aws to set user session
         } catch ( error ) {
           console.log( "Error creating session: ", error )
         }
