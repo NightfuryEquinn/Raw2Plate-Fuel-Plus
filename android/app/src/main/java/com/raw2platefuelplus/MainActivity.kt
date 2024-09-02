@@ -1,4 +1,4 @@
-package com.nightfuryequinn.Raw2PlateFuelPlus
+package com.raw2platefuelplus
 
 import android.os.Build
 import android.os.Bundle

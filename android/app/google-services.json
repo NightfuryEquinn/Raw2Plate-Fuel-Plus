@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:205582845909:android:584e30c056781aa73ddf5c",
+        "mobilesdk_app_id": "1:205582845909:android:f32007bb9ce69f2f3ddf5c",
         "android_client_info": {
-          "package_name": "com.nightfuryequinn.Raw2PlateFuelPlus"
+          "package_name": "com.raw2platefuelplus"
         }
       },
       "oauth_client": [

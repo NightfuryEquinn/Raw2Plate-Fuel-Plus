@@ -1,4 +1,4 @@
-package com.nightfuryequinn.Raw2PlateFuelPlus
+package com.raw2platefuelplus
 
 import android.app.Application
 import android.content.res.Configuration

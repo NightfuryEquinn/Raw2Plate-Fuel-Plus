@@ -1,8 +1,10 @@
 import { USER_REGISTER_FAILURE, USER_REGISTER_LOADING, USER_REGISTER_SUCCESS, UserRegisterAction } from "redux/types/actionTypes"
-import { UserRegisterState } from "redux/types/stateTypes"
+import { ReduxState } from "redux/types/stateTypes"
 
-const initialState: UserRegisterState = {
-  data: [],
+const initialState: ReduxState = {
+  data: [{
+    
+  }],
   loading: false,
   error: null
 }
@@ -10,7 +12,7 @@ const initialState: UserRegisterState = {
 export const userReducer = (
   state = initialState,
   action: UserRegisterAction
-): UserRegisterState => {
+): ReduxState => {
   switch ( action.type ) {
     case USER_REGISTER_LOADING:
       return {

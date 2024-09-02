@@ -28,7 +28,7 @@
       "permissions": [
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.nightfuryequinn.Raw2PlateFuelPlus",
+      "package": "com.raw2platefuelplus",
       "googleServicesFile": "./android/app/google-services.json"
     },
     "web": {
