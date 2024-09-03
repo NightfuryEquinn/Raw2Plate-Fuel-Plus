@@ -15,12 +15,18 @@ import { postUser } from 'redux/services/userServices'
 
 export default function Register( { navigation }: any ) {
   const dispatch: AppDispatch = useDispatch()
-  const { loading } = useSelector(( state: RootState ) => state.user )
+  const { data, loading, error } = useSelector(( state: RootState ) => state.user )
 
   const [ email, setEmail ] = useState( "" )
   const [ password, setPassword ] = useState( "" )
   const [ confirm, setConfirm ] = useState( "" )
   const [ username, setUsername ] = useState( "" )
+
+  const checkEmail = () => {
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    return pattern.test( email )
+  }
 
   const awsRegister = async () => {
     dispatch( userRegisterLoading() )
@@ -46,8 +52,25 @@ export default function Register( { navigation }: any ) {
       )
 
       dispatch( userRegisterSuccess( res ) )
+
+      Alert.alert(
+        "New user created!",
+        "Please proceed to login!",
+        [
+          { text: "Cancel", style: "cancel" },
+          { text: "Proceed to Login", onPress: () => navigation.goBack() }
+        ]
+      )
     } catch ( error: any ) {
       dispatch( userRegisterFailure( error.message ) )
+
+      Alert.alert(
+        "Failed to create new user!",
+        "Ensure that your email is correctly written and not already in use! Both passwords must also be matching!",
+        [
+          { text: "I Understood", style: "default" },
+        ]
+      )
     }
   }
 
@@ -115,7 +138,7 @@ export default function Register( { navigation }: any ) {
               color={ LightMode.yellow }
               textColor={ LightMode.white }
               borderRadius={ 10 }
-              disabled={ ( password !== confirm ) || password === "" || confirm === "" }
+              disabled={ !checkEmail() || email === "" || username === "" || ( password === "" && confirm === "" ) || ( password !== confirm ) }
             />
           </KeyboardAvoidingView>
         </View>

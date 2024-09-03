@@ -1,39 +1,60 @@
+import Loading from 'app/Loading'
 import { LightMode } from 'assets/colors/LightMode'
 import LinedTextField from 'components/LinedTextField'
 import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
 import { useFontFromContext } from 'context/FontProvider'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useDispatch, useSelector } from 'react-redux'
+import { resetPasswordFailure, resetPasswordLoading, resetPasswordSuccess } from 'redux/actions/userAction'
+import { AppDispatch, RootState } from 'redux/reducers/store'
+import { resetPassword } from 'redux/services/userServices'
 
-export default function Reset() {
+export default function Reset( { navigation }: any ) {
+  const dispatch: AppDispatch = useDispatch()
+  const { data, loading, error } = useSelector(( state: RootState ) => state.user )
+  
   const [ email, setEmail ] = useState( "" )
-  const [ timer, setTimer ] = useState( 0 )
+  const [ password, setPassword ] = useState( "" )
+  const [ confirm, setConfirm ] = useState( "" )
 
-  const sendEmail = () => {
-    setTimer( 15 )
+  const checkEmail = () => {
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    return pattern.test( email )
   }
 
-  // TODO: Reset password
+  // Reset password with email, ignore security
+  const awsReset = async () => {
+    dispatch( resetPasswordLoading() )
+
+    try {
+      const res = await resetPassword( email, password )
+
+      dispatch( resetPasswordSuccess( res ) )
+
+      Alert.alert(
+        "Success!",
+        "Your password has been reset successfully!",
+        [
+          { text: "I Understood", style: "default" },
+        ]
+      )
+    } catch ( error: any ) {
+      dispatch( resetPasswordFailure( error.message ) )
+    }
+  }
 
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
     return null
   }
-
-  useEffect(() => {
-    if ( timer > 0 ) {
-      const interval = setInterval(() => {
-        setTimer( timer - 1 )
-      }, 1000)
-
-      return () => clearInterval( interval )
-    }
-  }, [ timer ])
   
   return (
+    loading ? <Loading /> :
     <SafeAreaView style={ s.container }>
       <TouchableWithoutFeedback onPress={ Keyboard.dismiss }>
         <View style={{ flex: 1 }}>
@@ -53,47 +74,36 @@ export default function Reset() {
               setText={ setEmail } 
             />
 
-            <Spacer size={ 10 } />
+            <LinedTextField 
+              name="password" 
+              placeholder="Password" 
+              secure={ true } 
+              text={ password } 
+              setText={ setPassword } 
+            />
 
-            <Text style={ s.subLeft }>
-              A verification link will be sent to your email for resetting your password. Do check your spam and junk email for confirmation.
-            </Text>
-
-            <Text style={ s.subLeft }>
-              Didn't receive email?
-              {
-                timer !== 0 ? (
-                  <Text style={ s.blue }> Resend in { timer }s.</Text>
-                ) : (
-                  <Text> Resend now.</Text>
-                )
-              }
-              
-            </Text>
+            <LinedTextField 
+              name="password" 
+              placeholder="Confirm Password" 
+              secure={ true } 
+              text={ confirm } 
+              setText={ setConfirm } 
+            />
           </ScrollView>
           
           <KeyboardAvoidingView behavior={ Platform.OS === "ios" ? "padding" : "height" }>
             <Spacer size={ 20 } />
-            {
-              timer !== 0 ? (
-                <RoundedBorderButton
-                  onPress={ () => console.log( "Cooldown... Do nothing..." ) }
-                  disabled={ true }
-                  text="Cooldown..."
-                  color={ LightMode.lightYellow }
-                  textColor={ LightMode.white }
-                  borderRadius={ 10 }
-                />
-              ) : (
-                <RoundedBorderButton
-                  onPress={ () => null }
-                  text="Send Link"
-                  color={ LightMode.yellow }
-                  textColor={ LightMode.white }
-                  borderRadius={ 10 }
-                />
-              )
-            }
+              <RoundedBorderButton
+                onPress={ () => {
+                  awsReset()
+                  navigation.goBack()
+                }}
+                text="Reset Password"
+                color={ LightMode.yellow }
+                textColor={ LightMode.white }
+                borderRadius={ 10 }
+                disabled={ !checkEmail() || email === "" || ( password === "" && confirm === "" ) || ( password !== confirm ) }
+              />
           </KeyboardAvoidingView>
         </View>
       </TouchableWithoutFeedback>

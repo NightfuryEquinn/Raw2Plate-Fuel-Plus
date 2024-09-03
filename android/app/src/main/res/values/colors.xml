@@ -1,4 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <resources>
-  <color name="splashscreen_background">#FFFFFF</color>
+  <color name="splashscreen_background">#fafafa</color>
+  <color name="iconBackground">#fafafa</color>
+  <color name="colorPrimary">#023c69</color>
+  <color name="colorPrimaryDark">#fafafa</color>
+  <color name="activityBackground">#FAFAFA</color>
 </resources>

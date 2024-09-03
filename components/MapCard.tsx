@@ -1,4 +1,4 @@
-import { MAPS_API_KEY } from '@env'
+import { GOOGLE_API_KEY } from '@env'
 import { LightMode } from 'assets/colors/LightMode'
 import { useFontFromContext } from 'context/FontProvider'
 import React from 'react'
@@ -58,7 +58,7 @@ export default function MapCard( {}: any ) {
         <MapViewDirections 
           origin={ driverLocation }
           destination={ destination }
-          apikey={ MAPS_API_KEY }
+          apikey={ GOOGLE_API_KEY }
           strokeColor={ LightMode.black }
           strokeWidth={ 4 }
           optimizeWaypoints={ true }

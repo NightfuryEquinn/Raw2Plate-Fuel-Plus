@@ -1,4 +1,4 @@
-import { MAPS_API_KEY } from "@env"
+import { GOOGLE_API_KEY } from "@env"
 import { LightMode } from 'assets/colors/LightMode'
 import axios from 'axios'
 import LinedTextField from 'components/LinedTextField'
@@ -31,7 +31,7 @@ export default function Payment( { route }: any ) {
   const locationSearch = async () => {
     try {
       const res = await axios.get(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${ address }&key=${ MAPS_API_KEY }`
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${ address }&key=${ GOOGLE_API_KEY }`
       )
 
       console.log( res )

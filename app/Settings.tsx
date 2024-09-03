@@ -6,10 +6,15 @@ import * as Location from 'expo-location'
 import React, { useEffect, useState } from 'react'
 import { Alert, Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useSelector } from 'react-redux'
+import { RootState } from 'redux/reducers/store'
 
 export default function Settings() {
+  const { data, loading, error } = useSelector(( state: RootState ) => state.user )
+  const userInfo = data[ 0 ].setUserSession
+
   const pkg = require( "../package.json" )
-  const [ darkMode, setDarkMode ] = useState( false )
+  const [ darkMode, setDarkMode ] = useState( userInfo.isDarkMode )
   const [ foreground, setForeground ] = useState( false )
   const [ background, setBackground ] = useState( false )
   const [ microphone, setMicrophone ] = useState( false )

@@ -7,12 +7,18 @@ import { useFontFromContext } from 'context/FontProvider'
 import React, { useState } from 'react'
 import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useDispatch, useSelector } from 'react-redux'
+import { setUserSessionFailure, setUserSessionLoading, setUserSessionSuccess } from 'redux/actions/userAction'
+import { AppDispatch, RootState } from 'redux/reducers/store'
+import { getTheUser } from 'redux/services/userServices'
 
 export default function Login( { navigation }: any ) {
+  const dispatch: AppDispatch = useDispatch()
+  const { data, loading, error } = useSelector(( state: RootState ) => state.user )
+
   const [ email, setEmail ] = useState( "" )
   const [ password, setPassword ] = useState( "" )
-  const [ loading, setLoading ] = useState( false )
-
+ 
   const toRegister = () => {
     navigation.navigate( "Register" )
   }
@@ -21,14 +27,33 @@ export default function Login( { navigation }: any ) {
     navigation.navigate( "Reset" )
   }
 
-  // TODO: Login user
+  // Login user
+  const awsLogin = async () => {
+    dispatch( setUserSessionLoading() )
+
+    try {
+      const res = await getTheUser( email, password )
+
+      dispatch( setUserSessionSuccess( res ) )
+    } catch ( error: any ) {
+      dispatch( setUserSessionFailure( error.message ) )
+    
+      Alert.alert(
+        "Incorrect credentials!",
+        "Ensure that your email and password is correctly written!",
+        [
+          { text: "I Understood", style: "default" },
+        ]
+      )
+    }
+  }
 
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
     return null
   }
-  
+ 
   return (
     loading ? <Loading /> :
     <SafeAreaView style={ s.container }>
@@ -104,9 +129,9 @@ export default function Login( { navigation }: any ) {
 
             <Spacer size={ 25 } />
 
-            { email ?
+            { email !== "" ?
               <RoundedBorderButton
-                onPress={ () => null }
+                onPress={ awsLogin }
                 icon="MA"
                 name="account-circle"
                 text="Proceed with Login"

@@ -43,3 +43,72 @@ interface SetUserSessionFailure {
 }
 
 export type SetUserSessionAction = SetUserSessionLoading | SetUserSessionSuccess | SetUserSessionFailure
+
+/**
+ * Reset password
+ */
+export const RESET_PASSWORD_LOADING = "RESET_PASSWORD_LOADING"
+export const RESET_PASSWORD_SUCCESS = "RESET_PASSWORD_SUCCESS"
+export const RESET_PASSWORD_FAILURE = "RESET_PASSWORD_FAILURE"
+
+interface ResetPasswordLoading {
+  type: typeof RESET_PASSWORD_LOADING
+}
+
+interface ResetPasswordSuccess {
+  type: typeof RESET_PASSWORD_SUCCESS,
+  payload: any[]
+}
+
+interface ResetPasswordFailure {
+  type: typeof RESET_PASSWORD_FAILURE,
+  payload: string
+}
+
+export type ResetPasswordAction = ResetPasswordLoading | ResetPasswordSuccess | ResetPasswordFailure
+
+/**
+ * Logout clear session
+ */
+export const LOGOUT_CLEAR_LOADING = "LOGOUT_CLEAR_LOADING"
+export const LOGOUT_CLEAR_SUCCESS = "LOGOUT_CLEAR_SUCCESS"
+export const LOGOUT_CLEAR_FAILURE = "LOGOUT_CLEAR_FAILURE"
+
+interface LogoutClearLoading {
+  type: typeof LOGOUT_CLEAR_LOADING
+}
+
+interface LogoutClearSuccess {
+  type: typeof LOGOUT_CLEAR_SUCCESS,
+  payload: any[]
+}
+
+interface LogoutClearFailure {
+  type: typeof LOGOUT_CLEAR_FAILURE,
+  payload: string
+}
+
+export type LogoutClearAction = LogoutClearLoading | LogoutClearSuccess | LogoutClearFailure
+
+/**
+ * Update profile
+ */
+export const UPDATE_PROFILE_LOADING = "UPDATE_PROFILE_LOADING"
+export const UPDATE_PROFILE_SUCCESS = "UPDATE_PROFILE_SUCCESS"
+export const UPDATE_PROFILE_FAILURE = "UPDATE_PROFILE_FAILURE"
+
+interface UpdateProfileLoading {
+  type: typeof UPDATE_PROFILE_LOADING
+}
+
+interface UpdateProfileSuccess {
+  type: typeof UPDATE_PROFILE_SUCCESS,
+  payload: any[]
+}
+
+interface UpdateProfileFailure {
+  type: typeof UPDATE_PROFILE_FAILURE,
+  payload: string
+}
+
+export type UpdateProfileAction = UpdateProfileLoading | UpdateProfileSuccess | UpdateProfileFailure

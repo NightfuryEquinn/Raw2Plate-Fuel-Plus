@@ -1,22 +1,30 @@
-import auth from '@react-native-firebase/auth'
 import { LightMode } from 'assets/colors/LightMode'
 import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
+import dayjs from 'dayjs'
 import * as ImagePicker from 'expo-image-picker'
 import React, { useState } from 'react'
-import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { TextInput } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useDispatch, useSelector } from 'react-redux'
+import { logoutClearFailure, logoutClearLoading, logoutClearSuccess } from 'redux/actions/userAction'
+import { AppDispatch, RootState } from 'redux/reducers/store'
+import Loading from './Loading'
 
 export default function Profile( { navigation }: any ) {
+  const dispatch: AppDispatch = useDispatch()
+  const { data, loading, error } = useSelector(( state: RootState ) => state.user )
+  const userInfo = data[ 0 ].setUserSession
+
   const [ image, setImage ] = useState( "" )
-  const [ email, setEmail ] = useState( "john.doe@gmail.com" )
-  const [ contact, setContact ] = useState( "012 892 4254" )
-  const [ height, setHeight ] = useState( "177" )
-  const [ weight, setWeight ] = useState( "78" )
-  const [ age, setAge ] = useState( "22" )
+  const [ email, setEmail ] = useState( userInfo.email )
+  const [ contact, setContact ] = useState( userInfo.contact )
+  const [ height, setHeight ] = useState( userInfo.height )
+  const [ weight, setWeight ] = useState( userInfo.weight )
+  const [ age, setAge ] = useState( userInfo.age )
 
   const pickImage = async () => {
     // Request permission
@@ -39,16 +47,27 @@ export default function Profile( { navigation }: any ) {
     }
   }
 
-  const firebaseLogout = () => {
-    auth().signOut().then(() => {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "LandingStack" }]
-      })
-    })
-    .catch(( error ) => {
-      console.log( "Error logging out: ", error )
-    })
+  const awsLogout = async () => {
+    dispatch( logoutClearLoading() )
+
+    try {
+      dispatch( logoutClearSuccess( [] ) )
+    } catch ( error: any ) {
+      console.log( error )
+      dispatch( logoutClearFailure( error.message ) )
+
+      Alert.alert(
+        "Failed to logout!",
+        "Unknown error occured, please try again!",
+        [
+          { text: "I Understood", style: "default" },
+        ]
+      )
+    }
+  }
+
+  const saveChanges = async () => {
+
   }
 
   const { fontsLoaded } = useFontFromContext()
@@ -58,6 +77,7 @@ export default function Profile( { navigation }: any ) {
   }
   
   return (
+    loading ? <Loading /> :
     <SafeAreaView style={ s.container }>
       <TouchableWithoutFeedback onPress={ Keyboard.dismiss }>
         <View style={{ flex: 1 }}>
@@ -76,13 +96,14 @@ export default function Profile( { navigation }: any ) {
                   resizeMode="cover"
                   style={ s.image }
                   source={ 
-                    image ? { uri: image } : require( "../assets/images/placeholders/profile_placeholder.jpg" ) }
+                    image ? { uri: image } : require( "../assets/images/placeholders/profile_placeholder.jpg" ) 
+                  }
                 />
               </TouchableOpacity>
 
               <View style={ s.profileWrapper }>
-                <Text style={ s.profileHeading }>John Doe</Text>
-                <Text style={ s.profileSub }>Joined since 14 July 2024</Text>
+                <Text style={ s.profileHeading }>{ userInfo.username }</Text>
+                <Text style={ s.profileSub }>Joined since { dayjs( userInfo.registeredDate ).format( "DD MMMM YYYY" ) }</Text>
               </View>
             </View>
 
@@ -175,7 +196,7 @@ export default function Profile( { navigation }: any ) {
           <KeyboardAvoidingView behavior={ Platform.OS === "ios" ? "padding" : "height" }>
             <View style={ s.buttonContainer }>
               <RoundedBorderButton 
-                onPress={ firebaseLogout }
+                onPress={ awsLogout }
                 text="Log Out"
                 color={ LightMode.black }
                 textColor={ LightMode.white }
@@ -184,7 +205,7 @@ export default function Profile( { navigation }: any ) {
               />
 
               <RoundedBorderButton 
-                onPress={ () => console.log( "Save Changes" ) }
+                onPress={ saveChanges }
                 text="Save Changes"
                 color={ LightMode.yellow }
                 textColor={ LightMode.white }

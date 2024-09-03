@@ -4,9 +4,11 @@ import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { LightMode } from 'assets/colors/LightMode'
 import { useFontFromContext } from 'context/FontProvider'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import IconEN from 'react-native-vector-icons/Entypo'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
+import { useSelector } from 'react-redux'
+import { RootState } from 'redux/reducers/store'
 import AppDrawer from './AppDrawer'
 import Profile from './Profile'
 import Settings from './Settings'
@@ -32,14 +34,13 @@ import AllNutrients from './tracker/AllNutrients'
 import MainTracker from './tracker/MainTracker'
 import ManualAdd from './tracker/ManualAdd'
 import MoreDetails from './tracker/MoreDetails'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Tab = createMaterialBottomTabNavigator()
 const Drawer = createDrawerNavigator()
 const Stack = createNativeStackNavigator()
 
 export default function AppStack() {
-  const [ isLoggedIn, setIsLoggedIn ] = useState( false )
+  const { data, loading, error } = useSelector(( state: RootState ) => state.user )
 
   const theme = {
     ...DefaultTheme,
@@ -50,36 +51,23 @@ export default function AppStack() {
     }
   }
 
+  const isUserSessionEmpty = ( session: [] ) => {
+    if ( session === null ) {
+      return true
+    }
+
+    return !Object.values( session ).some( value => value !== null && value !== '' && value !== false )
+  };
+
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
     return null
   }
-
-  // Check existing user session
-  // Set new user session if session is empty
-  useEffect(() => {
-    const checkExistingSession = async () => {
-      try {
-        const sessionUser = await AsyncStorage.getItem( "user" )
-
-        if ( sessionUser ) {
-          setIsLoggedIn( true )
-        } else {
-          setIsLoggedIn( false )
-        }
-      } catch ( error ) {
-        console.log( "Error check existing session: ", error )
-        setIsLoggedIn( false )
-      }
-    }
-
-    checkExistingSession()
-  }, [])
   
   return (
     <NavigationContainer theme={ theme }>
-      { isLoggedIn ? <MainStack /> : <LandingStack /> }
+      { !isUserSessionEmpty( data[ 0 ].setUserSession ) ? <MainStack /> : <LandingStack /> }
     </NavigationContainer>
   )
 }
@@ -178,6 +166,7 @@ const MainStack = () => {
             />
           )
         }}
+        
       />
       <Drawer.Screen 
         name="Settings" 

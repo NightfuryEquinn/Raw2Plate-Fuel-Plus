@@ -28,16 +28,13 @@
       "permissions": [
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.raw2platefuelplus",
-      "googleServicesFile": "./android/app/google-services.json"
+      "package": "com.raw2platefuelplus"
     },
     "web": {
       "favicon": "./assets/images/logos/white_no_text.png"
     },
     "plugins": [
-      "@wdragon/react-native-voice",
-      "@react-native-firebase/app",
-      "@react-native-firebase/auth"
+      "@wdragon/react-native-voice"
     ]
   }
 }

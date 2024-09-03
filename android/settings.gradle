@@ -44,7 +44,7 @@ if (getRNMinorVersion() >= 75) {
   }
 }
 
-rootProject.name = 'Raw2PlateFuelPlus'
+rootProject.name = 'Raw2Plate-Fuel-Plus'
 
 dependencyResolutionManagement {
   versionCatalogs {
