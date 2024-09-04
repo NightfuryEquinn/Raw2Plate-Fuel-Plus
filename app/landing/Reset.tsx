@@ -3,22 +3,27 @@ import { LightMode } from 'assets/colors/LightMode'
 import LinedTextField from 'components/LinedTextField'
 import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
+import { useFirebaseFromContext } from 'context/FirebaseProvider'
 import { useFontFromContext } from 'context/FontProvider'
-import React, { useState } from 'react'
+import { sendPasswordResetEmail } from 'firebase/auth'
+import React, { useEffect, useState } from 'react'
 import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
-import { resetPasswordFailure, resetPasswordLoading, resetPasswordSuccess } from 'redux/actions/userAction'
 import { AppDispatch, RootState } from 'redux/reducers/store'
-import { resetPassword } from 'redux/services/userServices'
 
 export default function Reset( { navigation }: any ) {
   const dispatch: AppDispatch = useDispatch()
   const { data, loading, error } = useSelector(( state: RootState ) => state.user )
   
+  const { authInit } = useFirebaseFromContext()
+
   const [ email, setEmail ] = useState( "" )
-  const [ password, setPassword ] = useState( "" )
-  const [ confirm, setConfirm ] = useState( "" )
+  const [ timer, setTimer ] = useState( 0 )
+  
+  const cooldownTimer = () => {
+    setTimer( 15 )
+  }
 
   const checkEmail = () => {
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -26,25 +31,55 @@ export default function Reset( { navigation }: any ) {
     return pattern.test( email )
   }
 
-  // Reset password with email, ignore security
-  const awsReset = async () => {
-    dispatch( resetPasswordLoading() )
-
-    try {
-      const res = await resetPassword( email, password )
-
-      dispatch( resetPasswordSuccess( res ) )
-
+  // Reset password link, ignoring changing AWS password 
+  const firebaseReset = async () => {
+    if ( !email ) {
       Alert.alert(
-        "Success!",
-        "Your password has been reset successfully!",
+        "Email address is empty!",
+        "Please enter your email address to have the reset link sent to your account!",
         [
           { text: "I Understood", style: "default" },
         ]
       )
-    } catch ( error: any ) {
-      dispatch( resetPasswordFailure( error.message ) )
+
+      return
     }
+
+    cooldownTimer()
+
+    await sendPasswordResetEmail( authInit, email )
+      .then(() => {
+        Alert.alert(
+          "Reset link sent!",
+          "A password reset link has been sent to your email address, please check!",
+          [
+            { text: "I Understood", style: "default" },
+          ]
+        )
+      })
+      .catch(( error: any ) => {
+        if ( error.code === "auth/invalid-email" ) {
+          Alert.alert(
+            "Invalid email format!",
+            "Email address format is badly written!",
+            [
+              { text: "I Understood", style: "default" },
+            ]
+          )
+        }
+
+        if ( error.code === "auth/user-not-found" ) {
+          Alert.alert(
+            "User not found!",
+            "No user found with this email, please register a new account!",
+            [
+              { text: "I Understood", style: "default" },
+            ]
+          )
+        }
+
+        console.log( "Error reseting: ", error )
+      })
   }
 
   const { fontsLoaded } = useFontFromContext()
@@ -52,6 +87,16 @@ export default function Reset( { navigation }: any ) {
   if ( !fontsLoaded ) {
     return null
   }
+
+  useEffect(() => {
+    if ( timer > 0 ) {
+      const interval = setInterval(() => {
+        setTimer( timer - 1 )
+      }, 1000)
+
+      return () => clearInterval( interval )
+    }
+  }, [ timer ])
   
   return (
     loading ? <Loading /> :
@@ -74,36 +119,47 @@ export default function Reset( { navigation }: any ) {
               setText={ setEmail } 
             />
 
-            <LinedTextField 
-              name="password" 
-              placeholder="Password" 
-              secure={ true } 
-              text={ password } 
-              setText={ setPassword } 
-            />
+            <Spacer size={ 10 } />
 
-            <LinedTextField 
-              name="password" 
-              placeholder="Confirm Password" 
-              secure={ true } 
-              text={ confirm } 
-              setText={ setConfirm } 
-            />
+            <Text style={ s.subLeft }>
+              A verification link will be sent to your email for resetting your password. Do check your spam and junk email for confirmation.
+            </Text>
+
+            <Text style={ s.subLeft }>
+              Didn't receive email?
+              {
+                timer !== 0 ? (
+                  <Text style={ s.blue }> Resend in { timer }s.</Text>
+                ) : (
+                  <Text> Resend now.</Text>
+                )
+              }
+            </Text>
           </ScrollView>
           
           <KeyboardAvoidingView behavior={ Platform.OS === "ios" ? "padding" : "height" }>
             <Spacer size={ 20 } />
-              <RoundedBorderButton
-                onPress={ () => {
-                  awsReset()
-                  navigation.goBack()
-                }}
-                text="Reset Password"
-                color={ LightMode.yellow }
-                textColor={ LightMode.white }
-                borderRadius={ 10 }
-                disabled={ !checkEmail() || email === "" || ( password === "" && confirm === "" ) || ( password !== confirm ) }
-              />
+            {
+              timer !== 0 ? (
+                <RoundedBorderButton
+                  onPress={ () => console.log( "Cooldown... Do nothing..." ) }
+                  disabled={ true }
+                  text="Cooldown..."
+                  color={ LightMode.lightYellow }
+                  textColor={ LightMode.white }
+                  borderRadius={ 10 }
+                />
+              ) : (
+                <RoundedBorderButton
+                  onPress={ firebaseReset }
+                  text="Send Link"
+                  color={ LightMode.yellow }
+                  textColor={ LightMode.white }
+                  borderRadius={ 10 }
+                  disabled={ !checkEmail() || email === "" }
+                />
+              )
+            }
           </KeyboardAvoidingView>
         </View>
       </TouchableWithoutFeedback>

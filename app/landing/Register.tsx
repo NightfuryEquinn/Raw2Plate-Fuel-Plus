@@ -3,19 +3,22 @@ import { LightMode } from 'assets/colors/LightMode'
 import LinedTextField from 'components/LinedTextField'
 import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
+import { useFirebaseFromContext } from 'context/FirebaseProvider'
 import { useFontFromContext } from 'context/FontProvider'
 import dayjs from 'dayjs'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
 import React, { useState } from 'react'
 import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
-import { userRegisterFailure, userRegisterLoading, userRegisterSuccess } from 'redux/actions/userAction'
+import { userRegister } from 'redux/actions/userAction'
 import { AppDispatch, RootState } from 'redux/reducers/store'
-import { postUser } from 'redux/services/userServices'
 
 export default function Register( { navigation }: any ) {
   const dispatch: AppDispatch = useDispatch()
   const { data, loading, error } = useSelector(( state: RootState ) => state.user )
+
+  const { authInit } = useFirebaseFromContext()
 
   const [ email, setEmail ] = useState( "" )
   const [ password, setPassword ] = useState( "" )
@@ -28,50 +31,73 @@ export default function Register( { navigation }: any ) {
     return pattern.test( email )
   }
 
-  const awsRegister = async () => {
-    dispatch( userRegisterLoading() )
-
-    try {
-      const res = await postUser(
-        {
-          UserId: 0,
-          Username: username,
-          Password: password,
-          Image: undefined,
-          Email: email,
-          Contact: undefined,
-          DateOfBirth: undefined,
-          Height: undefined,
-          Weight: undefined,
-          Age: undefined,
-          RegisteredDate: dayjs().toString(),
-          IsDarkMode: false,
-          IsAppleAuth: false,
-          IsGoogleAuth: false
-        }
-      )
-
-      dispatch( userRegisterSuccess( res ) )
-
+  // Firebase register and save into AWS
+  const firebaseRegister = async ( theEmail: string, thePassword: string, theConfirm: string ) => {
+    if ( thePassword !== theConfirm ) {
       Alert.alert(
-        "New user created!",
-        "Please proceed to login!",
-        [
-          { text: "Cancel", style: "cancel" },
-          { text: "Proceed to Login", onPress: () => navigation.goBack() }
-        ]
-      )
-    } catch ( error: any ) {
-      dispatch( userRegisterFailure( error.message ) )
-
-      Alert.alert(
-        "Failed to create new user!",
-        "Ensure that your email is correctly written and not already in use! Both passwords must also be matching!",
+        "Passwords doesn't match!",
+        "Please ensure both passwords are correctly typed!",
         [
           { text: "I Understood", style: "default" },
         ]
       )
+
+      return
     }
+
+    await createUserWithEmailAndPassword( authInit, theEmail, thePassword )
+      .then(() => {
+        dispatch( userRegister(
+          {
+            UserId: 0,
+            Username: username,
+            Password: password,
+            Image: undefined,
+            Email: email,
+            Contact: undefined,
+            DateOfBirth: undefined,
+            Height: undefined,
+            Weight: undefined,
+            Age: undefined,
+            RegisteredDate: dayjs().toString(),
+            IsDarkMode: false,
+            IsAppleAuth: false,
+            IsGoogleAuth: false
+          }
+        ))
+
+        Alert.alert(
+          "Success!",
+          "User account created successfully!",
+          [
+            { text: "Cancel", style: "cancel" },
+            { text: "Proceed to Login", onPress: () => navigation.goBack() }
+          ]
+        )
+      })
+      .catch( error => {
+        if ( error.code === "auth/email-already-in-use" ) {
+          Alert.alert(
+            "Existing email address!",
+            "That email address is already in use!",
+            [
+              { text: "I Understood", style: "default" },
+            ]
+          )
+        }
+
+        if ( error.code === "auth/invalid-email" ) {
+          Alert.alert(
+            "Invalid email address!",
+            "That email address is invalid!",
+            [
+              { text: "I Understood", style: "default" },
+            ]
+          )
+        }
+
+        console.log( "Error registering: ", error )
+      })
   }
 
   const { fontsLoaded } = useFontFromContext()
@@ -133,7 +159,7 @@ export default function Register( { navigation }: any ) {
             <Spacer size={ 20 } />
 
             <RoundedBorderButton
-              onPress={ awsRegister }
+              onPress={ () => firebaseRegister( email, password, confirm ) }
               text="Start Exploring!"
               color={ LightMode.yellow }
               textColor={ LightMode.white }

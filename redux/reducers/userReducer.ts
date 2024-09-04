@@ -1,4 +1,4 @@
-import { LOGOUT_CLEAR_FAILURE, LOGOUT_CLEAR_LOADING, LOGOUT_CLEAR_SUCCESS, LogoutClearAction, RESET_PASSWORD_FAILURE, RESET_PASSWORD_LOADING, RESET_PASSWORD_SUCCESS, ResetPasswordAction, SET_USER_SESSION_FAILURE, SET_USER_SESSION_LOADING, SET_USER_SESSION_SUCCESS, SetUserSessionAction, UPDATE_PROFILE_FAILURE, UPDATE_PROFILE_LOADING, UPDATE_PROFILE_SUCCESS, UpdateProfileAction, USER_REGISTER_FAILURE, USER_REGISTER_LOADING, USER_REGISTER_SUCCESS, UserRegisterAction } from "redux/types/actionTypes"
+import { LOGOUT_CLEAR_FAILURE, LOGOUT_CLEAR_LOADING, LOGOUT_CLEAR_SUCCESS, GET_THE_USER_FAILURE, GET_THE_USER_LOADING, GET_THE_USER_SUCCESS, UPDATE_PROFILE_FAILURE, UPDATE_PROFILE_LOADING, UPDATE_PROFILE_SUCCESS, USER_REGISTER_FAILURE, USER_REGISTER_LOADING, USER_REGISTER_SUCCESS } from "redux/types/actionTypes"
 import { ReduxState } from "redux/types/stateTypes"
 
 const initialState: ReduxState = {
@@ -11,7 +11,7 @@ const initialState: ReduxState = {
 
 export const userReducer = (
   state = initialState,
-  action: UserRegisterAction | SetUserSessionAction | ResetPasswordAction | LogoutClearAction | UpdateProfileAction
+  action: any
 ): ReduxState => {
   switch ( action.type ) {
     case USER_REGISTER_LOADING:
@@ -37,14 +37,14 @@ export const userReducer = (
         error: action.payload
       }
 
-    case SET_USER_SESSION_LOADING:
+    case GET_THE_USER_LOADING:
       return {
         ...state,
         loading: true,
         error: null
       }
 
-    case SET_USER_SESSION_SUCCESS:
+    case GET_THE_USER_SUCCESS:
       return {
         ...state,
         loading: false,
@@ -54,30 +54,7 @@ export const userReducer = (
         }]
       }
 
-    case SET_USER_SESSION_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: action.payload
-      }
-
-    case RESET_PASSWORD_LOADING:
-      return {
-        ...state,
-        loading: true,
-        error: null
-      }
-    
-    case RESET_PASSWORD_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        data: [{
-          ...state.data[ 0 ],
-        }]
-      }
-
-    case RESET_PASSWORD_FAILURE:
+    case GET_THE_USER_FAILURE:
       return {
         ...state,
         loading: false,

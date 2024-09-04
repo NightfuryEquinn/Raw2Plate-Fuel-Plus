@@ -8,53 +8,40 @@ interface ApiRes<T> {
   statusText: string
 }
 
-export const getTheUser = async ( theEmail: string, thePassword: string ): Promise<ReduxState[]> => {
+export const getTheUserService = async ( theEmail: string, thePassword: string ): Promise<ReduxState[]> => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.get( `/user/email/${ theEmail }/password/${ thePassword }` )
 
-    console.log( "getTheUser: ", res.data )
+    console.log( "DONE - getTheUserService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "Get the user: ", error )
+    console.log( "ERROR - getTheUserService: ", error )
 
     throw error
   }
 }
 
-export const resetPassword = async ( theEmail: string, thePassword: string ): Promise<ReduxState[]> => {
-  try {
-    const res: ApiRes<ReduxState[]> = await awsInstance.put( `/user/email/${ theEmail }/password/${ thePassword }` )
-
-    console.log( "resetPassword: ", res.data )
-    return res.data
-  } catch ( error ) {
-    console.log( "Reset password: ", error )
-
-    throw error
-  }
-}
-
-export const postUser = async ( theUser: User ): Promise<ReduxState[]> => {
+export const userRegisterService = async ( theUser: User ): Promise<ReduxState[]> => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.post( "/user", theUser )
 
-    console.log( "postUser: ", res.data )
+    console.log( "DONE - userRegisterService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "Post user: ", error )
+    console.log( "ERROR - userRegisterService: ", error )
 
     throw error
   }
 }
 
-export const updateProfile = async ( theUser: User ): Promise<ReduxState[]> => {
+export const updateProfileService = async ( theUser: User ): Promise<ReduxState[]> => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.put( `/user/${ theUser.UserId }`, theUser )
 
-    console.log( "updateProfile: ", res.data )
+    console.log( "DONE - updateProfileService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "Update profile: ", error )
+    console.log( "ERROR - updateProfileService: ", error )
 
     throw error
   }

@@ -22,50 +22,11 @@ interface UserRegisterFailure {
 export type UserRegisterAction = UserRegisterLoading | UserRegisterSuccess | UserRegisterFailure
 
 /**
- * Set user session
+ * Get the user
  */
-export const SET_USER_SESSION_LOADING = "SET_USER_SESSION_LOADING"
-export const SET_USER_SESSION_SUCCESS = "SET_USER_SESSION_SUCCESS"
-export const SET_USER_SESSION_FAILURE = "SET_USER_SESSION_FAILURE"
-
-interface SetUserSessionLoading {
-  type: typeof SET_USER_SESSION_LOADING
-}
-
-interface SetUserSessionSuccess {
-  type: typeof SET_USER_SESSION_SUCCESS,
-  payload: any[]
-}
-
-interface SetUserSessionFailure {
-  type: typeof SET_USER_SESSION_FAILURE,
-  payload: string
-}
-
-export type SetUserSessionAction = SetUserSessionLoading | SetUserSessionSuccess | SetUserSessionFailure
-
-/**
- * Reset password
- */
-export const RESET_PASSWORD_LOADING = "RESET_PASSWORD_LOADING"
-export const RESET_PASSWORD_SUCCESS = "RESET_PASSWORD_SUCCESS"
-export const RESET_PASSWORD_FAILURE = "RESET_PASSWORD_FAILURE"
-
-interface ResetPasswordLoading {
-  type: typeof RESET_PASSWORD_LOADING
-}
-
-interface ResetPasswordSuccess {
-  type: typeof RESET_PASSWORD_SUCCESS,
-  payload: any[]
-}
-
-interface ResetPasswordFailure {
-  type: typeof RESET_PASSWORD_FAILURE,
-  payload: string
-}
-
-export type ResetPasswordAction = ResetPasswordLoading | ResetPasswordSuccess | ResetPasswordFailure
+export const GET_THE_USER_LOADING = "GET_THE_USER_LOADING"
+export const GET_THE_USER_SUCCESS = "GET_THE_USER_SUCCESS"
+export const GET_THE_USER_FAILURE = "GET_THE_USER_FAILURE"
 
 /**
  * Logout clear session

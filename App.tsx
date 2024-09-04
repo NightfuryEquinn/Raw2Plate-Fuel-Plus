@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { FontProvider } from 'context/FontProvider';
 import { store } from 'redux/reducers/store';
 import AppStack from 'app/AppStack';
+import { FirebaseProvider } from 'context/FirebaseProvider';
 
 export default function App() {
   const fontConfig = {
@@ -19,9 +20,11 @@ export default function App() {
   return (
     <Provider store={ store }>
       <PaperProvider theme={ theme }>
-        <FontProvider>
-          <AppStack />
-        </FontProvider>
+        <FirebaseProvider>
+          <FontProvider>
+            <AppStack />
+          </FontProvider>
+        </FirebaseProvider>
       </PaperProvider>
     </Provider>
   )

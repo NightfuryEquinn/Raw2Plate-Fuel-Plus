@@ -1,23 +1,31 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { LightMode } from 'assets/colors/LightMode'
 import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
+import { useFirebaseFromContext } from 'context/FirebaseProvider'
 import { useFontFromContext } from 'context/FontProvider'
 import dayjs from 'dayjs'
 import * as ImagePicker from 'expo-image-picker'
+import { signOut } from 'firebase/auth'
 import React, { useState } from 'react'
 import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { TextInput } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
-import { logoutClearFailure, logoutClearLoading, logoutClearSuccess } from 'redux/actions/userAction'
+import { logoutClear, updateProfileFailure, updateProfileLoading, updateProfileSuccess } from 'redux/actions/userAction'
 import { AppDispatch, RootState } from 'redux/reducers/store'
 import Loading from './Loading'
+import { updateProfileService } from 'redux/services/userServices'
 
 export default function Profile( { navigation }: any ) {
   const dispatch: AppDispatch = useDispatch()
   const { data, loading, error } = useSelector(( state: RootState ) => state.user )
   const userInfo = data[ 0 ].setUserSession
+  console.log( userInfo )
+  console.log( AsyncStorage.getItem( "@user_session" ) )
+
+  const { authInit } = useFirebaseFromContext()
 
   const [ image, setImage ] = useState( "" )
   const [ email, setEmail ] = useState( userInfo.email )
@@ -47,27 +55,60 @@ export default function Profile( { navigation }: any ) {
     }
   }
 
-  const awsLogout = async () => {
-    dispatch( logoutClearLoading() )
+  // Firebase logout
+  const firebaseLogout = async () => {
+    await signOut( authInit )
+      .then(() => {
+        dispatch( logoutClear() )
+      })
+      .catch( error => {
+        Alert.alert(
+          "Failed to logout!",
+          "Unknown error occured, please try again!",
+          [
+            { text: "I Understood", style: "default" },
+          ]
+        )
+
+        console.log( "Error logout: ", error )
+      })
+  }
+
+  const saveChanges = async () => {
+    dispatch( updateProfileLoading() )
 
     try {
-      dispatch( logoutClearSuccess( [] ) )
-    } catch ( error: any ) {
-      console.log( error )
-      dispatch( logoutClearFailure( error.message ) )
+      const res = await updateProfileService(
+        {
+          ...userInfo,
+          Email: email,
+          Contact: contact,
+          Height: height,
+          Weight: weight,
+          Age: age
+        }
+      )
+
+      dispatch( updateProfileSuccess( res ) )
 
       Alert.alert(
-        "Failed to logout!",
-        "Unknown error occured, please try again!",
+        "Success!",
+        "New user info have been updated!",
+        [
+          { text: "I Understood", style: "default" },
+        ]
+      )
+    } catch ( error: any ) {
+      dispatch( updateProfileFailure( error.message ) )
+
+      Alert.alert(
+        "Failed to update!",
+        "Unknown error occured, please check your Internet connection and try again!",
         [
           { text: "I Understood", style: "default" },
         ]
       )
     }
-  }
-
-  const saveChanges = async () => {
-
   }
 
   const { fontsLoaded } = useFontFromContext()
@@ -196,7 +237,7 @@ export default function Profile( { navigation }: any ) {
           <KeyboardAvoidingView behavior={ Platform.OS === "ios" ? "padding" : "height" }>
             <View style={ s.buttonContainer }>
               <RoundedBorderButton 
-                onPress={ awsLogout }
+                onPress={ firebaseLogout }
                 text="Log Out"
                 color={ LightMode.black }
                 textColor={ LightMode.white }

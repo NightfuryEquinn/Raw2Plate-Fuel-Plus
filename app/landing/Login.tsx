@@ -1,20 +1,24 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import Loading from 'app/Loading'
 import { LightMode } from 'assets/colors/LightMode'
 import LinedTextField from 'components/LinedTextField'
 import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
+import { useFirebaseFromContext } from 'context/FirebaseProvider'
 import { useFontFromContext } from 'context/FontProvider'
+import { signInWithEmailAndPassword } from 'firebase/auth'
 import React, { useState } from 'react'
 import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
-import { setUserSessionFailure, setUserSessionLoading, setUserSessionSuccess } from 'redux/actions/userAction'
+import { getTheUser } from 'redux/actions/userAction'
 import { AppDispatch, RootState } from 'redux/reducers/store'
-import { getTheUser } from 'redux/services/userServices'
 
 export default function Login( { navigation }: any ) {
   const dispatch: AppDispatch = useDispatch()
   const { data, loading, error } = useSelector(( state: RootState ) => state.user )
+
+  const { authInit } = useFirebaseFromContext()
 
   const [ email, setEmail ] = useState( "" )
   const [ password, setPassword ] = useState( "" )
@@ -27,25 +31,55 @@ export default function Login( { navigation }: any ) {
     navigation.navigate( "Reset" )
   }
 
-  // Login user
-  const awsLogin = async () => {
-    dispatch( setUserSessionLoading() )
+  // Firebase login
+  const firebaseLogin = async ( theEmail: string, thePassword: string ) => {
+    await signInWithEmailAndPassword( authInit, theEmail, thePassword )
+      .then(() => {
+        dispatch( getTheUser( theEmail, thePassword ))
+      })
+      .catch( error => {
+        if ( error.code === "auth/invalid-credential" ) {
+          Alert.alert(
+            "Invalid credentials!",
+            "Email address or password is incorrect or user not exist!",
+            [
+              { text: "I Understood", style: "default" },
+            ]
+          )
+        }
 
-    try {
-      const res = await getTheUser( email, password )
+        if ( error.code === "auth/user-not-found" ) {
+          Alert.alert(
+            "User not found!",
+            "No user found with this email, please register a new account!",
+            [
+              { text: "I Understood", style: "default" },
+            ]
+          )
+        }
 
-      dispatch( setUserSessionSuccess( res ) )
-    } catch ( error: any ) {
-      dispatch( setUserSessionFailure( error.message ) )
-    
-      Alert.alert(
-        "Incorrect credentials!",
-        "Ensure that your email and password is correctly written!",
-        [
-          { text: "I Understood", style: "default" },
-        ]
-      )
-    }
+        if ( error.code === "auth/wrong-password" ) {
+          Alert.alert(
+            "Incorrect password!",
+            "Password doesn't match, please check again!",
+            [
+              { text: "I Understood", style: "default" },
+            ]
+          )
+        }
+
+        if ( error.code === "auth/weak-password" ) {
+          Alert.alert(
+            "Weak password!",
+            "Password should be at least 6 characters!",
+            [
+              { text: "I Understood", style: "default" },
+            ]
+          )
+        }
+
+        console.log( "Error login: ", error )
+      })
   }
 
   const { fontsLoaded } = useFontFromContext()
@@ -131,7 +165,7 @@ export default function Login( { navigation }: any ) {
 
             { email !== "" ?
               <RoundedBorderButton
-                onPress={ awsLogin }
+                onPress={ () => firebaseLogin( email, password ) }
                 icon="MA"
                 name="account-circle"
                 text="Proceed with Login"
