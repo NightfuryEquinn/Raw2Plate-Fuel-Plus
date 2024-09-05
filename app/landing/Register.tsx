@@ -49,20 +49,20 @@ export default function Register( { navigation }: any ) {
       .then(() => {
         dispatch( userRegister(
           {
-            UserId: 0,
-            Username: username,
-            Password: password,
-            Image: undefined,
-            Email: email,
-            Contact: undefined,
-            DateOfBirth: undefined,
-            Height: undefined,
-            Weight: undefined,
-            Age: undefined,
-            RegisteredDate: dayjs().toString(),
-            IsDarkMode: false,
-            IsAppleAuth: false,
-            IsGoogleAuth: false
+            userId: 0,
+            username: username,
+            password: password,
+            image: undefined,
+            email: email,
+            contact: undefined,
+            dateOfBirth: undefined,
+            height: undefined,
+            weight: undefined,
+            age: undefined,
+            registeredDate: dayjs().toString(),
+            isDarkMode: false,
+            isAppleAuth: false,
+            isGoogleAuth: false
           }
         ))
 

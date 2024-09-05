@@ -53,6 +53,14 @@ export default function Settings() {
       setDarkMode( false )
     } else {
       setDarkMode( true )
+
+      Alert.alert(
+        "Not yet available!",
+        "Dark mode will be integrated in the future. Please bear with the bugs!",
+        [
+          { text: "I Understood", style: "default" },
+        ]
+      )
     }
   }
 

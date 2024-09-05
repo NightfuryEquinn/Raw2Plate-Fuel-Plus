@@ -8,7 +8,7 @@ import { useFontFromContext } from 'context/FontProvider'
 import { forRecipeManager } from 'data/dummyData'
 import { mealCategories, MealCategory } from 'data/mealCategory'
 import React, { useRef, useState } from 'react'
-import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, ScrollView, StyleSheet, Text, Image, TouchableOpacity, View } from 'react-native'
 import PagerView from 'react-native-pager-view'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
@@ -33,6 +33,7 @@ export default function Bookmark() {
 
   const SearchItem = ( { item, index }: any ) => (
     <HoriCardWithCTA 
+      key={ index }
       onPress={ () => navigation.navigate( "RecipeDetail" ) }
       data={ item }
     />
@@ -125,15 +126,26 @@ export default function Bookmark() {
         >
           {
             mealCategories.map(( meal: MealCategory, index: number ) => (
-              <FlatList
-                key={ index }
-                contentContainerStyle={{ padding: 20 }}
-                showsVerticalScrollIndicator= { false }
-                data={ forRecipeManager }
-                renderItem={ SearchItem }
-                keyExtractor={ data => data.id.toString() }
-                ItemSeparatorComponent={ () => <Spacer size={ 10 } /> }
-              />
+              meal ? 
+                <FlatList
+                  key={ index }
+                  contentContainerStyle={{ padding: 20 }}
+                  showsVerticalScrollIndicator= { false }
+                  data={ forRecipeManager }
+                  renderItem={ SearchItem }
+                  keyExtractor={ data => data.id.toString() }
+                  ItemSeparatorComponent={ () => <Spacer size={ 10 } /> }
+                />
+              :
+                <View style={ s.emptyContainer }>
+                  <Image 
+                    source={ require( "../../assets/images/icons/cancel.png" ) }
+                    resizeMode="cover"
+                    style={ s.emptyIcon }
+                  />
+
+                  <Text style={ s.emptyText }>No products of this category available in this store...</Text>
+                </View>
             ))
           }
         </PagerView>
@@ -211,5 +223,25 @@ const s = StyleSheet.create({
   "pager": {
     flex: 1,
     margin: -20,
+  },
+  "emptyContainer": {
+    flex: 1,
+    gap: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    backgroundColor: LightMode.darkGrey,
+    borderRadius: 10
+  },
+  "emptyIcon": {
+    height: 44,
+    width: 44
+  },
+  "emptyText": {
+    paddingHorizontal: 20,
+    fontFamily: "cantarell",
+    fontSize: 16,
+    color: LightMode.black,
+    textAlign: "center"
   }
 })

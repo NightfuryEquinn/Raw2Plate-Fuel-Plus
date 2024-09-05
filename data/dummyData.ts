@@ -144,54 +144,54 @@ export const forViewCalendar: ForViewCalendar[] = [
 ]
 
 export const forRecipeManager: ForRecipeManager[] = [
-  {
-    "id": 1,
-    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
-    "heading": "Brill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
-    "meal": "BKF",
-    "date": "29-07-2024",
-    "author": "Sacrilegious Anonymous Illegal Horse"
-  },
-  {
-    "id": 2,
-    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
-    "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
-    "meal": "BKF",
-    "date": "31-07-2024",
-    "author": "Sacrilegious Anonymous Illegal Horse"
-  },
-  {
-    "id": 3,
-    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
-    "heading": "Drill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
-    "meal": "LUN",
-    "date": "31-07-2024",
-    "author": "Sacrilegious Anonymous Illegal Horse"
-  },
-  {
-    "id": 4,
-    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
-    "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
-    "meal": "LUN",
-    "date": "31-07-2024",
-    "author": "Sacrilegious Anonymous Illegal Horse"
-  },
-  {
-    "id": 5,
-    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
-    "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
-    "meal": "TEA",
-    "date": "02-08-2024",
-    "author": "Sacrilegious Anonymous Illegal Horse"
-  },
-  {
-    "id": 6,
-    "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
-    "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
-    "meal": "DIN",
-    "date": "02-08-2024",
-    "author": "Sacrilegious Anonymous Illegal Horse"
-  },
+  // {
+  //   "id": 1,
+  //   "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
+  //   "heading": "Brill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
+  //   "meal": "BKF",
+  //   "date": "29-07-2024",
+  //   "author": "Sacrilegious Anonymous Illegal Horse"
+  // },
+  // {
+  //   "id": 2,
+  //   "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
+  //   "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
+  //   "meal": "BKF",
+  //   "date": "31-07-2024",
+  //   "author": "Sacrilegious Anonymous Illegal Horse"
+  // },
+  // {
+  //   "id": 3,
+  //   "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
+  //   "heading": "Drill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
+  //   "meal": "LUN",
+  //   "date": "31-07-2024",
+  //   "author": "Sacrilegious Anonymous Illegal Horse"
+  // },
+  // {
+  //   "id": 4,
+  //   "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
+  //   "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
+  //   "meal": "LUN",
+  //   "date": "31-07-2024",
+  //   "author": "Sacrilegious Anonymous Illegal Horse"
+  // },
+  // {
+  //   "id": 5,
+  //   "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
+  //   "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
+  //   "meal": "TEA",
+  //   "date": "02-08-2024",
+  //   "author": "Sacrilegious Anonymous Illegal Horse"
+  // },
+  // {
+  //   "id": 6,
+  //   "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
+  //   "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
+  //   "meal": "DIN",
+  //   "date": "02-08-2024",
+  //   "author": "Sacrilegious Anonymous Illegal Horse"
+  // },
 ]
 
 export const forTimer: ForTimer[] = [

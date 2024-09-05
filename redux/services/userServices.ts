@@ -36,7 +36,7 @@ export const userRegisterService = async ( theUser: User ): Promise<ReduxState[]
 
 export const updateProfileService = async ( theUser: User ): Promise<ReduxState[]> => {
   try {
-    const res: ApiRes<ReduxState[]> = await awsInstance.put( `/user/${ theUser.UserId }`, theUser )
+    const res: ApiRes<ReduxState[]> = await awsInstance.put( `/user/${ theUser.userId }`, theUser )
 
     console.log( "DONE - updateProfileService: ", res.data )
     return res.data

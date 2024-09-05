@@ -1,22 +1,22 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { User } from "redux/models/User";
 import { AppDispatch } from "redux/reducers/store";
-import { getTheUserService, userRegisterService } from "redux/services/userServices";
-import { LOGOUT_CLEAR_FAILURE, LOGOUT_CLEAR_LOADING, LOGOUT_CLEAR_SUCCESS, LogoutClearAction, GET_THE_USER_FAILURE, GET_THE_USER_LOADING, GET_THE_USER_SUCCESS, UPDATE_PROFILE_FAILURE, UPDATE_PROFILE_LOADING, UPDATE_PROFILE_SUCCESS, UpdateProfileAction, USER_REGISTER_FAILURE, USER_REGISTER_LOADING, USER_REGISTER_SUCCESS, UserRegisterAction } from "redux/types/actionTypes";
+import { getTheUserService, updateProfileService, userRegisterService } from "redux/services/userServices";
+import { GET_THE_USER_FAILURE, GET_THE_USER_LOADING, GET_THE_USER_SUCCESS, LOGOUT_CLEAR_FAILURE, LOGOUT_CLEAR_LOADING, LOGOUT_CLEAR_SUCCESS, UPDATE_PROFILE_FAILURE, UPDATE_PROFILE_LOADING, UPDATE_PROFILE_SUCCESS, USER_REGISTER_FAILURE, USER_REGISTER_LOADING, USER_REGISTER_SUCCESS } from "redux/types/actionTypes";
 
 /**
  * User register
  */
-const userRegisterLoading = (): UserRegisterAction => ({
+const userRegisterLoading = () => ({
   type: USER_REGISTER_LOADING
 })
 
-const userRegisterSuccess = ( data: any[] ): UserRegisterAction => ({
+const userRegisterSuccess = ( data: any[] ) => ({
   type: USER_REGISTER_SUCCESS,
   payload: data
 })
 
-const userRegisterFailure = ( error: string ): UserRegisterAction => ({
+const userRegisterFailure = ( error: string ) => ({
   type: USER_REGISTER_FAILURE,
   payload: error
 })
@@ -79,16 +79,16 @@ export const getTheUser = ( theEmail: string, thePassword: string ) => {
 /**
  * Logout clear session
  */
-const logoutClearLoading = (): LogoutClearAction => ({
+const logoutClearLoading = () => ({
   type: LOGOUT_CLEAR_LOADING
 })
 
-const logoutClearSuccess = ( data: any[] ): LogoutClearAction => ({
+const logoutClearSuccess = ( data: any[] ) => ({
   type: LOGOUT_CLEAR_SUCCESS,
   payload: data
 })
 
-const logoutClearFailure = ( error: string ): LogoutClearAction => ({
+const logoutClearFailure = ( error: string ) => ({
   type: LOGOUT_CLEAR_FAILURE,
   payload: error
 })
@@ -98,8 +98,11 @@ export const logoutClear = () => {
     dispatch( logoutClearLoading() )
 
     try {
-      await AsyncStorage.removeItem( "@user_session" )
       dispatch( logoutClearSuccess( [] ) )
+
+      const sessionUser = await AsyncStorage.removeItem( "@user_session" )
+
+      console.log( "Done removing session: ", sessionUser )
     } catch ( error: any ) {
       dispatch( logoutClearFailure( error.message ) )
 
@@ -111,16 +114,40 @@ export const logoutClear = () => {
 /**
  * Update profile
  */
-export const updateProfileLoading = (): UpdateProfileAction => ({
+const updateProfileLoading = () => ({
   type: UPDATE_PROFILE_LOADING
 })
 
-export const updateProfileSuccess = ( data: any[] ): UpdateProfileAction => ({
+const updateProfileSuccess = ( data: any[] ) => ({
   type: UPDATE_PROFILE_SUCCESS,
   payload: data
 })
 
-export const updateProfileFailure = ( error: string ): UpdateProfileAction => ({
+const updateProfileFailure = ( error: string ) => ({
   type: UPDATE_PROFILE_FAILURE,
   payload: error
 })
+
+export const updateProfile = ( theUser: User ) => {
+  return async ( dispatch: AppDispatch ) => {
+    dispatch( updateProfileLoading() )
+
+    try {
+      const res = await updateProfileService( theUser )
+      dispatch( updateProfileSuccess( res ) )
+
+      try {
+        await AsyncStorage.removeItem( "@user_session" )
+        const sessionUser = await AsyncStorage.setItem( "@user_session", JSON.stringify( theUser ) )
+
+        console.log( "Done updating session: ", sessionUser )
+      } catch ( error: any ) {
+        console.log( "Error updating session: ", error )
+      }
+    } catch ( error: any ) {
+      dispatch( updateProfileFailure( error.message ) )
+
+      throw error
+    }
+  }
+}

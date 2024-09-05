@@ -1,7 +1,7 @@
 export interface Bookmark {
-  BookmarkId: number,
-  MealType: string,
-  RecipeId: number,
-  DateAdded: string,
-  UserId: number | undefined
+  bookmarkId: number,
+  mealType: string,
+  recipeId: number,
+  dateAdded: string,
+  userId: number | undefined
 }

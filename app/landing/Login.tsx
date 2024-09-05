@@ -36,6 +36,11 @@ export default function Login( { navigation }: any ) {
     await signInWithEmailAndPassword( authInit, theEmail, thePassword )
       .then(() => {
         dispatch( getTheUser( theEmail, thePassword ))
+
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "MainStack" }]
+        })
       })
       .catch( error => {
         if ( error.code === "auth/invalid-credential" ) {

@@ -13,26 +13,43 @@ import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, Sty
 import { TextInput } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
-import { logoutClear, updateProfileFailure, updateProfileLoading, updateProfileSuccess } from 'redux/actions/userAction'
+import { logoutClear, updateProfile } from 'redux/actions/userAction'
 import { AppDispatch, RootState } from 'redux/reducers/store'
 import Loading from './Loading'
-import { updateProfileService } from 'redux/services/userServices'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 
 export default function Profile( { navigation }: any ) {
   const dispatch: AppDispatch = useDispatch()
   const { data, loading, error } = useSelector(( state: RootState ) => state.user )
   const userInfo = data[ 0 ].setUserSession
-  console.log( userInfo )
-  console.log( AsyncStorage.getItem( "@user_session" ) )
 
-  const { authInit } = useFirebaseFromContext()
+  const { authInit, storageInit } = useFirebaseFromContext()
 
   const [ image, setImage ] = useState( "" )
   const [ email, setEmail ] = useState( userInfo.email )
   const [ contact, setContact ] = useState( userInfo.contact )
-  const [ height, setHeight ] = useState( userInfo.height )
-  const [ weight, setWeight ] = useState( userInfo.weight )
-  const [ age, setAge ] = useState( userInfo.age )
+  const [ height, setHeight ] = useState( userInfo?.height?.toString() || "0" )
+  const [ weight, setWeight ] = useState( userInfo?.weight?.toString() || "0" )
+  const [ age, setAge ] = useState( userInfo?.age?.toString() || "0" )
+
+  const uploadImageFirebase = async ( uri: string ) => {
+    try {
+      const res = await fetch( uri )
+      const blob = await res.blob()
+
+      const imageRef = ref( storageInit, `profile_images/${ userInfo.userId }_${ dayjs().toISOString() }.jpg` )
+
+      await uploadBytes( imageRef, blob )
+
+      const downloadUrl = await getDownloadURL( imageRef )
+
+      return downloadUrl
+    } catch ( error: any ) {
+      console.log( "Error uploading image: ", error )
+
+      throw error
+    }
+  }
 
   const pickImage = async () => {
     // Request permission
@@ -60,6 +77,11 @@ export default function Profile( { navigation }: any ) {
     await signOut( authInit )
       .then(() => {
         dispatch( logoutClear() )
+
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "LandingStack" }]
+        })
       })
       .catch( error => {
         Alert.alert(
@@ -75,40 +97,43 @@ export default function Profile( { navigation }: any ) {
   }
 
   const saveChanges = async () => {
-    dispatch( updateProfileLoading() )
+    let imageUrl = userInfo.image
 
-    try {
-      const res = await updateProfileService(
-        {
-          ...userInfo,
-          Email: email,
-          Contact: contact,
-          Height: height,
-          Weight: weight,
-          Age: age
-        }
-      )
+    if ( image ) {
+      try {
+        imageUrl = await uploadImageFirebase( image )
+      } catch ( error ) {
+        Alert.alert(
+          "Failed to upload image!",
+          "There was an error uploading the image. Please try again!",
+          [
+            { text: "I Understood", style: "default" }
+          ]
+        )
 
-      dispatch( updateProfileSuccess( res ) )
-
-      Alert.alert(
-        "Success!",
-        "New user info have been updated!",
-        [
-          { text: "I Understood", style: "default" },
-        ]
-      )
-    } catch ( error: any ) {
-      dispatch( updateProfileFailure( error.message ) )
-
-      Alert.alert(
-        "Failed to update!",
-        "Unknown error occured, please check your Internet connection and try again!",
-        [
-          { text: "I Understood", style: "default" },
-        ]
-      )
+        return
+      }
     }
+
+    dispatch( updateProfile(
+      {
+        ...userInfo,
+        image: imageUrl,
+        email: email,
+        contact: contact,
+        height: height,
+        weight: weight,
+        age: age
+      }
+    ))
+
+    Alert.alert(
+      "Success!",
+      "New user info has been saved successfully!",
+      [
+        { text: "I Understood", style: "default" },
+      ]
+    )
   }
 
   const { fontsLoaded } = useFontFromContext()

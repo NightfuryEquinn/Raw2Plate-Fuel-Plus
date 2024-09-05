@@ -51,12 +51,14 @@ export default function AppStack() {
     }
   }
 
-  const isUserSessionEmpty = ( session: [] ) => {
+  const isUserSessionEmpty = ( session: any ) => {
     if ( session === null ) {
       return true
     }
 
-    return !Object.values( session ).some( value => value !== null && value !== '' && value !== false )
+    return !Object.values( session ).some( 
+      value => value !== null && value !== '' && value !== false 
+    )
   };
 
   const { fontsLoaded } = useFontFromContext()
