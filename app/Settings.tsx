@@ -99,7 +99,7 @@ export default function Settings() {
   const toggleNotification = async () => {
     const { status } = await Notifications.requestPermissionsAsync()
 
-    if ( status !== "granted" ) {
+    if ( status === "granted" ) {
       openDeviceSettings( "notification" )
     } else {
       setNotification( true )

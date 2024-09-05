@@ -1,5 +1,6 @@
 import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native'
 import { LightMode } from 'assets/colors/LightMode'
+import EmptyContent from 'components/EmptyContent'
 import HoriCardWithCTA from 'components/HoriCardWithCTA'
 import LinedTextField from 'components/LinedTextField'
 import Spacer from 'components/Spacer'
@@ -126,7 +127,7 @@ export default function Bookmark() {
         >
           {
             mealCategories.map(( meal: MealCategory, index: number ) => (
-              meal ? 
+              forRecipeManager ? 
                 <FlatList
                   key={ index }
                   contentContainerStyle={{ padding: 20 }}
@@ -137,15 +138,9 @@ export default function Bookmark() {
                   ItemSeparatorComponent={ () => <Spacer size={ 10 } /> }
                 />
               :
-                <View style={ s.emptyContainer }>
-                  <Image 
-                    source={ require( "../../assets/images/icons/cancel.png" ) }
-                    resizeMode="cover"
-                    style={ s.emptyIcon }
-                  />
-
-                  <Text style={ s.emptyText }>No products of this category available in this store...</Text>
-                </View>
+                <EmptyContent 
+                  message={ `No bookmark for ${ meal.label } `}
+                />
             ))
           }
         </PagerView>

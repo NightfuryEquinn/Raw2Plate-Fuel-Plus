@@ -1,3 +1,4 @@
+import Loading from 'app/Loading'
 import { LightMode } from 'assets/colors/LightMode'
 import AddRecipeToPlannerModal from 'components/AddRecipeToPlannerModal'
 import AddRecipeToTrackerModal from 'components/AddRecipeToTrackerModal'
@@ -6,38 +7,22 @@ import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
 import dayjs from 'dayjs'
-import React, { useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchRecipeInfo } from 'redux/actions/recipeAction'
+import { AppDispatch, RootState } from 'redux/reducers/store'
 
 export default function RecipeDetail( { navigation, route }: any ) {
-  // const { recipeData } = route.params
-  
-  const allergy = [ "Gluten", "Pork", "Milk", "Crustaceans", "Peanuts", "Mustard", "Celery" ]
+  const { recipeId } = route.params
 
-  const ingredients = [
-    "12 ounces of linguine pasta",
-    "4 tablespoons of butter",
-    "4-5 cloves of garlic, minced",
-    "1 cup of heavy cream",
-    "1 cup of Parmesan cheese, grated",
-    "2 tablespoons of parsley, chopped",
-    "Salt to taste",
-    "Black pepper to taste",
-    "A pinch of red pepper",
-    "1 teaspoon of lemon zest",
-    "1-2 tablespoon of olive oil"
-  ]
-
-  const steps = [
-    "Bring a large pot of salted water to a boil. Add the linguine pasta and cook according to package instructions until al dente. Reserve 1 cup of pasta water and then drain the pasta.",
-    "In a large skillet, melt the butter over medium heat. Add the minced garlic and sauté until fragrant, about 1-2 minutes. Be careful not to burn the garlic.",
-    "Pour in the heavy cream and bring it to a gentle simmer. Add the grated Parmesan cheese and stir until the cheese is melted and the sauce is smooth. Season with salt, black pepper, and red pepper flakes (if using) to taste. If the sauce is too thick, gradually add the reserved pasta water until you reach the desired consistency.",
-    "Add the cooked and drained linguine to the skillet with the sauce. Toss to coat the pasta evenly with the sauce.",
-    "If using grilled chicken, shrimp, spinach, or mushrooms, add them to the skillet and toss to combine. Cook for an additional 2-3 minutes until everything is heated through. If adding lemon zest, sprinkle it over the pasta and mix well.",
-    "Transfer the pasta to serving plates. Garnish with chopped parsley and drizzle with olive oil if desired. Serve immediately with extra grated Parmesan cheese on the side."
-  ]
+  const dispatch: AppDispatch = useDispatch()
+  const { data, loading, error } = useSelector(( state: RootState ) => state.recipe )
+  const recipeInfo = data[ 0 ].recipeInfo || []
+  const ingredients = data[ 0 ].cacheIngredients || []
+  const steps = data[ 0 ].cacheSteps || []
 
   const [ modal, setModal ] = useState( false )
   const [ modalDate, setModalDate ] = useState( dayjs() )
@@ -63,20 +48,53 @@ export default function RecipeDetail( { navigation, route }: any ) {
     setTrackModal( !trackModal )
   }
 
+  const cacheIngredients = ( recipe: any ) => {
+    const ingreMap: { [ key: number ]: boolean } = {}
+    const ingredients: any[] = []
+
+    recipe[ 0 ].steps.forEach(( step: any ) => {
+      step.ingredients.forEach(( ingre: any ) => {
+        if ( !ingreMap[ ingre.id ] ) {
+          ingreMap[ ingre.id ] = true
+          ingredients.push( ingre )
+        }
+      })
+    })
+
+    return ingredients
+  }
+
+  const cacheSteps = ( recipe: any ) => {
+    const steps: string[] = []
+
+    recipe[ 0 ].forEach(( step: any ) => {
+      step.push( step.step )
+    })
+
+    return steps
+  }
+
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
     return null
   }
+
+  useEffect(() => {
+    if ( !data[ 0 ].recipeInfo ) {
+      dispatch( fetchRecipeInfo( recipeId ) )
+    }
+  }, [])
   
   return (
+    loading ? <Loading /> :
     <SafeAreaView style={ s.container }>        
       <View style={{ flex: 1 }}>
         <TopBar />
 
         <Spacer size={ 20 } />
 
-        <Text style={ s.heading }>Parmesan Garlic Linguine Pasta</Text>
+        <Text style={ s.heading }>{ recipeInfo.title }</Text>
 
         <Spacer size={ 20 } />
 
@@ -89,7 +107,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
           <View style={ s.subContainer }>
             <View style={ s.detailWrapper }>
               <Text style={[ s.sub, s.yellow ]}>By</Text>
-              <Text numberOfLines={ 1 } style={[ s.sub, { flex: 1 } ]}>Sacrilegious Anonymous Illegal Horse</Text>
+              <Text numberOfLines={ 1 } style={[ s.sub, { flex: 1 } ]}>{ recipeInfo.sourceName }</Text>
             </View>
 
             <TouchableOpacity
@@ -110,7 +128,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
           <View style={ s.imageWrapper }>
             <Image 
               resizeMode="cover"
-              source={ require( "../../assets/images/placeholders/linguine.jpg" ) }
+              source={{ uri: recipeInfo.image }}
               style={ s.image }
             />
           </View>
@@ -118,11 +136,11 @@ export default function RecipeDetail( { navigation, route }: any ) {
           <Spacer size={ 5 } />
 
           <View style={[ s.detailWrapper, { marginLeft: "auto" } ]}>
-            <Text style={ s.sub }>45 minutes</Text>
+            <Text style={ s.sub }>{ recipeInfo.readyInMinutes } minutes</Text>
             <Text style={[ s.sub, s.yellow ]}>|</Text>
-            <Text style={ s.sub }>2 servings</Text>
+            <Text style={ s.sub }>{ recipeInfo.servings } servings</Text>
             <Text style={[ s.sub, s.yellow ]}>|</Text>
-            <Text style={ s.sub }>460 kcal</Text>
+            <Text style={ s.sub }>{ recipeInfo.nutrition?.nutrients?.find(( item: any ) => item.name === "Calories" )?.amount } kcal</Text>
           </View>
 
           <Spacer size={ 20 } />
@@ -135,16 +153,57 @@ export default function RecipeDetail( { navigation, route }: any ) {
                 style={ s.icon }
               />
 
-              <Text style={ s.sectionHeading }>Allergy Information</Text>
+              <Text style={ s.sectionHeading }>Important Notes</Text>
             </View>
 
             <View style={[ s.sectionContent, { flexDirection: "row", gap: 10 } ]}>
-              {
-                allergy.map(( name: string, index: number ) => (
-                  <View key={ index } style={ s.box }>
-                    <Text style={ s.boxText }>{ name }</Text>
-                  </View>
-                ))
+              { recipeInfo.vegetarian || recipeInfo.vegan || recipeInfo.glutenFree || recipeInfo.dairyFree || recipeInfo.lowFodmap || recipeInfo.cheap || recipeInfo.veryHealthy || recipeInfo.sustainable ?
+                <Fragment>
+                  { recipeInfo.vegetarian && 
+                    <View style={ s.box }>
+                      <Text style={ s.boxText }>Vegetarian</Text>
+                    </View> 
+                  }
+                  { recipeInfo.vegan && 
+                    <View style={ s.box }>
+                      <Text style={ s.boxText }>Vegan</Text>
+                    </View> 
+                  }
+                  { recipeInfo.glutenFree && 
+                    <View style={ s.box }>
+                      <Text style={ s.boxText }>Gluten Free</Text>
+                    </View> 
+                  }
+                  { recipeInfo.dairyFree && 
+                    <View style={ s.box }>
+                      <Text style={ s.boxText }>Dairy Free</Text>
+                    </View> 
+                  }
+                  { recipeInfo.lowFodmap && 
+                    <View style={ s.box }>
+                      <Text style={ s.boxText }>Low FODMAP</Text>
+                    </View> 
+                  }
+                  { recipeInfo.cheap && 
+                    <View style={ s.box }>
+                      <Text style={ s.boxText }>Cheap</Text>
+                    </View> 
+                  }
+                  { recipeInfo.veryHealthy && 
+                    <View style={ s.box }>
+                      <Text style={ s.boxText }>Very Healthy</Text>
+                    </View> 
+                  }
+                  { recipeInfo.sustainable && 
+                    <View style={ s.box }>
+                      <Text style={ s.boxText }>Sustainable</Text>
+                    </View> 
+                  }
+                </Fragment>
+                :
+                <View style={ s.box }>
+                  <Text style={ s.boxText }>Nothing important...</Text>
+                </View> 
               }
             </View>
           </View>

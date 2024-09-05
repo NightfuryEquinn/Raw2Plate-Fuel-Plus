@@ -1,24 +1,26 @@
+import Loading from 'app/Loading'
 import { LightMode } from 'assets/colors/LightMode'
+import EmptyContent from 'components/EmptyContent'
 import FilterRecipeSelectionModal from 'components/FilterRecipeSelectionModal'
 import HoriCardWithCTA from 'components/HoriCardWithCTA'
 import LinedTextField from 'components/LinedTextField'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
-import { forRecipeManager } from 'data/dummyData'
-import { mealCategories, MealCategory } from 'data/mealCategory'
-import React, { useRef, useState } from 'react'
-import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import PagerView from 'react-native-pager-view'
+import React, { useEffect, useState } from 'react'
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchRandom } from 'redux/actions/recipeAction'
+import { AppDispatch, RootState } from 'redux/reducers/store'
 
 export default function DiscoverRecipe( { navigation }: any ) {
-  const pagerView = useRef<any>()
+  const dispatch: AppDispatch = useDispatch()
+  const { data, loading, error } = useSelector(( state: RootState ) => state.recipe )
 
   const [ search, setSearch ] = useState( "" )
   const [ modal, setModal ] = useState( false )
-  const [ active, setActive ] = useState( 0 )
 
   const [ openCuisines, setOpenCuisines ] = useState( false )
   const [ cuisinesValue, setCuisinesValue ] = useState( "" )
@@ -63,7 +65,7 @@ export default function DiscoverRecipe( { navigation }: any ) {
   const SearchItem = ( { item, index }: any ) => (
     <HoriCardWithCTA 
       key={ index }
-      onPress={ () => navigation.navigate( "RecipeDetail" ) }
+      onPress={ () => navigation.navigate( "RecipeDetail", { recipeId: item.id } ) }
       data={ item }
     />
   )
@@ -73,8 +75,15 @@ export default function DiscoverRecipe( { navigation }: any ) {
   if ( !fontsLoaded ) {
     return null
   }
+
+  useEffect(() => {
+    if ( !data[ 0 ].randomRecipes ) {
+      dispatch( fetchRandom( 1 ) )
+    }
+  }, [])
   
   return (
+    loading ? <Loading /> :
     <SafeAreaView style={ s.container }>        
       <View style={{ flex: 1 }}>
         <TopBar />
@@ -108,63 +117,29 @@ export default function DiscoverRecipe( { navigation }: any ) {
           </TouchableOpacity>
         </View>
 
-        <Spacer size={ 10 } />
+        <Spacer size={ 30 } />
 
-        <View>
-          <ScrollView
-            contentContainerStyle={{ padding: 20 }}
-            horizontal={ true }
-            showsHorizontalScrollIndicator={ false }
-            style={ s.scroll }
-          >
-            {
-              mealCategories.map(( meal: MealCategory, index: number ) => (
-                <TouchableOpacity
-                  key={ index }
-                  activeOpacity={ 0.5 }
-                  onPress={ () => {
-                    setActive( index ) 
-                    pagerView.current.setPage( index )
-                  }}
-                  style={[ 
-                    s.pagerButton, 
-                    active === index ? { backgroundColor: LightMode.green } : { backgroundColor: LightMode.white },
-                    mealCategories.length - 1 !== index && { marginRight: 15 }
-                  ]}
-                >
-                  <View style={ s.pagerWrapper }>
-                    <Text style={ s.pagerText }>{ meal.label }</Text>
-                  </View>
-                </TouchableOpacity>
-              ))
-            }
-          </ScrollView>
-        </View>
-
-        <Spacer size={ 40 } />
-
-        <PagerView
-          ref={ pagerView }
-          initialPage={ active }
-          scrollEnabled={ true }
-          style={ s.pager }
-          keyboardDismissMode="on-drag"
-          onPageScroll={ ( e: any ) => setActive( e.nativeEvent.position ) }
-        >
-          {
-            mealCategories.map(( meal: MealCategory, index: number ) => (
-              <FlatList
-                key={ index }
-                contentContainerStyle={{ padding: 20 }}
-                showsVerticalScrollIndicator={ false }
-                data={ forRecipeManager }
-                renderItem={ SearchItem }
-                keyExtractor={ data => data.id.toString() }
-                ItemSeparatorComponent={ () => <Spacer size={ 10 } /> }
-              />
-            ))
-          }
-        </PagerView>
+        {
+          data && data.length > 0 && data[ 0 ]?.randomRecipes?.recipes ?
+            <FlatList
+              style={{ margin: -20 }}
+              contentContainerStyle={{ padding: 20 }}
+              showsVerticalScrollIndicator={ false }
+              data={ data[ 0 ].randomRecipes.recipes }
+              renderItem={ SearchItem }
+              keyExtractor={ data => data.id.toString() }
+              ItemSeparatorComponent={ () => <Spacer size={ 10 } /> }
+              ListEmptyComponent={ () => (
+                <EmptyContent 
+                  message="No recipe found..."
+                />
+              )}
+            />
+          :
+            <EmptyContent 
+              message="No recipe found..."
+            />
+        }
       </View>
 
       <FilterRecipeSelectionModal 

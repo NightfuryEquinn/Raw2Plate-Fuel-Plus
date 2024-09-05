@@ -135,6 +135,15 @@ export default function Loading() {
             style={ s.gradient }
           />
         </Animated.View>
+
+        <Animated.View style={[ s.square, animatedStyle ]}>
+          <LinearGradient 
+            colors={[ LightMode.grey, LightMode.darkGrey, LightMode.grey ]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={ s.gradient }
+          />
+        </Animated.View>
       </View>
 
       <View style={ s.placeholder }>
