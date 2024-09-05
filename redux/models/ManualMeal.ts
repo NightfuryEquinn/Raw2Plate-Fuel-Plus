@@ -1,6 +1,6 @@
 export interface ManualMeal {
-  ManualMealId: number,
-  Name: string,
-  Calories: number,
-  TrackerId: number | undefined
+  manualMealId: number,
+  name: string,
+  calories: number,
+  trackerId: number | undefined
 }

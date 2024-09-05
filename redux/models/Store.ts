@@ -1,6 +1,6 @@
 export interface Store {
-  StoreId: number,
-  Name: string,
-  Image: string,
-  Distance: number
+  storeId: number,
+  name: string,
+  image: string,
+  distance: number
 }

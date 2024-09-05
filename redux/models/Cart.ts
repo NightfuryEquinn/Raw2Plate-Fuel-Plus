@@ -1,6 +1,6 @@
 export interface Cart {
-  CartId: number,
-  Quantity: number,
-  UserId: number | undefined,
-  ItemId: number | undefined
+  cartId: number,
+  quantity: number,
+  userId: number | undefined,
+  itemId: number | undefined
 }

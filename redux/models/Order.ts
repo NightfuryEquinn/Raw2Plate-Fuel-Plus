@@ -4,16 +4,16 @@ export enum Status {
 }
 
 export interface Order {
-  OrderId: number,
-  Receiver: string,
-  Contact: string,
-  Address: string,
-  TotalPrice: number,
-  PaidWith: string,
-  Status: Status,
-  Date: string,
-  OrderTime: string,
-  DeliveredTime: string,
-  Driver: string,
-  UserId: number | undefined
+  orderId: number,
+  receiver: string,
+  contact: string,
+  address: string,
+  totalPrice: number,
+  paidWith: string,
+  status: Status,
+  date: string,
+  orderTime: string,
+  deliveredTime: string,
+  driver: string,
+  userId: number | undefined
 }

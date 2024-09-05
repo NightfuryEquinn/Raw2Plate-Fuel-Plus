@@ -1,5 +1,5 @@
 export interface Planner {
-  PlannerId: number,
-  Date: string,
-  UserId: number | undefined
+  plannerId: number,
+  date: string,
+  userId: number | undefined
 }

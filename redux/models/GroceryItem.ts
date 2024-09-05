@@ -1,6 +1,6 @@
 export interface GroceryItem {
-  GroceryItemId: number,
-  Name: string,
-  IsCompleted: boolean,
-  GroceryListId: number | undefined
+  groceryItemId: number,
+  name: string,
+  isCompleted: boolean,
+  groceryListId: number | undefined
 }

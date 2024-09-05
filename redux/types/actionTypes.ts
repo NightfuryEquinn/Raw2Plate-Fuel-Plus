@@ -1,4 +1,7 @@
 /**
+ * ------------------------ USER ------------------------
+ */
+/**
  * User register
  */
 export const USER_REGISTER_LOADING = "USER_REGISTER_LOADING"
@@ -25,3 +28,13 @@ export const LOGOUT_CLEAR_FAILURE = "LOGOUT_CLEAR_FAILURE"
 export const UPDATE_PROFILE_LOADING = "UPDATE_PROFILE_LOADING"
 export const UPDATE_PROFILE_SUCCESS = "UPDATE_PROFILE_SUCCESS"
 export const UPDATE_PROFILE_FAILURE = "UPDATE_PROFILE_FAILURE"
+
+/**
+ * ------------------------ RECIPE ------------------------
+ */
+/**
+ * Fetch 35 recipes
+ */
+export const FETCH_RANDOM_LOADING = "FETCH_RANDOM_LOADING"
+export const FETCH_RANDOM_SUCCESS = "FETCH_RANDOM_SUCCESS"
+export const FETCH_RANDOM_FAILURE = "FETCH_RANDOM_FAILURE"

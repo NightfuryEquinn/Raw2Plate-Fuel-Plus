@@ -1,4 +1,4 @@
-import { auth, storage } from "data/firebaseInstance";
+import { auth, storage } from "config/firebaseInstance";
 import { Auth } from "firebase/auth";
 import { FirebaseStorage } from "firebase/storage";
 import { createContext, ReactNode, useContext } from "react";

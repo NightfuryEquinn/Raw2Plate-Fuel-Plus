@@ -1,5 +1,5 @@
 export interface Tracker {
-  TrackerId: number,
-  Date: string,
-  UserId: number | undefined
+  trackerId: number,
+  date: string,
+  userId: number | undefined
 }

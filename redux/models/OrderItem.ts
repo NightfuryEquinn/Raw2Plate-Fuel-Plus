@@ -1,5 +1,5 @@
 export interface OrderItem {
-  OrderItemId: number,
-  ItemId: number | undefined,
-  OrderId: number | undefined
+  orderItemId: number,
+  itemId: number | undefined,
+  orderId: number | undefined
 }

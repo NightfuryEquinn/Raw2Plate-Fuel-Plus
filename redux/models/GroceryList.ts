@@ -1,4 +1,4 @@
 export interface GroceryList {
-  GroceryListId: number,
-  UserId: number | undefined
+  groceryListId: number,
+  userId: number | undefined
 }

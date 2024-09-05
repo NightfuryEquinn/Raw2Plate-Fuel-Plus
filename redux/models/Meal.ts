@@ -1,7 +1,7 @@
 export interface Meal {
-  MealId: number,
-  MealType: string,
-  RecipeId: number,
-  PlannerId: number | undefined,
-  TrackerId: number | undefined
+  mealId: number,
+  mealType: string,
+  recipeId: number,
+  plannerId: number | undefined,
+  trackerId: number | undefined
 }

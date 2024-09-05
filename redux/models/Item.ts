@@ -1,9 +1,9 @@
 export interface Item {
-  ItemId: number,
-  Name: string,
-  Category: string,
-  Image: string,
-  Price: number,
-  Description: string,
-  StoreId: number | undefined
+  itemId: number,
+  name: string,
+  category: string,
+  image: string,
+  price: number,
+  description: string,
+  storeId: number | undefined
 }
