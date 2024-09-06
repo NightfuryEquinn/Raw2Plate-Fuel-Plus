@@ -12,7 +12,7 @@ import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'rea
 import { SafeAreaView } from 'react-native-safe-area-context'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchRecipeInfo } from 'redux/actions/recipeAction'
+import { fetchRecipeInfo, fetchRecipeIngreSteps } from 'redux/actions/recipeAction'
 import { AppDispatch, RootState } from 'redux/reducers/store'
 
 export default function RecipeDetail( { navigation, route }: any ) {
@@ -21,8 +21,10 @@ export default function RecipeDetail( { navigation, route }: any ) {
   const dispatch: AppDispatch = useDispatch()
   const { data, loading, error } = useSelector(( state: RootState ) => state.recipe )
   const recipeInfo = data[ 0 ].recipeInfo || []
-  const ingredients = data[ 0 ].cacheIngredients || []
-  const steps = data[ 0 ].cacheSteps || []
+  const recipeIngreSteps = data[ 0 ].recipeIngreSteps || []
+
+  const [ displayIngre, setDisplayIngre ] = useState<string[]>( [] )
+  const [ displaySteps, setDisplaySteps ] = useState<string[]>( [] )
 
   const [ modal, setModal ] = useState( false )
   const [ modalDate, setModalDate ] = useState( dayjs() )
@@ -49,26 +51,22 @@ export default function RecipeDetail( { navigation, route }: any ) {
   }
 
   const cacheIngredients = ( recipe: any ) => {
-    const ingreMap: { [ key: number ]: boolean } = {}
-    const ingredients: any[] = []
+    const uniqueIngredients = new Set<string>()
 
-    recipe[ 0 ].steps.forEach(( step: any ) => {
-      step.ingredients.forEach(( ingre: any ) => {
-        if ( !ingreMap[ ingre.id ] ) {
-          ingreMap[ ingre.id ] = true
-          ingredients.push( ingre )
-        }
+    recipe[ 0 ]?.steps.forEach(( stepItem: any ) => {
+      stepItem.ingredients.forEach(( ingredientItem: any ) => {
+        uniqueIngredients.add( ingredientItem.name )
       })
     })
 
-    return ingredients
+    return Array.from( uniqueIngredients )
   }
 
   const cacheSteps = ( recipe: any ) => {
     const steps: string[] = []
 
-    recipe[ 0 ].forEach(( step: any ) => {
-      step.push( step.step )
+    recipe[ 0 ]?.steps.forEach(( stepItem: any ) => {
+      steps.push( stepItem.step )
     })
 
     return steps
@@ -81,10 +79,16 @@ export default function RecipeDetail( { navigation, route }: any ) {
   }
 
   useEffect(() => {
-    if ( !data[ 0 ].recipeInfo ) {
+    if ( data[ 0 ]?.recipeInfo?.id !== recipeId ) {
       dispatch( fetchRecipeInfo( recipeId ) )
+      dispatch( fetchRecipeIngreSteps( recipeId ) )
     }
-  }, [])
+
+    if ( recipeIngreSteps ) {
+      setDisplayIngre( cacheIngredients( recipeIngreSteps ) )
+      setDisplaySteps( cacheSteps( recipeIngreSteps ) )
+    }
+  }, [ data ])
   
   return (
     loading ? <Loading /> :
@@ -223,9 +227,12 @@ export default function RecipeDetail( { navigation, route }: any ) {
 
             <View style={[ s.sectionContent, { gap: 5, flexWrap: "nowrap" } ]}>
               {
-                ingredients.map(( name: string, index: number ) => (
-                  <Text key={ index } style={[ s.boxText, { color: LightMode.black, fontSize: 16 } ]}>• { name }</Text>
+                displayIngre ?
+                displayIngre.map(( name: string, index: number ) => (
+                  <Text key={ index } style={[ s.boxText, { color: LightMode.black, fontSize: 16, textTransform: "capitalize" } ]}>• { name }</Text>
                 ))
+                :
+                <Text style={[ s.boxText, { color: LightMode.black, fontSize: 16, textTransform: "capitalize" } ]}>• No ingredients list available</Text>
               }
             </View>
           </View>
@@ -245,9 +252,12 @@ export default function RecipeDetail( { navigation, route }: any ) {
 
             <View style={[ s.sectionContent, { gap: 15, flexWrap: "nowrap" } ]}>
               {
-                steps.map(( name: string, index: number ) => (
+                displaySteps ?
+                displaySteps.map(( name: string, index: number ) => (
                   <Text key={ index } style={[ s.boxText, { color: LightMode.black, fontSize: 16 } ]}>{ index + 1 }. { name }</Text>
                 ))
+                :
+                <Text style={[ s.boxText, { color: LightMode.black, fontSize: 16 } ]}>• No steps available</Text>
               }
             </View>
           </View>
@@ -295,7 +305,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
           </View>
           
           <RoundedBorderButton 
-            onPress={ () => navigation.navigate( "RecipeNarration", { recipeSteps: steps } ) }
+            onPress={ () => navigation.navigate( "RecipeNarration", { recipeSteps: displaySteps } ) }
             color={ LightMode.yellow }
             text="Start Cooking"
             textColor={ LightMode.white }      

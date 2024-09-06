@@ -1,15 +1,13 @@
+import MultiSlider from '@ptomasroos/react-native-multi-slider'
 import { LightMode } from 'assets/colors/LightMode'
 import { useFontFromContext } from 'context/FontProvider'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Dimensions, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import DropDownPicker from 'react-native-dropdown-picker'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import RoundedBorderButton from './RoundedBorderButton'
 import Spacer from './Spacer'
-
-import MultiSlider from '@ptomasroos/react-native-multi-slider'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import { Checkbox } from 'react-native-paper'
 
 export default function FilterRecipeSelectionModal( { 
   modal, showModal,
@@ -17,9 +15,9 @@ export default function FilterRecipeSelectionModal( {
   ingredients,
   openInclude, includeValue, openExclude, excludeValue,
   setOpenInclude, setIncludeValue, setOpenExclude, setExcludeValue,
-  match, setMatch,
   min, max, setMin, setMax,
-  save 
+  save,
+  clearFilter
 }: any ) {
 
   const { fontsLoaded } = useFontFromContext()
@@ -155,17 +153,7 @@ export default function FilterRecipeSelectionModal( {
               </View>
             </View>
 
-            <View style={ s.buttonContainer }>
-              <View style={ s.checkbox }>
-                <Checkbox 
-                  color={ LightMode.black }
-                  status={ match ? "checked": "unchecked" }
-                  onPress={ () => setMatch( !match ) }
-                />
-
-                <Text style={ s.checkboxText }>Match Ingredients Included & Excluded</Text>
-              </View>
-              
+            <View style={ s.buttonContainer }>              
               <RoundedBorderButton 
                 onPress={ save }
                 text="Apply Filter"
@@ -176,7 +164,7 @@ export default function FilterRecipeSelectionModal( {
 
               <TouchableOpacity
                 activeOpacity={ 0.5 }
-                onPress={ () => console.log( "Clear" ) }
+                onPress={ clearFilter }
               >
                 <Text style={ s.textButton }>Clear Filter</Text>
               </TouchableOpacity>
@@ -295,11 +283,10 @@ FilterRecipeSelectionModal.propTypes = {
   setIncludeValue: PropTypes.func.isRequired, 
   setOpenExclude: PropTypes.func.isRequired, 
   setExcludeValue: PropTypes.func.isRequired,
-  match: PropTypes.any.isRequired,
-  setMatch: PropTypes.func.isRequired,
   min: PropTypes.number.isRequired,
   max: PropTypes.number.isRequired,
   setMin: PropTypes.func.isRequired,
   setMax: PropTypes.func.isRequired,
-  save: PropTypes.func.isRequired
+  save: PropTypes.func.isRequired,
+  clearFilter: PropTypes.func.isRequired
 }

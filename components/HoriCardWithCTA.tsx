@@ -18,11 +18,19 @@ export default function HoriCardWithCTA( { changeOrAdd, onPress, data }: any ) {
           <Text numberOfLines={ 2 } style={ s.detailHeading }>{ data.title }</Text>
         </View>
         
-        <View style={ s.detailWrapper }>
-          <Text style={[ s.sub, s.yellow ]}>By</Text>
-          <Text numberOfLines={ 1 } style={[ s.sub, { flex: 1 } ]}>{ data.sourceName }</Text>
-        </View>
-      </View>
+        {
+          data.sourceName ?
+            <View style={ s.detailWrapper }>
+              <Text style={[ s.sub, s.yellow ]}>By</Text>
+              <Text numberOfLines={ 1 } style={[ s.sub, { flex: 1 } ]}>{ data.sourceName }</Text>
+            </View>
+          :
+            <View style={ s.detailWrapper }>
+              <Text style={[ s.sub, s.yellow ]}>Calories</Text>
+              <Text numberOfLines={ 1 } style={[ s.sub, { flex: 1 } ]}>{ data.nutrition.nutrients[ 0 ].amount }</Text>
+            </View>
+        }
+      </View> 
 
       <TouchableOpacity
         activeOpacity={ 0.5 }

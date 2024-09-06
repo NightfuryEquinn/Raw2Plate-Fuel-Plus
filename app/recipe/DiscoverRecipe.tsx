@@ -4,15 +4,18 @@ import EmptyContent from 'components/EmptyContent'
 import FilterRecipeSelectionModal from 'components/FilterRecipeSelectionModal'
 import HoriCardWithCTA from 'components/HoriCardWithCTA'
 import LinedTextField from 'components/LinedTextField'
+import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
+import { spoonCuisines } from 'data/spoonCuisines'
+import { spoonIngredients } from 'data/spoonIngredients'
 import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchRandom } from 'redux/actions/recipeAction'
+import { discoverSearch, fetchRandom } from 'redux/actions/recipeAction'
 import { AppDispatch, RootState } from 'redux/reducers/store'
 
 export default function DiscoverRecipe( { navigation }: any ) {
@@ -32,34 +35,23 @@ export default function DiscoverRecipe( { navigation }: any ) {
   const [ min, setMin ] = useState( 100 )
   const [ max, setMax ] = useState( 350 )
 
-  const [ match, setMatch ] = useState( false )
-
-  const cuisines = [
-    { label: 'African', value: 'AFR' },
-    { label: 'American', value: 'AMR' },
-    { label: 'British', value: 'BRT' },
-    { label: 'Cajun', value: 'CAJ' },
-    { label: 'Caribbean', value: 'CRB' },
-    { label: 'Chinese', value: 'CHN' },
-    { label: 'Eastern European', value: 'EAE' },
-    { label: 'European', value: 'EUR' },
-    { label: 'French', value: 'FRN' },
-  ]
-
-  const ingredients = [
-    { label: 'Tomato', value: 'TOM' },
-    { label: 'Garlic', value: 'GAR' },
-    { label: 'Onion', value: 'ONI' },
-    { label: 'Olive Oil', value: 'OLI' },
-    { label: 'Chicken Breast', value: 'CHB' },
-    { label: 'Basil', value: 'BAS' },
-    { label: 'Salt', value: 'SLT' },
-    { label: 'Black Pepper', value: 'BKP' },
-    { label: 'Lemon', value: 'LEM' },
-  ]
+  const clearFilter = () => {
+    setCuisinesValue( "" ) 
+    setIncludeValue( [] )
+    setExcludeValue( [] )
+    setMin( 100 )
+    setMax( 350 )
+  }
 
   const showModal = () => {
     setModal( !modal )
+  }
+
+  const searchPress = () => {
+    const includeString = includeValue.join( "," )
+    const excludeString = excludeValue.join( "," )
+
+    dispatch( discoverSearch( search, 2, cuisinesValue, includeString, excludeString, min, max ) )
   }
 
   const SearchItem = ( { item, index }: any ) => (
@@ -78,8 +70,10 @@ export default function DiscoverRecipe( { navigation }: any ) {
 
   useEffect(() => {
     if ( !data[ 0 ].randomRecipes ) {
-      dispatch( fetchRandom( 1 ) )
+      dispatch( fetchRandom( 2 ) )
     }
+
+    console.log( data[ 0 ].randomRecipes.results[ 0 ].nutrition )
   }, [])
   
   return (
@@ -117,15 +111,24 @@ export default function DiscoverRecipe( { navigation }: any ) {
           </TouchableOpacity>
         </View>
 
+        <RoundedBorderButton 
+          onPress={ searchPress } 
+          color={ LightMode.lightBlack } 
+          text="Search" 
+          textColor={ LightMode.white }
+          borderRadius={ 10 }
+          marginHori={ 0 }    
+        />
+
         <Spacer size={ 30 } />
 
         {
-          data && data.length > 0 && data[ 0 ]?.randomRecipes?.recipes ?
+          data && data.length > 0 && ( data[ 0 ]?.randomRecipes?.recipes || data[ 0 ]?.randomRecipes?.results ) ?
             <FlatList
               style={{ margin: -20 }}
               contentContainerStyle={{ padding: 20 }}
               showsVerticalScrollIndicator={ false }
-              data={ data[ 0 ].randomRecipes.recipes }
+              data={ data[ 0 ].randomRecipes.recipes || data[ 0 ].randomRecipes.results }
               renderItem={ SearchItem }
               keyExtractor={ data => data.id.toString() }
               ItemSeparatorComponent={ () => <Spacer size={ 10 } /> }
@@ -137,7 +140,7 @@ export default function DiscoverRecipe( { navigation }: any ) {
             />
           :
             <EmptyContent 
-              message="No recipe found..."
+              message="Unable to fetch Spooncular API..."
             />
         }
       </View>
@@ -147,10 +150,10 @@ export default function DiscoverRecipe( { navigation }: any ) {
         showModal={ showModal }
         openCuisines={ openCuisines }
         cuisinesValue={ cuisinesValue }
-        cuisines={ cuisines }
+        cuisines={ spoonCuisines }
         setOpenCuisines={ setOpenCuisines }
         setCuisinesValue={ setCuisinesValue }
-        ingredients={ ingredients }
+        ingredients={ spoonIngredients }
         openInclude={ openInclude }
         includeValue={ includeValue }
         openExclude={ openExclude }
@@ -159,13 +162,12 @@ export default function DiscoverRecipe( { navigation }: any ) {
         setIncludeValue={ setIncludeValue }
         setOpenExclude={ setOpenExclude }
         setExcludeValue={ setExcludeValue }
-        match={ match }
-        setMatch={ setMatch }
         min={ min }
         max={ max }
         setMin={ setMin }
         setMax={ setMax }
         save={ showModal }
+        clearFilter={ clearFilter }
       />
     </SafeAreaView>
   )

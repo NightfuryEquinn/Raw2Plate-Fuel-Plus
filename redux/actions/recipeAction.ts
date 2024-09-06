@@ -1,6 +1,6 @@
 import { AppDispatch } from "redux/reducers/store";
-import { fetchRandomService, fetchRecipeInfoService, fetchRecipeIngreStepsService } from "redux/services/recipeServices";
-import { FETCH_RANDOM_FAILURE, FETCH_RANDOM_LOADING, FETCH_RANDOM_SUCCESS, FETCH_RECIPE_INFO_FAILURE, FETCH_RECIPE_INFO_LOADING, FETCH_RECIPE_INFO_SUCCESS, FETCH_RECIPE_INGRE_STEPS_FAILURE, FETCH_RECIPE_INGRE_STEPS_LOADING, FETCH_RECIPE_INGRE_STEPS_SUCCESS } from "redux/types/actionTypes";
+import { discoverSearchService, fetchRandomService, fetchRecipeInfoService, fetchRecipeIngreStepsService } from "redux/services/recipeServices";
+import { DISCOVER_SEARCH_FAILURE, DISCOVER_SEARCH_LOADING, DISCOVER_SEARCH_SUCCESS, FETCH_RANDOM_FAILURE, FETCH_RANDOM_LOADING, FETCH_RANDOM_SUCCESS, FETCH_RECIPE_INFO_FAILURE, FETCH_RECIPE_INFO_LOADING, FETCH_RECIPE_INFO_SUCCESS, FETCH_RECIPE_INGRE_STEPS_FAILURE, FETCH_RECIPE_INGRE_STEPS_LOADING, FETCH_RECIPE_INGRE_STEPS_SUCCESS } from "redux/types/actionTypes";
 
 /**
  * Fetch random recipes
@@ -25,7 +25,7 @@ export const fetchRandom = ( theNumber: number ) => {
   
     try {
       const res = await fetchRandomService( theNumber )
-      dispatch( fetchRandomSuccess( res ))
+      dispatch( fetchRandomSuccess( res ) )
     } catch ( error: any ) {
       dispatch( fetchRandomFailure( error.message ) )
 
@@ -57,7 +57,7 @@ export const fetchRecipeInfo = ( theRecipeId: number ) => {
   
     try {
       const res = await fetchRecipeInfoService( theRecipeId )
-      dispatch( fetchRecipeInfoSuccess( res ))
+      dispatch( fetchRecipeInfoSuccess( res ) )
     } catch ( error: any ) {
       dispatch( fetchRecipeInfoFailure( error.message ) )
 
@@ -89,7 +89,7 @@ export const fetchRecipeIngreSteps = ( theRecipeId: number ) => {
   
     try {
       const res = await fetchRecipeIngreStepsService( theRecipeId )
-      dispatch( fetchRecipeIngreStepsSuccess( res ))
+      dispatch( fetchRecipeIngreStepsSuccess( res ) )
     } catch ( error: any ) {
       dispatch( fetchRecipeIngreStepsFailure( error.message ) )
 
@@ -99,11 +99,47 @@ export const fetchRecipeIngreSteps = ( theRecipeId: number ) => {
 }
 
 /**
- * Cache recipe ingredients
+ * Discover search with filters
+ */
+const discoverSearchLoading = () => ({
+  type: DISCOVER_SEARCH_LOADING
+})
+
+const discoverSearchSuccess = ( data: any[] ) => ({
+  type: DISCOVER_SEARCH_SUCCESS,
+  payload: data
+})
+
+const discoverSearchFailure = ( error: string ) => ({
+  type: DISCOVER_SEARCH_FAILURE,
+  payload: error
+})
+
+export const discoverSearch = ( query: string, theNumber: number, theCuisine: string, include: string, exclude: string, minCal: number, maxCal: number ) => {
+  return async ( dispatch: AppDispatch ) => {
+    dispatch( discoverSearchLoading() )
+  
+    try {
+      const res = await discoverSearchService( query, theNumber, theCuisine, include, exclude, minCal, maxCal )
+      dispatch( discoverSearchSuccess( res ) )
+    } catch ( error: any ) {
+      dispatch( discoverSearchFailure( error.message ) )
+
+      throw error
+    }
+  }
+}
+
+/**
+ * Bookmark recipes
  */
 
 
+/**
+ * Add recipes to planner
+ */
+
 
 /**
- * Cache recipe steps
+ * Add recipes to tracker
  */

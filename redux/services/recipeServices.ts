@@ -57,3 +57,34 @@ export const fetchRecipeIngreStepsService = async ( theRecipeId: number ) => {
     throw error
   }
 }
+
+/**
+ * Discover search with filters
+ */
+export const discoverSearchService = async ( query: string, theNumber: number, theCuisine: string, include: string, exclude: string, minCal: number, maxCal: number ) => {
+  try {
+    // Limit license true, Ignore pantry true
+    const res: ApiRes<ReduxState[]> = await spoonInstance.get( `recipes/complexSearch?ignorePantry=true&limitLicense=true&query=${ query }&number=${ theNumber }&cuisine=${ theCuisine }&includeIngredients=${ include }&excludeIngredients=${ exclude }&minCalories=${ minCal }&maxCalories=${ maxCal }` )
+
+    console.log( "DONE - discoverSearchService: ", res.data )
+    return res.data
+  } catch ( error ) {
+    console.log( "ERROR - discoverSearchService: ", error )
+
+    throw error
+  }
+}
+
+/**
+ * Bookmark recipes
+ */
+
+
+/**
+ * Add recipes to planner
+ */
+
+
+/**
+ * Add recipes to tracker
+ */
