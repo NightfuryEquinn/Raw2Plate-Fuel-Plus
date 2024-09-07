@@ -189,11 +189,10 @@ export default function RecipeNarration( { navigation, route }: any ) {
       <ConfirmationModal 
         modal={ modal }
         showModal={ showModal }
-        message="Do you wish to add this recipe to your tracker?"
+        message="Finish cooking?"
         onCancel={ () => {
           console.log( "Cancel" )
           showModal()
-          endStep()
         }}
         onConfirm={ () => {
           console.log( "Confirm" ) 

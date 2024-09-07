@@ -1,4 +1,4 @@
-import { DISCOVER_SEARCH_FAILURE, DISCOVER_SEARCH_LOADING, DISCOVER_SEARCH_SUCCESS, FETCH_RANDOM_FAILURE, FETCH_RANDOM_LOADING, FETCH_RANDOM_SUCCESS, FETCH_RECIPE_INFO_FAILURE, FETCH_RECIPE_INFO_LOADING, FETCH_RECIPE_INFO_SUCCESS, FETCH_RECIPE_INGRE_STEPS_FAILURE, FETCH_RECIPE_INGRE_STEPS_LOADING, FETCH_RECIPE_INGRE_STEPS_SUCCESS } from "redux/types/actionTypes"
+import { BOOKMARK_FAILURE, BOOKMARK_LOADING, BOOKMARK_SUCCESS, DISCOVER_SEARCH_FAILURE, DISCOVER_SEARCH_LOADING, DISCOVER_SEARCH_SUCCESS, FETCH_RANDOM_FAILURE, FETCH_RANDOM_LOADING, FETCH_RANDOM_SUCCESS, FETCH_RECIPE_INFO_FAILURE, FETCH_RECIPE_INFO_LOADING, FETCH_RECIPE_INFO_SUCCESS, FETCH_RECIPE_INGRE_STEPS_FAILURE, FETCH_RECIPE_INGRE_STEPS_LOADING, FETCH_RECIPE_INGRE_STEPS_SUCCESS } from "redux/types/actionTypes"
 import { ReduxState } from "redux/types/stateTypes"
 
 const initialState: ReduxState = {
@@ -108,6 +108,29 @@ export const recipeReducer = (
       }
 
     case DISCOVER_SEARCH_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload
+      }
+
+    case BOOKMARK_LOADING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+
+    case BOOKMARK_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        data: [{
+          ...state.data[ 0 ],
+        }]
+      }
+
+    case BOOKMARK_FAILURE:
       return {
         ...state,
         loading: false,

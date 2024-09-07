@@ -1,6 +1,7 @@
+import { Bookmark } from "redux/models/Bookmark";
 import { AppDispatch } from "redux/reducers/store";
-import { discoverSearchService, fetchRandomService, fetchRecipeInfoService, fetchRecipeIngreStepsService } from "redux/services/recipeServices";
-import { DISCOVER_SEARCH_FAILURE, DISCOVER_SEARCH_LOADING, DISCOVER_SEARCH_SUCCESS, FETCH_RANDOM_FAILURE, FETCH_RANDOM_LOADING, FETCH_RANDOM_SUCCESS, FETCH_RECIPE_INFO_FAILURE, FETCH_RECIPE_INFO_LOADING, FETCH_RECIPE_INFO_SUCCESS, FETCH_RECIPE_INGRE_STEPS_FAILURE, FETCH_RECIPE_INGRE_STEPS_LOADING, FETCH_RECIPE_INGRE_STEPS_SUCCESS } from "redux/types/actionTypes";
+import { bookmarkRecipeService, discoverSearchService, fetchRandomService, fetchRecipeInfoService, fetchRecipeIngreStepsService } from "redux/services/recipeServices";
+import { BOOKMARK_FAILURE, BOOKMARK_LOADING, BOOKMARK_SUCCESS, DISCOVER_SEARCH_FAILURE, DISCOVER_SEARCH_LOADING, DISCOVER_SEARCH_SUCCESS, FETCH_RANDOM_FAILURE, FETCH_RANDOM_LOADING, FETCH_RANDOM_SUCCESS, FETCH_RECIPE_INFO_FAILURE, FETCH_RECIPE_INFO_LOADING, FETCH_RECIPE_INFO_SUCCESS, FETCH_RECIPE_INGRE_STEPS_FAILURE, FETCH_RECIPE_INGRE_STEPS_LOADING, FETCH_RECIPE_INGRE_STEPS_SUCCESS } from "redux/types/actionTypes";
 
 /**
  * Fetch random recipes
@@ -133,7 +134,35 @@ export const discoverSearch = ( query: string, theNumber: number, theCuisine: st
 /**
  * Bookmark recipes
  */
+const bookmarkRecipeLoading = () => ({
+  type: BOOKMARK_LOADING
+})
 
+const bookmarkRecipeSuccess = ( data: any[] ) => ({
+  type: BOOKMARK_SUCCESS,
+  payload: data
+})
+
+const bookmarkRecipeFailure = ( error: string ) => ({
+  type: BOOKMARK_FAILURE,
+  payload: error
+})
+
+export const bookmarkRecipe = ( theBookmark: Bookmark ) => {
+  return async ( dispatch: AppDispatch ) => {
+    dispatch( bookmarkRecipeLoading() )
+
+    try {
+      const res = await bookmarkRecipeService( theBookmark )
+
+      dispatch( bookmarkRecipeSuccess( res ) )
+    } catch ( error: any ) {
+      dispatch( bookmarkRecipeFailure( error.message ) )
+
+      return error.response.status
+    }
+  }
+}
 
 /**
  * Add recipes to planner

@@ -1,4 +1,5 @@
-import { spoonInstance } from "config/apisInstance"
+import { awsInstance, spoonInstance } from "config/apisInstance"
+import { Bookmark } from "redux/models/Bookmark"
 import { ReduxState } from "redux/types/stateTypes"
 
 interface ApiRes<T> {
@@ -64,7 +65,7 @@ export const fetchRecipeIngreStepsService = async ( theRecipeId: number ) => {
 export const discoverSearchService = async ( query: string, theNumber: number, theCuisine: string, include: string, exclude: string, minCal: number, maxCal: number ) => {
   try {
     // Limit license true, Ignore pantry true
-    const res: ApiRes<ReduxState[]> = await spoonInstance.get( `recipes/complexSearch?ignorePantry=true&limitLicense=true&query=${ query }&number=${ theNumber }&cuisine=${ theCuisine }&includeIngredients=${ include }&excludeIngredients=${ exclude }&minCalories=${ minCal }&maxCalories=${ maxCal }` )
+    const res: ApiRes<ReduxState[]> = await spoonInstance.get( `/recipes/complexSearch?ignorePantry=true&limitLicense=true&query=${ query }&number=${ theNumber }&cuisine=${ theCuisine }&includeIngredients=${ include }&excludeIngredients=${ exclude }&minCalories=${ minCal }&maxCalories=${ maxCal }` )
 
     console.log( "DONE - discoverSearchService: ", res.data )
     return res.data
@@ -78,7 +79,18 @@ export const discoverSearchService = async ( query: string, theNumber: number, t
 /**
  * Bookmark recipes
  */
+export const bookmarkRecipeService = async ( theBookmark: Bookmark ) => {
+  try {
+    const res: ApiRes<ReduxState[]> = await awsInstance.post( `/bookmark`, theBookmark )
 
+    console.log( "DONE - bookmarkRecipeService: ", res.data )
+    return res.data
+  } catch ( error: any ) {
+    console.log( "ERROR - bookmarkRecipeService: ", error )
+
+    throw error
+  }
+}
 
 /**
  * Add recipes to planner

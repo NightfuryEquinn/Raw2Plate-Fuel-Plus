@@ -1,8 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { User } from "redux/models/User";
 import { AppDispatch } from "redux/reducers/store";
-import { getTheUserService, updateProfileService, userRegisterService } from "redux/services/userServices";
-import { GET_THE_USER_FAILURE, GET_THE_USER_LOADING, GET_THE_USER_SUCCESS, LOGOUT_CLEAR_FAILURE, LOGOUT_CLEAR_LOADING, LOGOUT_CLEAR_SUCCESS, UPDATE_PROFILE_FAILURE, UPDATE_PROFILE_LOADING, UPDATE_PROFILE_SUCCESS, USER_REGISTER_FAILURE, USER_REGISTER_LOADING, USER_REGISTER_SUCCESS } from "redux/types/actionTypes";
+import { deleteBookmarkService, fetchBookmarkInfoService, fetchBookmarkService, getTheUserService, updateProfileService, userRegisterService } from "redux/services/userServices";
+import { DELETE_BOOKMARK_FAILURE, DELETE_BOOKMARK_LOADING, DELETE_BOOKMARK_SUCCESS, FETCH_BOOKMARK_FAILURE, FETCH_BOOKMARK_INFO_FAILURE, FETCH_BOOKMARK_INFO_LOADING, FETCH_BOOKMARK_INFO_SUCCESS, FETCH_BOOKMARK_LOADING, FETCH_BOOKMARK_SUCCESS, GET_THE_USER_FAILURE, GET_THE_USER_LOADING, GET_THE_USER_SUCCESS, LOGOUT_CLEAR_FAILURE, LOGOUT_CLEAR_LOADING, LOGOUT_CLEAR_SUCCESS, UPDATE_PROFILE_FAILURE, UPDATE_PROFILE_LOADING, UPDATE_PROFILE_SUCCESS, USER_REGISTER_FAILURE, USER_REGISTER_LOADING, USER_REGISTER_SUCCESS } from "redux/types/actionTypes";
 
 /**
  * User register
@@ -148,6 +148,103 @@ export const updateProfile = ( theUser: User ) => {
       dispatch( updateProfileFailure( error.message ) )
 
       throw error
+    }
+  }
+}
+
+/**
+ * Fetch bookmarks
+ */
+const fetchBookmarkLoading = () => ({
+  type: FETCH_BOOKMARK_LOADING
+})
+
+const fetchBookmarkSuccess = ( data: any[] ) => ({
+  type: FETCH_BOOKMARK_SUCCESS,
+  payload: data
+})
+
+const fetchBookmarkFailure = ( error: string ) => ({
+  type: FETCH_BOOKMARK_FAILURE,
+  payload: error
+})
+
+export const fetchBookmark = ( theUserId: number ) => {
+  return async ( dispatch: AppDispatch ) => {
+    dispatch( fetchBookmarkLoading() )
+
+    try {
+      const res = await fetchBookmarkService( theUserId )
+      dispatch( fetchBookmarkSuccess( res ) )
+    } catch ( error: any ) {
+      dispatch( fetchBookmarkFailure( error.message ) )
+
+      throw error
+    }
+  }
+}
+
+/**
+ * Fetch bookmark recipes information
+ */
+const fetchBookmarkInfoLoading = () => ({
+  type: FETCH_BOOKMARK_INFO_LOADING
+})
+
+const fetchBookmarkInfoSuccess = ( data: any[] ) => ({
+  type: FETCH_BOOKMARK_INFO_SUCCESS,
+  payload: data
+})
+
+const fetchBookmarkInfoFailure = ( error: string ) => ({
+  type: FETCH_BOOKMARK_INFO_FAILURE,
+  payload: error
+})
+
+export const fetchBookmarkInfo = ( theRecipeIds: string ) => {
+  return async ( dispatch: AppDispatch ) => {
+    dispatch( fetchBookmarkInfoLoading() )
+
+    try {
+      const res = await fetchBookmarkInfoService( theRecipeIds )
+      dispatch( fetchBookmarkInfoSuccess( res ) )
+    } catch ( error: any ) {
+      dispatch( fetchBookmarkInfoFailure( error.message ) )
+
+      throw error
+    }
+  }
+}
+
+/**
+ * Delete bookmark recipes
+ */
+const deleteBookmarkLoading = () => ({
+  type: DELETE_BOOKMARK_LOADING
+})
+
+const deleteBookmarkSuccess = ( data: any[] ) => ({
+  type: DELETE_BOOKMARK_SUCCESS,
+  payload: data
+})
+
+const deleteBookmarkFailure = ( error: string ) => ({
+  type: DELETE_BOOKMARK_FAILURE,
+  payload: error
+})
+
+export const deleteBookmark = ( theUserId: number, theRecipeId: number ) => {
+  return async ( dispatch: AppDispatch ) => {
+    dispatch( deleteBookmarkLoading() )
+
+    try {
+      const res = await deleteBookmarkService( theUserId, theRecipeId )
+
+      dispatch( deleteBookmarkSuccess( res ) )
+    } catch ( error: any ) {
+      dispatch( deleteBookmarkFailure( error.message ) )
+
+      return error.response.status
     }
   }
 }

@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { rootReducer } from "./rootReducers";
+import { thunk } from "redux-thunk";
 
 export const store = configureStore({
   reducer: rootReducer,
@@ -7,7 +8,7 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: false,
       immutableCheck: false
-    }),
+    }).concat( thunk ),
   devTools: true
 })
 

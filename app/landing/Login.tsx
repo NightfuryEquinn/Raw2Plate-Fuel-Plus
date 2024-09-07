@@ -130,6 +130,30 @@ export default function Login( { navigation }: any ) {
           <KeyboardAvoidingView behavior={ Platform.OS === "ios" ? "padding" : "height" }>
             <Spacer size={ 20 } />
 
+            { email !== "" ?
+              <RoundedBorderButton
+                onPress={ () => firebaseLogin( email, password ) }
+                icon="MA"
+                name="account-circle"
+                text="Proceed with Login"
+                color={ LightMode.green }
+                textColor={ LightMode.black }
+                borderRadius={ 10 }
+              />
+              :
+              <RoundedBorderButton
+                onPress={ () => toRegister() }
+                icon="MA"
+                name="account-circle"
+                text="Create New Account"
+                color={ LightMode.yellow }
+                textColor={ LightMode.white }
+                borderRadius={ 10 }
+              />
+            }
+
+            <Spacer size={ 25 } />
+
             <RoundedBorderButton
               onPress={ () => {
                 Alert.alert(
@@ -165,30 +189,6 @@ export default function Login( { navigation }: any ) {
               textColor={ LightMode.white }
               borderRadius={ 10 }
             />
-
-            <Spacer size={ 25 } />
-
-            { email !== "" ?
-              <RoundedBorderButton
-                onPress={ () => firebaseLogin( email, password ) }
-                icon="MA"
-                name="account-circle"
-                text="Proceed with Login"
-                color={ LightMode.green }
-                textColor={ LightMode.black }
-                borderRadius={ 10 }
-              />
-              :
-              <RoundedBorderButton
-                onPress={ () => toRegister() }
-                icon="MA"
-                name="account-circle"
-                text="Create New Account"
-                color={ LightMode.yellow }
-                textColor={ LightMode.white }
-                borderRadius={ 10 }
-              />
-            }
           </KeyboardAvoidingView>
         </View>
       </TouchableWithoutFeedback>

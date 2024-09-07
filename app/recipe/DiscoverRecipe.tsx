@@ -57,7 +57,7 @@ export default function DiscoverRecipe( { navigation }: any ) {
   const SearchItem = ( { item, index }: any ) => (
     <HoriCardWithCTA 
       key={ index }
-      onPress={ () => navigation.navigate( "RecipeDetail", { recipeId: item.id } ) }
+      onPress={ () => navigation.navigate( "RecipeDetail", { recipeId: item.id, inBookmark: false } ) }
       data={ item }
     />
   )
@@ -72,8 +72,6 @@ export default function DiscoverRecipe( { navigation }: any ) {
     if ( !data[ 0 ].randomRecipes ) {
       dispatch( fetchRandom( 2 ) )
     }
-
-    console.log( data[ 0 ].randomRecipes.results[ 0 ].nutrition )
   }, [])
   
   return (
@@ -205,33 +203,4 @@ const s = StyleSheet.create({
     shadowRadius: 6,
     elevation: 10,
   }, 
-  "scroll": {
-    margin: -20
-  },
-  "pagerButton": {
-    height: 35,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 100,
-    shadowColor: LightMode.black,
-    shadowOffset: {
-      width: 4,
-      height: 4
-    },
-    shadowOpacity: 0.375,
-    shadowRadius: 6,
-    elevation: 10,
-  },
-  "pagerWrapper": {
-    flex: 1,
-  },
-  "pagerText": {
-    fontFamily: "cantarell",
-    fontSize: 12,
-    color: LightMode.black
-  },
-  "pager": {
-    flex: 1,
-    margin: -20,
-  }
 })

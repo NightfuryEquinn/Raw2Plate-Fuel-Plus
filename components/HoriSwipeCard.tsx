@@ -1,50 +1,10 @@
 import { LightMode } from 'assets/colors/LightMode'
 import { useFontFromContext } from 'context/FontProvider'
 import PropTypes from 'prop-types'
-import React, { useRef } from 'react'
+import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler'
-import IconMA from 'react-native-vector-icons/MaterialIcons'
 
-export default function HoriSwipeCard( { onPress, onBookmark, onDelete, data, first }: any ) {
-  const swipeRef = useRef<Swipeable>( null )
-
-  const leftAction = () => (
-    <TouchableOpacity
-      activeOpacity={ 0.5 }
-      onPress={() => {
-        swipeRef.current?.close()
-        onBookmark()
-      }}
-    >
-      <View style={[ s.swipeButton, { marginHorizontal: 15 } ]}>
-        <IconMA 
-          name="bookmark"
-          color={ LightMode.green }
-          size={ 32 }
-        />
-      </View>
-    </TouchableOpacity>
-  )
-
-  const rightAction = () => (
-    <TouchableOpacity
-      activeOpacity={ 0.5 }
-      onPress={() => {
-        swipeRef.current?.close()
-        onDelete()
-      }}
-    >
-      <View style={[ s.swipeButton, { marginHorizontal: 15 } ]}>
-        <IconMA 
-          name="delete"
-          color={ LightMode.red }
-          size={ 32 }
-        />
-      </View>
-    </TouchableOpacity>
-  )
-  
+export default function HoriSwipeCard( { onPress, data, first }: any ) {
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
@@ -52,36 +12,28 @@ export default function HoriSwipeCard( { onPress, onBookmark, onDelete, data, fi
   }
   
   return (
-    <GestureHandlerRootView>
-      <Swipeable
-        ref={ swipeRef }
-        renderLeftActions={ leftAction }
-        renderRightActions={ rightAction }
-      >
-        <TouchableOpacity
-          activeOpacity={ 0.5 }
-          onPress={ onPress }
-          style={[ s.container, !first && { marginTop: 5 } ]}
-        >
-          <Image 
-            resizeMode="cover"
-            style={ s.image }
-            source={ data.image }
-          />
+    <TouchableOpacity
+      activeOpacity={ 0.5 }
+      onPress={ onPress }
+      style={[ s.container, !first && { marginTop: 5 } ]}
+    >
+      <Image 
+        resizeMode="cover"
+        style={ s.image }
+        source={ data.image }
+      />
 
-          <View style={ s.detailContainer }>
-            <View style={ s.detailHeadingWrapper }>
-              <Text numberOfLines={ 2 } style={ s.detailHeading }>{ data.heading }</Text>
-            </View>
-            
-            <View style={ s.detailWrapper }>
-              <Text style={ s.sub }>{ data.sub }</Text>
-              <Text style={[ s.sub, s.yellow ]}>{ data.desc }</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-      </Swipeable>
-    </GestureHandlerRootView>
+      <View style={ s.detailContainer }>
+        <View style={ s.detailHeadingWrapper }>
+          <Text numberOfLines={ 2 } style={ s.detailHeading }>{ data.heading }</Text>
+        </View>
+        
+        <View style={ s.detailWrapper }>
+          <Text style={ s.sub }>{ data.sub }</Text>
+          <Text style={[ s.sub, s.yellow ]}>{ data.desc }</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
   )
 }
 
@@ -153,8 +105,6 @@ const s = StyleSheet.create({
 
 HoriSwipeCard.propTypes = {
   onPress: PropTypes.func.isRequired,
-  onBookmark: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
   data: PropTypes.any.isRequired,
   first: PropTypes.bool.isRequired,
 }

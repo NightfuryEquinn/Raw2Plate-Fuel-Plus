@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import Loading from 'app/Loading'
 import { LightMode } from 'assets/colors/LightMode'
 import AddRecipeToPlannerModal from 'components/AddRecipeToPlannerModal'
@@ -8,15 +9,17 @@ import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
 import dayjs from 'dayjs'
 import React, { Fragment, useEffect, useState } from 'react'
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchRecipeInfo, fetchRecipeIngreSteps } from 'redux/actions/recipeAction'
+import { bookmarkRecipe, fetchRecipeInfo, fetchRecipeIngreSteps } from 'redux/actions/recipeAction'
+import { deleteBookmark } from 'redux/actions/userAction'
 import { AppDispatch, RootState } from 'redux/reducers/store'
 
 export default function RecipeDetail( { navigation, route }: any ) {
-  const { recipeId } = route.params
+  const { recipeId, inBookmark } = route.params
+  const [ userSession, setUserSession ] = useState<any>( null )
 
   const dispatch: AppDispatch = useDispatch()
   const { data, loading, error } = useSelector(( state: RootState ) => state.recipe )
@@ -72,6 +75,84 @@ export default function RecipeDetail( { navigation, route }: any ) {
     return steps
   }
 
+  const bookmarkPress = async () => {
+    try {
+      const res = await dispatch( bookmarkRecipe(
+        {
+          bookmarkId: 0,
+          mealType: "",
+          recipeId: recipeId,
+          dateAdded: dayjs().format( "YYYY-MM-DD" ).toString(),
+          userId: userSession.userId
+        }
+      ))
+
+      if ( res === 409 ) {
+        Alert.alert(
+          "Existed!",
+          "This recipe has already been bookmarked before!",
+          [
+            { text: "I Understood", style: "default" },
+          ]
+        )
+      } else {
+        Alert.alert(
+          "Success!",
+          "This recipe has been bookmarked!",
+          [
+            { text: "I Understood", style: "default" },
+          ]
+        )
+      }
+    } catch ( error: any ) {
+      Alert.alert(
+        "Error!",
+        "Unknown error occured, please try again!",
+        [
+          { text: "I Understood", style: "default" },
+        ]
+      )
+
+      console.log( "Error bookmarking: ", error )
+    }
+  }
+
+  const deletePress = async () => {
+    try {
+      const res = await dispatch( deleteBookmark( userSession.userId, recipeId ) )
+
+      if ( res === 404 ) {
+        Alert.alert(
+          "Not Found!",
+          "How did you access this recipe? It is not in your bookmark list!",
+          [
+            { text: "Huh?", style: "default" },
+          ]
+        )
+      } else {
+        Alert.alert(
+          "Success!",
+          "This recipe has been removed from your bookmark list!",
+          [
+            { text: "I Understood", style: "default" },
+          ]
+        )
+
+        navigation.goBack()
+      }
+    } catch ( error: any ) {
+      Alert.alert(
+        "Error!",
+        "Unknown error occured, please try again!",
+        [
+          { text: "I Understood", style: "default" },
+        ]
+      )
+
+      console.log( "Error deleting bookmark: ", error )
+    }
+  }
+
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
@@ -79,6 +160,18 @@ export default function RecipeDetail( { navigation, route }: any ) {
   }
 
   useEffect(() => {
+    const getUserSession = async () => {
+      const theUserSession = await AsyncStorage.getItem( "@user_session" )
+
+      if ( theUserSession !== null ) {
+        const parsed = JSON.parse( theUserSession )
+
+        setUserSession( parsed )
+      }
+    } 
+
+    getUserSession()
+
     if ( data[ 0 ]?.recipeInfo?.id !== recipeId ) {
       dispatch( fetchRecipeInfo( recipeId ) )
       dispatch( fetchRecipeIngreSteps( recipeId ) )
@@ -267,18 +360,32 @@ export default function RecipeDetail( { navigation, route }: any ) {
 
         <View style={ s.actionContainer }>
           <View style={ s.actionWrapper }>
-            <TouchableOpacity
-              activeOpacity={ 0.5 }
-              onPress={ () => console.log( "Bookmark" ) }
-              style={ s.actionIcon }
-            >
-              <IconMA 
-                name="bookmark"
-                color={ LightMode.green }
-                size={ 32 }
-              />
-            </TouchableOpacity>
-
+            { inBookmark ? 
+              <TouchableOpacity
+                activeOpacity={ 0.5 }
+                onPress={ deletePress }
+                style={ s.actionIcon }
+              >
+                <IconMA 
+                  name="delete"
+                  color={ LightMode.red }
+                  size={ 32 }
+                />
+              </TouchableOpacity>
+              :
+              <TouchableOpacity
+                activeOpacity={ 0.5 }
+                onPress={ bookmarkPress }
+                style={ s.actionIcon }
+              >
+                <IconMA 
+                  name="bookmark"
+                  color={ LightMode.green }
+                  size={ 32 }
+                />
+              </TouchableOpacity>
+            }
+            
             <TouchableOpacity
               activeOpacity={ 0.5 }
               onPress={ showModal }
