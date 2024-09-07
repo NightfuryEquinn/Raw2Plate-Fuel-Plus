@@ -1,12 +1,10 @@
 import { LightMode } from 'assets/colors/LightMode'
-import AbsoluteIcon from 'components/AbsoluteIcon'
 import HoriStoreCardWithCTA from 'components/HoriStoreCardWithCTA'
 import LinedTextField from 'components/LinedTextField'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
 import { browseStoreCategories } from 'data/browseStoreCategory'
-import { forInCart } from 'data/dummyData'
 import React, { useState } from 'react'
 import { FlatList, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -62,11 +60,6 @@ export default function BrowseStore( { navigation }: any ) {
           ItemSeparatorComponent={ () => <Spacer size={ 10 } />}
         />
       </View>
-
-      <AbsoluteIcon 
-        name="shopping-cart"
-        onPress={ () => navigation.navigate( "InCart", { theCart: forInCart[ 0 ] } ) }
-      />
     </SafeAreaView>
   )
 }       
