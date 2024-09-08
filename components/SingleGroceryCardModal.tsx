@@ -27,7 +27,7 @@ export default function SingleGroceryCardModal( { data, modal, showModal, quanti
             <View style={ s.wrapper }>
               <Image 
                 resizeMode="contain"
-                source={ data.source }
+                source={{ uri: data.image }}
                 style={ s.image }
               />
             </View>

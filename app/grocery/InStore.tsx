@@ -1,5 +1,7 @@
+import Loading from 'app/Loading'
 import { LightMode } from 'assets/colors/LightMode'
 import AbsoluteIcon from 'components/AbsoluteIcon'
+import EmptyContent from 'components/EmptyContent'
 import FilterGroceryCategoryModal from 'components/FilterGroceryCategoryModal'
 import GroceryCard from 'components/GroceryCard'
 import LinedTextField from 'components/LinedTextField'
@@ -9,16 +11,22 @@ import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
 import { forInCart } from 'data/dummyData'
 import { GroceryItemCategory, groceryItemCategory } from 'data/groceryItemCategory'
-import React, { useState } from 'react'
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Animated, { Extrapolation, interpolate, useAnimatedRef, useAnimatedStyle, useScrollViewOffset } from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchStoreItem } from 'redux/actions/groceryAction'
+import { AppDispatch, RootState } from 'redux/reducers/store'
 
 const IMG_HEIGHT = 200
 
 export default function InStore( { navigation, route }: any ) {
   const { storeData } = route.params
+
+  const dispatch: AppDispatch = useDispatch()
+  const { data, loading, error } = useSelector(( state: RootState ) => state.grocery )
 
   const [ search, setSearch ] = useState( "" )
   const [ category, setCategory ] = useState( "" )
@@ -29,14 +37,11 @@ export default function InStore( { navigation, route }: any ) {
   const [ singleData, setSingleData ] = useState( [] )
   const [ singleModal, setSingleModal ] = useState( false )
 
-  const filteredItems = groceryItemCategory.filter( data => 
+  const filteredItems = data[ 0 ]?.storeItems?.filter(( data: any ) => 
     data.name.toLowerCase().includes( search.toLowerCase() )
-  ).filter( data => 
+  ).filter(( data: any ) => 
     category === "" || data.category.toLowerCase() === category.toLowerCase()
   )
-
-  const scrollRef = useAnimatedRef<Animated.ScrollView>()
-  const scrollOffset = useScrollViewOffset( scrollRef )
 
   const showModal = () => {
     setModal( !modal )
@@ -51,60 +56,20 @@ export default function InStore( { navigation, route }: any ) {
     setSingleData( theSingleData )
   }
 
-  const imageAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: interpolate(
-            scrollOffset.value,
-            [ -IMG_HEIGHT, 0, IMG_HEIGHT ],
-            [ -IMG_HEIGHT / 2, 0, IMG_HEIGHT * 1.25 ]
-          )
-        },
-        { scale: interpolate(
-            scrollOffset.value,
-            [ -IMG_HEIGHT, 0, IMG_HEIGHT ],
-            [ 2, 1, 1 ],
-            Extrapolation.CLAMP
-          )
-        }
-      ]
-    }
-  })
-
-  const headerAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      height: interpolate(
-        scrollOffset.value,
-        [ 0, IMG_HEIGHT ],
-        [ 0, 35 ],
-        Extrapolation.CLAMP
-      ),
-      opacity: interpolate(
-        scrollOffset.value,
-        [ 0, IMG_HEIGHT ],
-        [ 0, 1 ]
-      ),
-      transform: [
-        {
-          translateY: interpolate(
-            scrollOffset.value,
-            [ 0, IMG_HEIGHT ],
-            [ -35, 0 ],
-            Extrapolation.CLAMP
-          )
-        }
-      ]
-    }
-  })
-
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
     return null
   }
+
+  useEffect(() => {
+    if ( !data[ 0 ].storeItems || ( data[ 0 ].storeItems[ 0 ].storeId !== storeData.storeId ) ) {
+      dispatch( fetchStoreItem( storeData.storeId ) )
+    }
+  }, [])
   
   return (
+    loading ? <Loading /> :
     <SafeAreaView style={ s.container }>
       <View style={{ flex: 1 }}>
         <TopBar />
@@ -137,28 +102,26 @@ export default function InStore( { navigation, route }: any ) {
 
           <Spacer size={ 10 } />
 
-          <Animated.View style={ headerAnimatedStyle }>
-            <Text style={ s.heading }>{ storeData.store }</Text>
-          </Animated.View>
+          <View>
+            <Text style={ s.heading }>{ storeData.name }</Text>
+          </View>
 
           <Spacer size={ 10 } />
 
-          <Animated.ScrollView
-            ref={ scrollRef }
-            scrollEventThrottle={ 16 }
+          <ScrollView
             showsVerticalScrollIndicator={ false }
             contentContainerStyle={{ paddingHorizontal: 20 }}
             style={ s.scroll }
           >
-            <Animated.Image 
+            <Image 
               resizeMode="cover"
-              source={ storeData.image }
-              style={[ s.image, imageAnimatedStyle ]}
+              source={{ uri: storeData.image }}
+              style={ s.image }
             />
 
             <View style={ s.itemContainer }>
               { 
-                filteredItems.length !== 0 ? (
+                filteredItems && filteredItems.length !== 0 ? (
                   filteredItems.map(( data: GroceryItemCategory, index: number ) => (
                     <GroceryCard
                       key={ index }
@@ -168,24 +131,18 @@ export default function InStore( { navigation, route }: any ) {
                   ))
                 )  
                 :
-                <View style={ s.emptyContainer }>
-                  <Image 
-                    source={ require( "../../assets/images/icons/cancel.png" ) }
-                    resizeMode="cover"
-                    style={ s.emptyIcon }
-                  />
-
-                  <Text style={ s.emptyText }>No products of this category available in this store...</Text>
-                </View>
+                <EmptyContent 
+                  message="No products of this category available in this store..."
+                />
               }
             </View>
-          </Animated.ScrollView>
+          </ScrollView>
         </View>
       </View>
 
       <AbsoluteIcon 
         name="shopping-cart"
-        onPress={ () => navigation.navigate( "InCart", { theCart: forInCart[ 1 ] } ) }
+        onPress={ () => navigation.navigate( "InCart", { storeId: storeData.storeId } ) }
       />
 
       <FilterGroceryCategoryModal 

@@ -109,3 +109,37 @@ export const ADD_RECIPE_TRACKER_FAILURE = "ADD_RECIPE_TRACKER_FAILURE"
 /**
  * ------------------------ GROCERY ------------------------
  */
+/**
+ * Fetch stores
+ */
+export const FETCH_STORE_LOADING = "FETCH_STORE_LOADING"
+export const FETCH_STORE_SUCCESS = "FETCH_STORE_SUCCESS"
+export const FETCH_STORE_FAILURE = "FETCH_STORE_FAILURE"
+
+/**
+ * Fetch one store
+ */
+export const FETCH_ONE_STORE_LOADING = "FETCH_ONE_STORE_LOADING"
+export const FETCH_ONE_STORE_SUCCESS = "FETCH_ONE_STORE_SUCCESS"
+export const FETCH_ONE_STORE_FAILURE = "FETCH_ONE_STORE_FAILURE"
+
+/**
+ * Fetch store items
+ */
+export const FETCH_STORE_ITEM_LOADING = "FETCH_STORE_ITEM_LOADING"
+export const FETCH_STORE_ITEM_SUCCESS = "FETCH_STORE_ITEM_SUCCESS"
+export const FETCH_STORE_ITEM_FAILURE = "FETCH_STORE_ITEM_FAILURE"
+
+/**
+ * Fetch in cart items
+ */
+export const FETCH_IN_CART_LOADING = "FETCH_IN_CART_LOADING"
+export const FETCH_IN_CART_SUCCESS = "FETCH_IN_CART_SUCCESS"
+export const FETCH_IN_CART_FAILURE = "FETCH_IN_CART_FAILURE"
+
+/**
+ * Add item to cart
+ */
+export const ADD_ITEM_CART_LOADING = "ADD_ITEM_CART_LOADING"
+export const ADD_ITEM_CART_SUCCESS = "ADD_ITEM_CART_SUCCESS"
+export const ADD_ITEM_CART_FAILURE = "ADD_ITEM_CART_FAILURE"

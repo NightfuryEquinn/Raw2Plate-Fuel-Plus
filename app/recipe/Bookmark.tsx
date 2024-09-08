@@ -128,7 +128,7 @@ export default function Bookmark() {
               ItemSeparatorComponent={ () => <Spacer size={ 10 } /> }
               ListEmptyComponent={ () => (
                 <EmptyContent 
-                  message="No bookmarks found..."
+                  message="No bookmarks found... Try to refresh again..."
                 />
               )}
             />

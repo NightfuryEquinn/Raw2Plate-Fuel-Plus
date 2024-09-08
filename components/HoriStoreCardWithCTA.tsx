@@ -10,16 +10,16 @@ export default function HoriStoreCardWithCTA( { data, onPress }: any ) {
       <Image 
         resizeMode="cover"
         style={ s.image }
-        source={ data.image }
+        source={{ uri: data.image }}
       />
 
       <View style={ s.detailContainer }>
         <View style={ s.detailHeadingWrapper }>
-          <Text numberOfLines={ 2 } style={ s.detailHeading }>{ data.store }</Text>
+          <Text numberOfLines={ 2 } style={ s.detailHeading }>{ data.name }</Text>
         </View>
         
         <View style={ s.detailWrapper }>
-          <Text style={[ s.sub, s.yellow ]}>{ data.distance }km</Text>
+          <Text style={[ s.sub, s.yellow ]}>{ data.distance }.0 km</Text>
           <Text numberOfLines={ 1 } style={[ s.sub, { flex: 1 } ]}>away</Text>
         </View>
       </View>
