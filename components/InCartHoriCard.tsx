@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import { LightMode } from 'assets/colors/LightMode'
 import SingleGroceryCardModal from './SingleGroceryCardModal'
 
-export default function InCartHoriCard( { data, onDelete }: any ) {
+export default function InCartHoriCard( { userId, data, onDelete }: any ) {
   const [ quantity, setQuantity ] = useState( data.quantity )
   const [ editModal, setEditModal ] = useState( false )
 
@@ -23,18 +23,18 @@ export default function InCartHoriCard( { data, onDelete }: any ) {
   return (
     <View style={ s.container }>
       <Image 
-        source={ data.item.source }
+        source={{ uri: data.image }}
         resizeMode="contain"
         style={ s.image }
       />
 
       <View style={ s.contentContainer }>
-        <Text numberOfLines={ 2 } style={ s.name }>{ data.item.name }</Text>
+        <Text numberOfLines={ 2 } style={ s.name }>{ data.name }</Text>
 
         <View style={ s.contentDetail }>
           <Text style={ s.quantity }>Quantity <Text style={ s.black }>{ data.quantity }</Text></Text>
 
-          <Text style={ s.price }>RM { ( data.item.price * data.quantity ).toFixed( 2 ) }</Text>
+          <Text style={ s.price }>RM { ( data.price * data.quantity ).toFixed( 2 ) }</Text>
         </View>
       </View>
 
@@ -65,11 +65,13 @@ export default function InCartHoriCard( { data, onDelete }: any ) {
       </View>
 
       <SingleGroceryCardModal 
-        data={ data.item }
+        userId={ userId }
+        data={ data }
         modal={ editModal }
         showModal={ showEditModal }
         quantity={ quantity }
         setQuantity={ setQuantity }
+        editable={ true }
       />
     </View>
   )
@@ -153,6 +155,7 @@ const s = StyleSheet.create({
 })
 
 InCartHoriCard.propTypes = {
+  userId: PropTypes.number.isRequired,
   data: PropTypes.any.isRequired,
   onDelete: PropTypes.func.isRequired,
 }

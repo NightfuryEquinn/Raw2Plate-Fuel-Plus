@@ -1,4 +1,4 @@
-import { FETCH_IN_CART_FAILURE, FETCH_IN_CART_LOADING, FETCH_IN_CART_SUCCESS, FETCH_ONE_STORE_FAILURE, FETCH_ONE_STORE_LOADING, FETCH_ONE_STORE_SUCCESS, FETCH_STORE_FAILURE, FETCH_STORE_ITEM_FAILURE, FETCH_STORE_ITEM_LOADING, FETCH_STORE_ITEM_SUCCESS, FETCH_STORE_LOADING, FETCH_STORE_SUCCESS } from "redux/types/actionTypes";
+import { ADD_ITEM_CART_FAILURE, ADD_ITEM_CART_LOADING, ADD_ITEM_CART_SUCCESS, DELETE_ITEM_CART_FAILURE, DELETE_ITEM_CART_LOADING, DELETE_ITEM_CART_SUCCESS, FETCH_IN_CART_FAILURE, FETCH_IN_CART_LOADING, FETCH_IN_CART_SUCCESS, FETCH_ONE_STORE_FAILURE, FETCH_ONE_STORE_LOADING, FETCH_ONE_STORE_SUCCESS, FETCH_STORE_FAILURE, FETCH_STORE_ITEM_FAILURE, FETCH_STORE_ITEM_LOADING, FETCH_STORE_ITEM_SUCCESS, FETCH_STORE_LOADING, FETCH_STORE_SUCCESS, UPDATE_ITEM_CART_FAILURE, UPDATE_ITEM_CART_LOADING, UPDATE_ITEM_CART_SUCCESS } from "redux/types/actionTypes";
 import { ReduxState } from "redux/types/stateTypes";
 
 const initialState: ReduxState = {
@@ -107,6 +107,75 @@ export const grcoeryReducer = (
       } 
 
     case FETCH_IN_CART_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload
+      }
+
+    case ADD_ITEM_CART_LOADING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+
+    case ADD_ITEM_CART_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        data: [{
+          ...state.data[ 0 ],
+        }]
+      } 
+
+    case ADD_ITEM_CART_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload
+      }
+
+    case UPDATE_ITEM_CART_LOADING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+
+    case UPDATE_ITEM_CART_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        data: [{
+          ...state.data[ 0 ],
+        }]
+      } 
+
+    case UPDATE_ITEM_CART_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload
+      }
+
+    case DELETE_ITEM_CART_LOADING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+
+    case DELETE_ITEM_CART_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        data: [{
+          ...state.data[ 0 ],
+        }]
+      } 
+
+    case DELETE_ITEM_CART_FAILURE:
       return {
         ...state,
         loading: false,

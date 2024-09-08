@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import Loading from 'app/Loading'
 import { LightMode } from 'assets/colors/LightMode'
 import AbsoluteIcon from 'components/AbsoluteIcon'
@@ -24,6 +25,8 @@ const IMG_HEIGHT = 200
 
 export default function InStore( { navigation, route }: any ) {
   const { storeData } = route.params
+
+  const [ userSession, setUserSession ] = useState<any>( null )
 
   const dispatch: AppDispatch = useDispatch()
   const { data, loading, error } = useSelector(( state: RootState ) => state.grocery )
@@ -63,6 +66,18 @@ export default function InStore( { navigation, route }: any ) {
   }
 
   useEffect(() => {
+    const getUserSession = async () => {
+      const theUserSession = await AsyncStorage.getItem( "@user_session" )
+
+      if ( theUserSession !== null ) {
+        const parsed = JSON.parse( theUserSession )
+
+        setUserSession( parsed )
+      }
+    } 
+
+    getUserSession()
+    
     if ( !data[ 0 ].storeItems || ( data[ 0 ].storeItems[ 0 ].storeId !== storeData.storeId ) ) {
       dispatch( fetchStoreItem( storeData.storeId ) )
     }
@@ -122,7 +137,7 @@ export default function InStore( { navigation, route }: any ) {
             <View style={ s.itemContainer }>
               { 
                 filteredItems && filteredItems.length !== 0 ? (
-                  filteredItems.map(( data: GroceryItemCategory, index: number ) => (
+                  filteredItems.map(( data: any, index: number ) => (
                     <GroceryCard
                       key={ index }
                       data={ data }
@@ -153,6 +168,7 @@ export default function InStore( { navigation, route }: any ) {
       />
 
       <SingleGroceryCardModal
+        userId={ userSession?.userId }
         data={ singleData }
         modal={ singleModal }
         showModal={ () => {

@@ -45,7 +45,7 @@ export default function Profile( { navigation }: any ) {
 
       return downloadUrl
     } catch ( error: any ) {
-      console.log( "Error uploading image: ", error )
+      console.error( "Error uploading image: ", error )
 
       throw error
     }
@@ -92,7 +92,7 @@ export default function Profile( { navigation }: any ) {
           ]
         )
 
-        console.log( "Error logout: ", error )
+        console.error( "Error logout: ", error )
       })
   }
 

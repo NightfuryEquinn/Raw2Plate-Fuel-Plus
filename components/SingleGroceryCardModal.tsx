@@ -6,8 +6,13 @@ import { Dimensions, Image, Modal, StyleSheet, Text, TouchableOpacity, View } fr
 import IconMA from 'react-native-vector-icons/MaterialIcons'
 import RoundedBorderButton from './RoundedBorderButton'
 import Spacer from './Spacer'
+import { AppDispatch } from 'redux/reducers/store'
+import { useDispatch } from 'react-redux'
+import { addItemCart, updateItemCart } from 'redux/actions/groceryAction'
 
-export default function SingleGroceryCardModal( { data, modal, showModal, quantity, setQuantity }: any ) {
+export default function SingleGroceryCardModal( { userId, data, modal, showModal, quantity, setQuantity, editable }: any ) {
+  const dispatch: AppDispatch = useDispatch()
+  
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
@@ -76,8 +81,30 @@ export default function SingleGroceryCardModal( { data, modal, showModal, quanti
 
             <View style={ s.buttonContainer }>
               <RoundedBorderButton 
-                onPress={ showModal }
-                text="Add to Cart"
+                onPress={ () => {
+                  showModal()
+
+                  if ( editable ) {
+                    dispatch( updateItemCart(
+                      {
+                        cartId: data.cartId,
+                        quantity: quantity,
+                        userId: userId,
+                        itemId: data.itemId
+                      }
+                    ))
+                  } else {
+                    dispatch( addItemCart(
+                      {
+                        cartId: 0,
+                        quantity: quantity,
+                        userId: userId,
+                        itemId: data.itemId
+                      }
+                    )) 
+                  }
+                }}
+                text={ editable ? "Update Cart" : "Add to Cart" }
                 color={ LightMode.yellow }
                 textColor={ LightMode.white }
                 borderRadius={ 10 }
@@ -195,9 +222,15 @@ const s = StyleSheet.create({
 })
 
 SingleGroceryCardModal.propTypes = {
+  userId: PropTypes.number.isRequired,
   data: PropTypes.any.isRequired,
   modal: PropTypes.bool.isRequired,
   showModal: PropTypes.func.isRequired,
   quantity: PropTypes.number.isRequired,
   setQuantity: PropTypes.func.isRequired,
+  editable: PropTypes.bool
+}
+
+SingleGroceryCardModal.defaultProps = {
+  editable: false
 }

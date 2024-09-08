@@ -7,11 +7,11 @@ import InCartHoriCard from 'components/InCartHoriCard'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
-import React, { useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchInCart, fetchOneStore } from 'redux/actions/groceryAction'
+import { deleteItemCart, fetchInCart, fetchOneStore } from 'redux/actions/groceryAction'
 import { AppDispatch, RootState } from 'redux/reducers/store'
 
 export default function InCart( { navigation, route }: any ) {
@@ -24,21 +24,29 @@ export default function InCart( { navigation, route }: any ) {
 
   const [ modal, setModal ] = useState( false )
   const [ refreshing, setRefreshing ] = useState( false )
+  const [ selected, setSelected ] = useState<any>( null )
 
-  const total = data[ 0 ]?.cartItems?.reduce(( total: any , currentItem: any ) => {
-    return total + ( currentItem.item.price * currentItem.quantity )
+  const total = data[ 0 ]?.cartItems?.reduce(( total: any, currentItem: any ) => {
+    return total + ( currentItem.price * currentItem.quantity )
   }, 0)
 
   const CartItem = ( { item, index }: any ) => (
     <InCartHoriCard
       key={ index }
+      userId={ userSession?.userId }
       data={ item }
-      onDelete={ showModal }
+      onDelete={ () => showModal( item.cartId ) }
     />
   )
 
-  const showModal = () => {
+  const showModal = ( theCartId?: number ) => {
     setModal( !modal )
+
+    if ( theCartId ) {
+      setSelected( theCartId )
+    } else {
+      setSelected( null )
+    }
   }
 
   // Refresh twice to see result, redux state issues
@@ -91,11 +99,14 @@ export default function InCart( { navigation, route }: any ) {
 
         <Spacer size={ 20 } />
 
-        <Image 
-          resizeMode="cover"
-          source={{ uri: data[ 0 ]?.oneStore?.image }}
-          style={ s.image }
-        />
+        {
+          ( data && data[ 0 ].oneStore && data[ 0 ].oneStore.image ) &&
+          <Image 
+            resizeMode="cover"
+            source={{ uri: data[ 0 ].oneStore.image }}
+            style={ s.image }
+          />
+        }
 
         <Spacer size={ 15 } />
 
@@ -117,7 +128,7 @@ export default function InCart( { navigation, route }: any ) {
               contentContainerStyle={{ padding: 20 }}
               data={ data[ 0 ].cartItems }
               renderItem={ CartItem }
-              keyExtractor={ data => data.id.toString() }
+              keyExtractor={ data => data.cartId.toString() }
               ItemSeparatorComponent={ () => <Spacer size={ 15 } /> }
               ListEmptyComponent={ () => (
                 <EmptyContent 
@@ -131,17 +142,22 @@ export default function InCart( { navigation, route }: any ) {
             />
         }
 
-        <Spacer size={ 30 } />
+        {
+          total !== 0 &&
+          <Fragment>
+            <Spacer size={ 30 } />
 
-        <TouchableOpacity
-          activeOpacity={ 0.5 }
-          onPress={ () => navigation.navigate( "Payment", { theCart: data[ 0 ].cartItems, total: total } ) }
-          style={ s.paymentContainer }
-        >
-          <Text style={ s.payment }>Proceed to Payment</Text>
+            <TouchableOpacity
+              activeOpacity={ 0.5 }
+              onPress={ () => navigation.navigate( "Payment", { theCart: data[ 0 ].cartItems, total: total } ) }
+              style={ s.paymentContainer }
+            >
+              <Text style={ s.payment }>Proceed to Payment</Text>
 
-          <Text style={ s.total }>RM { total?.toFixed( 2 ) }</Text>
-        </TouchableOpacity>
+              <Text style={ s.total }>RM { total?.toFixed( 2 ) }</Text>
+            </TouchableOpacity>
+          </Fragment>
+        }
       </View>
 
       <ConfirmationModal 
@@ -152,6 +168,9 @@ export default function InCart( { navigation, route }: any ) {
           showModal()
         }}
         onConfirm={ () => {
+          if ( selected ) {
+            dispatch( deleteItemCart( selected ) )
+          }
           showModal()
         }}
       />

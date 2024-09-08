@@ -1,4 +1,5 @@
 import { awsInstance } from "config/apisInstance"
+import { Cart } from "redux/models/Cart"
 import { ReduxState } from "redux/types/stateTypes"
 
 interface ApiRes<T> {
@@ -17,7 +18,7 @@ export const fetchStoreService = async () => {
     console.log( "DONE - fetchStoreService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchStoreService: ", error )
+    console.error( "ERROR - fetchStoreService: ", error )
 
     throw error
   }
@@ -33,7 +34,7 @@ export const fetchOneStoreService = async ( theStoreId: number ) => {
     console.log( "DONE - fetchOneStoreService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchOneStoreService: ", error )
+    console.error( "ERROR - fetchOneStoreService: ", error )
 
     throw error
   }
@@ -49,7 +50,7 @@ export const fetchStoreItemService = async ( theStoreId: number ) => {
     console.log( "DONE - fetchStoreItemService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchStoreItemService: ", error )
+    console.error( "ERROR - fetchStoreItemService: ", error )
 
     throw error
   }
@@ -65,7 +66,55 @@ export const fetchInCartService = async ( theUserId: number, theStoreId: number 
     console.log( "DONE - fetchInCartService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchInCartService: ", error )
+    console.error( "ERROR - fetchInCartService: ", error )
+
+    throw error
+  }
+}
+
+/**
+ * Add item to cart
+ */
+export const addItemCartService = async ( theCart: Cart ) => {
+  try {
+    const res: ApiRes<ReduxState[]> = await awsInstance.post( `/cart`, theCart )
+
+    console.log( "DONE - addItemCartService: ", res.data )
+    return res.data
+  } catch ( error ) {
+    console.error( "ERROR - addItemCartService: ", error )
+
+    throw error
+  }
+}
+
+/**
+ * Update item to cart
+ */
+export const updateItemCartService = async ( theCart: Cart ) => {
+  try {
+    const res: ApiRes<ReduxState[]> = await awsInstance.put( `/cart/${ theCart.cartId }`, theCart )
+
+    console.log( "DONE - updateItemCartService: ", res.data )
+    return res.data
+  } catch ( error ) {
+    console.error( "ERROR - updateItemCartService: ", error )
+
+    throw error
+  }
+}
+
+/**
+ * Delete item to cart
+ */
+export const deleteItemCartService = async ( theCartId: number ) => {
+  try {
+    const res: ApiRes<ReduxState[]> = await awsInstance.delete( `/cart/${ theCartId }` )
+
+    console.log( "DONE - deleteItemCartService: ", res.data )
+    return res.data
+  } catch ( error ) {
+    console.error( "ERROR - deleteItemCartService: ", error )
 
     throw error
   }

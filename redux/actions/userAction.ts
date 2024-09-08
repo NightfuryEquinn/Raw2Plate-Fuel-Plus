@@ -66,7 +66,7 @@ export const getTheUser = ( theEmail: string, thePassword: string ) => {
         await AsyncStorage.setItem( "@user_session", JSON.stringify( res ) )
         console.log( "Done creating session: ", res )
       } catch ( error: any ) {
-        console.log( "Error creating session: ", error )
+        console.error( "Error creating session: ", error )
       }
     } catch ( error: any ) {
       dispatch( getTheUserFailure( error.message ) )
@@ -142,7 +142,7 @@ export const updateProfile = ( theUser: User ) => {
 
         console.log( "Done updating session: ", sessionUser )
       } catch ( error: any ) {
-        console.log( "Error updating session: ", error )
+        console.error( "Error updating session: ", error )
       }
     } catch ( error: any ) {
       dispatch( updateProfileFailure( error.message ) )

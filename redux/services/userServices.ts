@@ -11,14 +11,14 @@ interface ApiRes<T> {
 /**
  * User register
  */
-export const userRegisterService = async ( theUser: User ): Promise<ReduxState[]> => {
+export const userRegisterService = async ( theUser: User ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.post( "/user", theUser )
 
     console.log( "DONE - userRegisterService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - userRegisterService: ", error )
+    console.error( "ERROR - userRegisterService: ", error )
 
     throw error
   }
@@ -27,14 +27,14 @@ export const userRegisterService = async ( theUser: User ): Promise<ReduxState[]
 /**
  * Set user session
  */
-export const getTheUserService = async ( theEmail: string, thePassword: string ): Promise<ReduxState[]> => {
+export const getTheUserService = async ( theEmail: string, thePassword: string ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.get( `/user/email/${ theEmail }/password/${ thePassword }` )
 
     console.log( "DONE - getTheUserService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - getTheUserService: ", error )
+    console.error( "ERROR - getTheUserService: ", error )
 
     throw error
   }
@@ -43,14 +43,14 @@ export const getTheUserService = async ( theEmail: string, thePassword: string )
 /**
  * Update profile
  */
-export const updateProfileService = async ( theUser: User ): Promise<ReduxState[]> => {
+export const updateProfileService = async ( theUser: User ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.put( `/user/${ theUser.userId }`, theUser )
 
     console.log( "DONE - updateProfileService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - updateProfileService: ", error )
+    console.error( "ERROR - updateProfileService: ", error )
 
     throw error
   }
@@ -66,7 +66,7 @@ export const fetchBookmarkService = async ( theUserId: number ) => {
     console.log( "DONE - fetchBookmarkService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchBookmarkService: ", error )
+    console.error( "ERROR - fetchBookmarkService: ", error )
 
     throw error
   }
@@ -83,7 +83,7 @@ export const fetchBookmarkInfoService = async ( theRecipeIds: string ) => {
     console.log( "DONE - fetchBookmarkInfoService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchBookmarkInfoService: ", error )
+    console.error( "ERROR - fetchBookmarkInfoService: ", error )
     
     throw error
   }
@@ -99,7 +99,7 @@ export const deleteBookmarkService = async ( theUserId: number, theRecipeId: num
     console.log( "DONE - deleteBookmarkService: ", res.data )
     return res.data
   } catch ( error: any ) {
-    console.log( "ERROR - deleteBookmarkService: ", error )
+    console.error( "ERROR - deleteBookmarkService: ", error )
 
     throw error
   }

@@ -1,6 +1,7 @@
+import { Cart } from "redux/models/Cart"
 import { AppDispatch } from "redux/reducers/store"
-import { fetchInCartService, fetchOneStoreService, fetchStoreItemService, fetchStoreService } from "redux/services/grcoeryServices"
-import { FETCH_IN_CART_FAILURE, FETCH_IN_CART_LOADING, FETCH_IN_CART_SUCCESS, FETCH_ONE_STORE_FAILURE, FETCH_ONE_STORE_LOADING, FETCH_ONE_STORE_SUCCESS, FETCH_STORE_FAILURE, FETCH_STORE_ITEM_FAILURE, FETCH_STORE_ITEM_LOADING, FETCH_STORE_ITEM_SUCCESS, FETCH_STORE_LOADING, FETCH_STORE_SUCCESS } from "redux/types/actionTypes"
+import { addItemCartService, deleteItemCartService, fetchInCartService, fetchOneStoreService, fetchStoreItemService, fetchStoreService, updateItemCartService } from "redux/services/grcoeryServices"
+import { ADD_ITEM_CART_FAILURE, ADD_ITEM_CART_LOADING, ADD_ITEM_CART_SUCCESS, DELETE_ITEM_CART_FAILURE, DELETE_ITEM_CART_LOADING, DELETE_ITEM_CART_SUCCESS, FETCH_IN_CART_FAILURE, FETCH_IN_CART_LOADING, FETCH_IN_CART_SUCCESS, FETCH_ONE_STORE_FAILURE, FETCH_ONE_STORE_LOADING, FETCH_ONE_STORE_SUCCESS, FETCH_STORE_FAILURE, FETCH_STORE_ITEM_FAILURE, FETCH_STORE_ITEM_LOADING, FETCH_STORE_ITEM_SUCCESS, FETCH_STORE_LOADING, FETCH_STORE_SUCCESS, UPDATE_ITEM_CART_FAILURE, UPDATE_ITEM_CART_LOADING, UPDATE_ITEM_CART_SUCCESS } from "redux/types/actionTypes"
 
 /**
  * Fetch stores
@@ -124,6 +125,102 @@ export const fetchInCart = ( theUserId: number, theStoreId: number ) => {
       dispatch( fetchInCartSuccess( res ) )
     } catch ( error: any ) {
       dispatch( fetchInCartFailure( error.message ) )
+
+      throw error
+    }
+  }
+}
+
+/**
+ * Add item to cart
+ */
+const addItemCartLoading = () => ({
+  type: ADD_ITEM_CART_LOADING
+})
+
+const addItemCartSuccess = ( data: any[] ) => ({
+  type: ADD_ITEM_CART_SUCCESS,
+  payload: data
+})
+
+const addItemCartFailure = ( error: string ) => ({
+  type: ADD_ITEM_CART_FAILURE,
+  payload: error
+})
+
+export const addItemCart = ( theCart: Cart ) => {
+  return async ( dispatch: AppDispatch ) => {
+    dispatch( addItemCartLoading() )
+
+    try {
+      const res = await addItemCartService( theCart )
+      dispatch( addItemCartSuccess( res ) )
+    } catch ( error: any ) {
+      dispatch( addItemCartFailure( error.message ) )
+
+      throw error
+    }
+  }
+}
+
+/**
+ * Update item to cart
+ */
+const updateItemCartLoading = () => ({
+  type: UPDATE_ITEM_CART_LOADING
+})
+
+const updateItemCartSuccess = ( data: any[] ) => ({
+  type: UPDATE_ITEM_CART_SUCCESS,
+  payload: data
+})
+
+const updateItemCartFailure = ( error: string ) => ({
+  type: UPDATE_ITEM_CART_FAILURE,
+  payload: error
+})
+
+export const updateItemCart = ( theCart: Cart ) => {
+  return async ( dispatch: AppDispatch ) => {
+    dispatch( updateItemCartLoading() )
+
+    try {
+      const res = await updateItemCartService( theCart )
+      dispatch( updateItemCartSuccess( res ) )
+    } catch ( error: any ) {
+      dispatch( updateItemCartFailure( error.message ) )
+
+      throw error
+    }
+  }
+}
+
+/**
+ * Delete item to cart
+ */
+const deleteItemCartLoading = () => ({
+  type: DELETE_ITEM_CART_LOADING
+})
+
+const deleteItemCartSuccess = ( data: any[] ) => ({
+  type: DELETE_ITEM_CART_SUCCESS,
+  payload: data
+})
+
+const deleteItemCartFailure = ( error: string ) => ({
+  type: DELETE_ITEM_CART_FAILURE,
+  payload: error
+})
+
+export const deleteItemCart = ( theCartId: number ) => {
+  return async ( dispatch: AppDispatch ) => {
+    dispatch( deleteItemCartLoading() )
+
+    try {
+      const res = await deleteItemCartService( theCartId )
+      dispatch( deleteItemCartSuccess( res ) )
+    } catch ( error: any ) {
+      dispatch( deleteItemCartFailure( error.message ) )
 
       throw error
     }

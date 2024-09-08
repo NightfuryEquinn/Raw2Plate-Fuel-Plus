@@ -19,7 +19,7 @@ export const fetchRandomService = async ( theNumber: number ) => {
     console.log( "DONE - fetchRandomService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchRandomService: ", error )
+    console.error( "ERROR - fetchRandomService: ", error )
 
     throw error
   }
@@ -36,7 +36,7 @@ export const fetchRecipeInfoService = async ( theRecipeId: number ) => {
     console.log( "DONE - fetchRecipeInfoService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchRecipeInfoService: ", error )
+    console.error( "ERROR - fetchRecipeInfoService: ", error )
 
     throw error
   }
@@ -53,7 +53,7 @@ export const fetchRecipeIngreStepsService = async ( theRecipeId: number ) => {
     console.log( "DONE - fetchRecipeIngreService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchRecipeIngreService: ", error )
+    console.error( "ERROR - fetchRecipeIngreService: ", error )
 
     throw error
   }
@@ -70,7 +70,7 @@ export const discoverSearchService = async ( query: string, theNumber: number, t
     console.log( "DONE - discoverSearchService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - discoverSearchService: ", error )
+    console.error( "ERROR - discoverSearchService: ", error )
 
     throw error
   }
@@ -86,7 +86,7 @@ export const bookmarkRecipeService = async ( theBookmark: Bookmark ) => {
     console.log( "DONE - bookmarkRecipeService: ", res.data )
     return res.data
   } catch ( error: any ) {
-    console.log( "ERROR - bookmarkRecipeService: ", error )
+    console.error( "ERROR - bookmarkRecipeService: ", error )
 
     throw error
   }

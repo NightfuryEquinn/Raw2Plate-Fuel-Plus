@@ -83,7 +83,7 @@ export default function Login( { navigation }: any ) {
           )
         }
 
-        console.log( "Error login: ", error )
+        console.error( "Error login: ", error )
       })
   }
 

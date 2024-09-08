@@ -113,7 +113,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
         ]
       )
 
-      console.log( "Error bookmarking: ", error )
+      console.error( "Error bookmarking: ", error )
     }
   }
 
@@ -149,7 +149,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
         ]
       )
 
-      console.log( "Error deleting bookmark: ", error )
+      console.error( "Error deleting bookmark: ", error )
     }
   }
 
