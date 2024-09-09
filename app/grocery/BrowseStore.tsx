@@ -72,7 +72,7 @@ export default function BrowseStore( { navigation }: any ) {
               showsVerticalScrollIndicator={ false }
               data={ filteredStores }
               renderItem={ StoreItem }
-              keyExtractor={ data => data.store }
+              keyExtractor={ data => data.storeId }
               ItemSeparatorComponent={ () => <Spacer size={ 10 } /> }
               ListEmptyComponent={ () => (
                 <EmptyContent 

@@ -1,4 +1,6 @@
 import { GOOGLE_API_KEY } from "@env"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import Loading from "app/Loading"
 import { LightMode } from 'assets/colors/LightMode'
 import axios from 'axios'
 import LinedTextField from 'components/LinedTextField'
@@ -6,17 +8,28 @@ import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
 import { methodCategory } from 'data/methodCategory'
-import React, { useState } from 'react'
+import dayjs from "dayjs"
+import React, { useEffect, useState } from 'react'
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import IconFA from "react-native-vector-icons/FontAwesome"
+import { useDispatch, useSelector } from "react-redux"
+import { addOrder } from "redux/actions/groceryAction"
+import { drivers, Status } from "redux/models/Order"
+import { AppDispatch, RootState } from "redux/reducers/store"
 
-export default function Payment( { route }: any ) {
-  const { theCart, total } = route.params
+export default function Payment( { navigation, route }: any ) {
+  const { total } = route.params
+
+  const [ userSession, setUserSession ] = useState<any>( null )
+
+  const dispatch: AppDispatch = useDispatch()
+  const { data, loading, error } = useSelector(( state: RootState ) => state.grocery )
 
   const [ receiver, setReceiver ] = useState( "" )
   const [ contact, setContact ] = useState( "" )
   const [ address, setAddress ] = useState( "" )
+  const [ checked, setChecked ] = useState( 0 )
 
   const [ method, setMethod ] = useState( 0 )
 
@@ -34,11 +47,10 @@ export default function Payment( { route }: any ) {
         `https://maps.googleapis.com/maps/api/geocode/json?address=${ address }&key=${ GOOGLE_API_KEY }`
       )
 
-      console.log( res )
-
       if ( res.data.status === "OK" ) {
         const theAddress = res.data.results[ 0 ].formatted_address
         setAddress( theAddress )
+        setChecked( 1 )
       } else {
         Alert.alert(
           "Location not found!",
@@ -63,13 +75,64 @@ export default function Payment( { route }: any ) {
     }
   }
 
+  const placeOrder = () => {
+    const randomIndex = Math.floor( Math.random() * drivers.length )
+    const randomDriver = drivers[ randomIndex ]
+
+    dispatch( addOrder(
+      {
+        orderId: 0,
+        receiver: receiver,
+        contact: contact,
+        address: address,
+        totalPrice: total,
+        paidWith: methodCategory[ method ].iconName,
+        status: Status.active,
+        date: dayjs().toISOString(),
+        orderTime: dayjs().format( "YYYY-MM-DD h:mm:ss a" ).toString(),
+        deliveredTime: "",
+        driver: randomDriver,
+        userId: userSession.userId
+      },
+      data[ 0 ].cartItems
+    ))
+
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "BrowseStore" }]
+    })
+
+    Alert.alert(
+      "Success!",
+      "Your order has been placed, please view it in your active order.",
+      [
+        { text: "I Understood", style: "default" },
+      ]
+    )
+  }
+
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
     return null
-  } 
+  }
+
+  useEffect(() => {
+    const getUserSession = async () => {
+      const theUserSession = await AsyncStorage.getItem( "@user_session" )
+
+      if ( theUserSession !== null ) {
+        const parsed = JSON.parse( theUserSession )
+
+        setUserSession( parsed )
+      }
+    } 
+
+    getUserSession()
+  }, [])
 
   return (
+    loading ? <Loading /> :
     <SafeAreaView style={ s.container }>
       <View style={{ flex: 1 }}>
         <TopBar />
@@ -104,6 +167,7 @@ export default function Payment( { route }: any ) {
           placeholder="Address"
           text={ address }
           setText={ setAddress }
+          multiline={ true }
         />
 
         <Spacer size={ 10 } />
@@ -132,10 +196,10 @@ export default function Payment( { route }: any ) {
             showsVerticalScrollIndicator={ false }
           >
             {
-              theCart.items.map(( item: any, index: number ) => (
+              data[ 0 ].cartItems.map(( item: any, index: number ) => (
                 <View key={ index } style={ s.itemContainer }>
-                  <Text style={ s.name }>{ item.item.name }</Text>
-                  <Text style={ s.price }>{ item.quantity } / RM { ( item.quantity * item.item.price ).toFixed( 2 ) }</Text>
+                  <Text style={ s.name }>{ item.name }</Text>
+                  <Text style={ s.price }>{ item.quantity } / RM { ( item.quantity * item.price ).toFixed( 2 ) }</Text>
                 </View>
               ))
             }
@@ -164,12 +228,13 @@ export default function Payment( { route }: any ) {
         
         <TouchableOpacity
           activeOpacity={ 0.5 }
-          onPress={ () => console.log( "Place Order" ) }
-          style={ s.paymentContainer }
+          onPress={ placeOrder }
+          style={[ s.paymentContainer, checked === 0 || receiver === "" || contact === "" || address === "" ? { backgroundColor: LightMode.lightGreen } : { backgroundColor: LightMode.green } ]}
+          disabled={ checked === 0 || receiver === "" || contact === "" || address === "" }
         >
-          <Text style={ s.payment }>Place Order</Text>
+          <Text style={[ s.payment, checked === 0 || receiver === "" || contact === "" || address === "" ? { opacity: 0.5 } : { opacity: 1 } ]}>Place Order</Text>
 
-          <Text style={ s.total }>RM { total.toFixed( 2 ) }</Text>
+          <Text style={[ s.total, checked === 0 || receiver === "" || contact === "" || address === "" ? { opacity: 0.5 } : { opacity: 1 } ]}>RM { total.toFixed( 2 ) }</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -270,7 +335,6 @@ const s = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: LightMode.green,
     borderRadius: 10,
     shadowColor: LightMode.black,
     shadowOffset: {

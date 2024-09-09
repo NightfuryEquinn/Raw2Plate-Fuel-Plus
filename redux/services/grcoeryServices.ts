@@ -1,5 +1,7 @@
 import { awsInstance } from "config/apisInstance"
 import { Cart } from "redux/models/Cart"
+import { Order } from "redux/models/Order"
+import { OrderItem } from "redux/models/OrderItem"
 import { ReduxState } from "redux/types/stateTypes"
 
 interface ApiRes<T> {
@@ -115,6 +117,61 @@ export const deleteItemCartService = async ( theCartId: number ) => {
     return res.data
   } catch ( error ) {
     console.error( "ERROR - deleteItemCartService: ", error )
+
+    throw error
+  }
+}
+
+/**
+ * Add order
+ */
+export const addOrderService = async ( theOrder: Order, theOrderItems: any[] ) => {
+  try {
+    const orderRes: ApiRes<any> = await awsInstance.post( "/order", theOrder )
+
+    console.log( "DONE - addOrderService: ", orderRes.data )
+
+    const theOrderId = orderRes.data.orderId
+    const updatedOrderItems = theOrderItems.map( item => ({
+      ...item,
+      orderId: theOrderId
+    }))
+
+    const updatedOrderItemsRequest = updatedOrderItems.map( item =>
+      awsInstance.post( "/orderItem", 
+        {
+          orderItemId: 0,
+          itemId: item.itemId,
+          orderId: item.orderId
+        }
+      )
+    )
+    
+    try {
+      const orderItemRes = await Promise.all( updatedOrderItemsRequest )
+      console.log( "DONE - addAllOrderItems: ", orderItemRes.map( res => res.data ) )
+    } catch ( error ) {
+      console.error( "ERROR - addAllOrderItems: ", error )
+      
+      throw error
+    }
+
+    const deleteCartRequest = updatedOrderItems.map( item => 
+      awsInstance.delete( `/cart/${ item.cartId }` )
+    )
+
+    try {
+      const orderItemRes = await Promise.all( deleteCartRequest )
+      console.log( "DONE - deleteAllCartItems: ", orderItemRes.map( res => res.data ) )
+    } catch ( error ) {
+      console.error( "ERROR - deleteAllCartItems: ", error )
+
+      throw error
+    }
+
+    return orderRes.data
+  } catch ( error ) {
+    console.error( "ERROR - addOrderService: ", error )
 
     throw error
   }

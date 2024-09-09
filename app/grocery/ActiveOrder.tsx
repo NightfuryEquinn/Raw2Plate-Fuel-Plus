@@ -58,7 +58,7 @@ export default function ActiveOrder() {
             <View style={[ s.infoWrapper, { flex: 0.4 } ]}>
               <Text style={[ s.info, s.black ]}>ETA</Text>
 
-              <Text style={ s.info }>25 <Text style={[ s.black, s.cantarell ]}>mins</Text></Text>
+              <Text style={ s.info }>{ Math.floor( Math.random() * ( 85 - 25 + 1 ) ) + 25 } <Text style={[ s.black, s.cantarell ]}>mins</Text></Text>
             </View>
           </View>
 

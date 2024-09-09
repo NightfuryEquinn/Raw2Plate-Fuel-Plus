@@ -49,17 +49,11 @@ export default function MapCard( {}: any ) {
           pinColor={ LightMode.green }
         />
 
-        <Polyline 
-          coordinates={[ origin, driverLocation, destination ]}
-          strokeColor={ LightMode.halfBlack }
-          strokeWidth={ 4 }
-        />
-
         <MapViewDirections 
           origin={ driverLocation }
           destination={ destination }
           apikey={ GOOGLE_API_KEY }
-          strokeColor={ LightMode.black }
+          strokeColor={ LightMode.lightBlack }
           strokeWidth={ 4 }
           optimizeWaypoints={ true }
         />

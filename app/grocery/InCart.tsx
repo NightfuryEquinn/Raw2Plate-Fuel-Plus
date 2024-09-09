@@ -114,7 +114,7 @@ export default function InCart( { navigation, route }: any ) {
         
         <Spacer size={ 5 } />
       
-        <Text style={ s.text }>Estimated delivery time <Text style={ s.black }>25 minutes</Text></Text>
+        <Text style={ s.text }>Estimated delivery time <Text style={ s.black }>{ Math.floor( Math.random() * ( 85 - 25 + 1 ) ) + 25 } minutes</Text></Text>
 
         <Spacer size={ 30 } />
 
@@ -149,7 +149,7 @@ export default function InCart( { navigation, route }: any ) {
 
             <TouchableOpacity
               activeOpacity={ 0.5 }
-              onPress={ () => navigation.navigate( "Payment", { theCart: data[ 0 ].cartItems, total: total } ) }
+              onPress={ () => navigation.navigate( "Payment", { total: total } ) }
               style={ s.paymentContainer }
             >
               <Text style={ s.payment }>Proceed to Payment</Text>

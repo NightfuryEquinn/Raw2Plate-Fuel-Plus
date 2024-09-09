@@ -1,7 +1,16 @@
 export enum Status {
   active = "Delivering",
-  inactive = "Completed"
+  inactive = "Completed",
+  cancel = "Cancelled"
 }
+
+export const drivers: string[] = [
+  "John Doe",
+  "Alexandar Xavier",
+  "Yggdrasil Wright",
+  "Thor Amellia",
+  "Zeus Almighty"
+]
 
 export interface Order {
   orderId: number,

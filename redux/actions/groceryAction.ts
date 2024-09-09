@@ -1,7 +1,9 @@
 import { Cart } from "redux/models/Cart"
+import { Order } from "redux/models/Order"
+import { OrderItem } from "redux/models/OrderItem"
 import { AppDispatch } from "redux/reducers/store"
-import { addItemCartService, deleteItemCartService, fetchInCartService, fetchOneStoreService, fetchStoreItemService, fetchStoreService, updateItemCartService } from "redux/services/grcoeryServices"
-import { ADD_ITEM_CART_FAILURE, ADD_ITEM_CART_LOADING, ADD_ITEM_CART_SUCCESS, DELETE_ITEM_CART_FAILURE, DELETE_ITEM_CART_LOADING, DELETE_ITEM_CART_SUCCESS, FETCH_IN_CART_FAILURE, FETCH_IN_CART_LOADING, FETCH_IN_CART_SUCCESS, FETCH_ONE_STORE_FAILURE, FETCH_ONE_STORE_LOADING, FETCH_ONE_STORE_SUCCESS, FETCH_STORE_FAILURE, FETCH_STORE_ITEM_FAILURE, FETCH_STORE_ITEM_LOADING, FETCH_STORE_ITEM_SUCCESS, FETCH_STORE_LOADING, FETCH_STORE_SUCCESS, UPDATE_ITEM_CART_FAILURE, UPDATE_ITEM_CART_LOADING, UPDATE_ITEM_CART_SUCCESS } from "redux/types/actionTypes"
+import { addItemCartService, addOrderService, deleteItemCartService, fetchInCartService, fetchOneStoreService, fetchStoreItemService, fetchStoreService, updateItemCartService } from "redux/services/grcoeryServices"
+import { ADD_ITEM_CART_FAILURE, ADD_ITEM_CART_LOADING, ADD_ITEM_CART_SUCCESS, ADD_ORDER_FAILURE, ADD_ORDER_LOADING, ADD_ORDER_SUCCESS, DELETE_ITEM_CART_FAILURE, DELETE_ITEM_CART_LOADING, DELETE_ITEM_CART_SUCCESS, FETCH_IN_CART_FAILURE, FETCH_IN_CART_LOADING, FETCH_IN_CART_SUCCESS, FETCH_ONE_STORE_FAILURE, FETCH_ONE_STORE_LOADING, FETCH_ONE_STORE_SUCCESS, FETCH_STORE_FAILURE, FETCH_STORE_ITEM_FAILURE, FETCH_STORE_ITEM_LOADING, FETCH_STORE_ITEM_SUCCESS, FETCH_STORE_LOADING, FETCH_STORE_SUCCESS, UPDATE_ITEM_CART_FAILURE, UPDATE_ITEM_CART_LOADING, UPDATE_ITEM_CART_SUCCESS } from "redux/types/actionTypes"
 
 /**
  * Fetch stores
@@ -221,6 +223,38 @@ export const deleteItemCart = ( theCartId: number ) => {
       dispatch( deleteItemCartSuccess( res ) )
     } catch ( error: any ) {
       dispatch( deleteItemCartFailure( error.message ) )
+
+      throw error
+    }
+  }
+}
+
+/**
+ * Add order
+ */
+const addOrderLoading = () => ({
+  type: ADD_ORDER_LOADING
+})
+
+const addOrderSuccess = ( data: any[] ) => ({
+  type: ADD_ORDER_SUCCESS,
+  payload: data
+})
+
+const addOrderFailure = ( error: string ) => ({
+  type: ADD_ORDER_FAILURE,
+  payload: error
+})
+
+export const addOrder = ( theOrder: Order, theOrderItems: OrderItem[] ) => {
+  return async ( dispatch: AppDispatch ) => {
+    dispatch( addOrderLoading() )
+
+    try {
+      const res = await addOrderService( theOrder, theOrderItems )
+      dispatch( addOrderSuccess( res ) )
+    } catch ( error: any ) {
+      dispatch( addOrderFailure( error.message ) )
 
       throw error
     }
