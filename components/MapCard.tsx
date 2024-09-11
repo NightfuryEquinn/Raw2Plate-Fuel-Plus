@@ -126,8 +126,6 @@ export default function MapCard( { storeAddress, receiverAddress }: any ) {
           optimizeWaypoints={ true }
           onError={ ( error: any ) => console.error( "Error getting direction: ", error ) }
         />
-
-        
       </MapView>
     </View>
   )

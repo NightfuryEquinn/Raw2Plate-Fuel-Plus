@@ -1,41 +1,53 @@
 import { LightMode } from 'assets/colors/LightMode'
 import { useFontFromContext } from 'context/FontProvider'
 import PropTypes from 'prop-types'
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import Spacer from './Spacer'
 import dayjs from 'dayjs'
 import EmptyContent from './EmptyContent'
+import { AppDispatch, RootState } from 'redux/reducers/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchOrderItems } from 'redux/actions/groceryAction'
+import RoundedBorderButton from './RoundedBorderButton'
 
-export default function OrderCard( { data, itemData, title }: any ) {
+export default function OrderCard( { orderData, title }: any ) {
+  const dispatch: AppDispatch = useDispatch()
+  const { data, loading, error } = useSelector(( state: RootState ) => state.grocery )
+
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
     return null
   } 
-  
+
   return (
     <Fragment>
-      <View style={ s.divider }>
-        <Text style={ s.dividerText }>{ title }</Text>
-      </View> 
+      {
+        title || title !== "" &&
+        <Fragment>
+          <View style={ s.divider }>
+            <Text style={ s.dividerText }>{ title }</Text>
+          </View> 
 
-      <Spacer size={ 10 } />
+          <Spacer size={ 10 } />
+        </Fragment>
+      }
 
       <View style={ s.container }>
         <View style={ s.topContainer }>
           <Image 
-            source={{ uri: data.storeImage }}
+            source={{ uri: orderData?.storeImage }}
             resizeMode="cover"
             style={ s.image }
           />
 
           <View style={ s.topTextContainer }>
-            <Text style={ s.topHeading }>Order #{ data.orderId }</Text>
+            <Text style={ s.topHeading }>Order #{ orderData?.orderId }</Text>
 
             <View>
-              <Text style={ s.topPrice }>RM { data.totalPrice.toFixed( 2 ) }</Text>
-              <Text style={ s.method }>Paid with { data.paidWith === "cc-visa" ? "Visa" : data.paidWith === "cc-mastercard" ? "Mastercard" : "American Express" }</Text>
+              <Text style={ s.topPrice }>RM { orderData?.totalPrice?.toFixed( 2 ) }</Text>
+              <Text style={ s.method }>Paid with { orderData?.paidWith === "cc-visa" ? "Visa" : orderData?.paidWith === "cc-mastercard" ? "Mastercard" : "American Express" }</Text>
             </View>
           </View>
         </View>
@@ -43,8 +55,14 @@ export default function OrderCard( { data, itemData, title }: any ) {
         <Spacer size={ 10 } />
 
         {
-          data && data[ 0 ]?.activeOrder ?
-            <Text style={ s.completed }>Completed at { dayjs( data.deliveredTime ).format( 'h:mm a' ) }. Received by <Text style={ s.grey }>Mr. { data.receiver } - { data.contact }</Text></Text>
+          orderData && ( orderData.status === "Cancelled" || orderData.status === "Completed" ) ?
+            <Fragment>
+              <Text style={ s.completed }>Completed at { dayjs( orderData?.deliveredTime ).format( 'h:mm a' ) }. </Text>
+              
+              <Spacer size={ 5 } />
+
+              <Text style={ s.completed }>Received by <Text style={ s.grey }>{ orderData?.receiver } - { orderData?.contact }</Text></Text>
+            </Fragment>
           :
             null
         }
@@ -59,8 +77,8 @@ export default function OrderCard( { data, itemData, title }: any ) {
           />
 
           <View style={ s.middleWrapper }>
-            <Text style={ s.address }><Text style={ s.yellow }>From</Text> { data.storeName }</Text>
-            <Text style={ s.address }><Text style={ s.yellow }>To</Text> { data.address }</Text>
+            <Text style={ s.address }><Text style={ s.yellow }>From</Text> { orderData?.storeName }</Text>
+            <Text style={ s.address }><Text style={ s.yellow }>To</Text> { orderData?.address }</Text>
           </View>
         </View>
 
@@ -68,13 +86,26 @@ export default function OrderCard( { data, itemData, title }: any ) {
 
         <View>
           {
-            itemData && itemData.length > 0 ?
-              itemData.map(( item: any, index: number ) => (
+            data[ 0 ]?.orderItems && data[ 0 ]?.orderItems.length > 0 && data[ 0 ].orderItems[ 0 ].orderId === orderData.orderId ?
+              data[ 0 ].orderItems.map(( item: any, index: number ) => (
                 <View key={ index } style={ s.itemContainer }>
                   <Text style={ s.name }>{ item.name }</Text>
                   <Text style={ s.price }>{ item.quantity } * { item.price } / RM { ( item.quantity * item.price ).toFixed( 2 ) }</Text>
                 </View>
               ))
+            : data[ 0 ].orderItems[ 0 ].orderId !== orderData.orderId ?
+              <Fragment>
+                <RoundedBorderButton 
+                  onPress={ () => dispatch( fetchOrderItems( orderData.orderId ) ) }
+                  text="View Details"
+                  color={ LightMode.blue }
+                  textColor={ LightMode.white }
+                  borderRadius={ 10 }
+                  marginHori={ 0 }
+                /> 
+
+                <Spacer size={ 7.5 } />
+              </Fragment>
             :
               <Fragment>
                 <EmptyContent 
@@ -210,7 +241,6 @@ const s = StyleSheet.create({
 })
 
 OrderCard.propTypes = {
-  data: PropTypes.any.isRequired,
-  itemData: PropTypes.any,
+  orderData: PropTypes.any.isRequired,
   title: PropTypes.string.isRequired
 }

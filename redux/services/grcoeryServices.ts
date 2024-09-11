@@ -199,16 +199,32 @@ export const fetchFirstActiveOrderService = async ( theUserId: number ) => {
 }
 
 /**
- * Fetch the active order items
+ * Fetch the order items
  */
-export const fetchActiveOrderItemsService = async ( theOrderId: number ) => {
+export const fetchOrderItemsService = async ( theOrderId: number ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.get( `/order/user/${ theOrderId }/items` )
 
-    console.log( "DONE - fetchActiveOrderItemsService: ", res.data )
+    console.log( "DONE - fetchOrderItemsService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - fetchActiveOrderItemsService: ", error )
+    console.error( "ERROR - fetchOrderItemsService: ", error )
+
+    throw error
+  }
+}
+
+/**
+ * Fetch order history
+ */
+export const fetchOrderHistoryService = async ( theUserId: number ) => {
+  try {
+    const res: ApiRes<ReduxState[]> = await awsInstance.get( `/order/user/${ theUserId }/past` )
+
+    console.log( "DONE - fetchOrderHistoryService: ", res.data )
+    return res.data
+  } catch ( error ) {
+    console.error( "ERROR - fetchOrderHistoryService: ", error )
 
     throw error
   }

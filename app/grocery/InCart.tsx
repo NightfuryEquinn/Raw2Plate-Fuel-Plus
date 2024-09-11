@@ -147,6 +147,10 @@ export default function InCart( { navigation, route }: any ) {
           <Fragment>
             <Spacer size={ 30 } />
 
+            <Text style={[ s.hint, { textAlign: "left" } ]}>NOTE: Please refresh to update and view your cart after making any changes.</Text>
+
+            <Spacer size={ 10 } />
+
             <TouchableOpacity
               activeOpacity={ 0.5 }
               onPress={ () => navigation.navigate( "Payment", { total: total } ) }
@@ -191,7 +195,7 @@ const s = StyleSheet.create({
   },
   "image": {
     width: "auto",
-    height: 150,
+    height: 100,
     borderRadius: 10,
   },
   "text": {
@@ -238,5 +242,11 @@ const s = StyleSheet.create({
     fontFamily: "cantarell",
     fontSize: 16,
     color: LightMode.black
-  }
+  },
+  "hint": {
+    fontFamily: "cantarell",
+    fontSize: 12,
+    color: LightMode.lightBlack,
+    textAlign: "right"
+  },
 })

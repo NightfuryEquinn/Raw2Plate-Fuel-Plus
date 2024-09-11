@@ -14,7 +14,7 @@ import React, { Fragment, useEffect, useState } from 'react'
 import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
-import { cancelOrder, fetchActiveOrderItems, fetchFirstActiveOrder } from 'redux/actions/groceryAction'
+import { cancelOrder, fetchFirstActiveOrder, fetchOrderItems } from 'redux/actions/groceryAction'
 import { Status } from 'redux/models/Order'
 import { AppDispatch, RootState } from 'redux/reducers/store'
 
@@ -39,7 +39,7 @@ export default function ActiveOrder() {
     }
 
     if ( userSession ) {
-      dispatch( fetchActiveOrderItems( data[ 0 ]?.activeOrder?.orderId ) )
+      dispatch( fetchOrderItems( data[ 0 ]?.activeOrder?.orderId ) )
     }
 
     setRefreshing( false )
@@ -72,8 +72,8 @@ export default function ActiveOrder() {
   }, [ userSession ])
 
   useEffect(() => {
-    if ( userSession && !data[ 0 ]?.activeOrderItems ) {
-      dispatch( fetchActiveOrderItems( data[ 0 ].activeOrder.orderId ) )
+    if ( userSession && !data[ 0 ]?.orderItems ) {
+      dispatch( fetchOrderItems( data[ 0 ].activeOrder.orderId ) )
     }
   }, [ data[ 0 ].activeOrder ])
   
@@ -143,7 +143,7 @@ export default function ActiveOrder() {
 
                 <OrderCard 
                   data={ data[ 0 ].activeOrder }
-                  itemData={ data[ 0 ].activeOrderItems }
+                  itemData={ data[ 0 ].orderItems }
                   title={ `Order Review | Status: ${ data[ 0 ].activeOrder.status }` }            
                 />
               </Fragment>
@@ -178,7 +178,8 @@ export default function ActiveOrder() {
           dispatch( cancelOrder(
             {
               ...data[ 0 ]?.activeOrder,
-              status: Status.cancel
+              status: Status.cancel,
+              deliveredTime: dayjs().format( "YYYY-MM-DD HH:mm:ss" ).toString()
             }
           ))
           showModal()

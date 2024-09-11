@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, FlatList } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { useFontFromContext } from 'context/FontProvider'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import TopBar from 'components/TopBar'
@@ -8,13 +8,49 @@ import { LightMode } from 'assets/colors/LightMode'
 import OrderCard from 'components/OrderCard'
 import dayjs from 'dayjs'
 import CalendarModal from 'components/CalendarModal'
+import { AppDispatch, RootState } from 'redux/reducers/store'
+import { useDispatch, useSelector } from 'react-redux'
+import Loading from 'app/Loading'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { fetchOrderHistory, fetchOrderItems } from 'redux/actions/groceryAction'
+import EmptyContent from 'components/EmptyContent'
 
 export default function HistoryOrder() {
+  const [ userSession, setUserSession ] = useState<any>( null )
+
+  const dispatch: AppDispatch = useDispatch()
+  const { data, loading, error } = useSelector(( state: RootState ) => state.grocery )
+
   const [ modal, setModal ] = useState( false )
   const [ modalDate, setModalDate ] = useState( dayjs() )
+  const [ refreshing, setRefreshing ] = useState( false )
+
+  const filteredOrders = data[ 0 ]?.pastOrders?.filter(( data: any ) => (
+    dayjs( data.deliveredTime ).isSame( modalDate, 'day' )
+  ))
+
+  const HistoryOrderItem = ( { item, index }: any ) => {
+    return (
+      <OrderCard
+        key={ index }
+        orderData={ item }
+        title={ "" }
+      />
+    )
+  }
 
   const showModal = () => {
     setModal( !modal )
+  }
+
+  const onRefresh = async () => {
+    setRefreshing( true )
+
+    if ( userSession ) {
+      dispatch( fetchOrderHistory( userSession.userId ) )
+    }
+    
+    setRefreshing( false )
   }
   
   const { fontsLoaded } = useFontFromContext()
@@ -23,7 +59,28 @@ export default function HistoryOrder() {
     return null
   } 
 
+  useEffect(() => {
+    const getUserSession = async () => {
+      const theUserSession = await AsyncStorage.getItem( "@user_session" )
+
+      if ( theUserSession !== null ) {
+        const parsed = JSON.parse( theUserSession )
+
+        setUserSession( parsed )
+      }
+    } 
+
+    getUserSession()
+  }, [])
+
+  useEffect(() => {
+    if ( userSession && ( !data[ 0 ].pastOrders || !data[ 0 ].orderItems )) {
+      dispatch( fetchOrderHistory( userSession.userId ) )
+    }
+  }, [ userSession, modalDate ])
+
   return (
+    loading ? <Loading /> :
     <SafeAreaView style={ s.container }>
       <View style={{ flex: 1 }}>
         <TopBar />
@@ -44,28 +101,22 @@ export default function HistoryOrder() {
 
         <Spacer size={ 30 } />
 
-        {/* Change to FlatList when data is available */}
-        <ScrollView
+        <FlatList 
+          refreshing={ refreshing }
+          onRefresh={ onRefresh }
           style={{ margin: -20 }}
-          contentContainerStyle={{ padding: 20 }}
           showsVerticalScrollIndicator={ false }
-        >
-          <OrderCard 
-            title="15 August 2024"            
-          />
-
-          <Spacer size={ 20 } />
-
-          <OrderCard 
-            title="13 August 2024"            
-          />
-
-          <Spacer size={ 20 } />
-
-          <OrderCard 
-            title="10 August 2024"            
-          />
-        </ScrollView>
+          contentContainerStyle={{ padding: 20 }}
+          data={ filteredOrders }
+          renderItem={ HistoryOrderItem }
+          keyExtractor={ data => data.orderId.toString() }
+          ItemSeparatorComponent={ () => <Spacer size={ 20 } /> }
+          ListEmptyComponent={ () => (
+            <EmptyContent 
+              message="No order found..."
+            />
+          )}
+        />
       </View>
 
       <CalendarModal 

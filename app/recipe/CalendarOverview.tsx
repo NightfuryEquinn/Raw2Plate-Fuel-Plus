@@ -28,8 +28,6 @@ export default function CalendarOverview( { navigation }: any ) {
   const CookItem = ( { item, index }: any ) => (
     <HoriSwipeCard 
       onPress={ () => console.log( "Recipe Detail" ) }
-      onBookmark={ () => console.log( "Bookmark" ) }
-      onDelete={ () => console.log( "Delete" ) }
       data={ item }
       first={ index === 0 && true }
     />
