@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Raw2Plate-Fuel-Plus",
-    "slug": "Raw2Plate-Fuel-Plus",
+    "name": "Bao",
+    "slug": "Bao",
     "scheme": "raw2platefuelplus",
     "platforms": [
       "ios",
@@ -13,7 +13,7 @@
     "icon": "./assets/images/logos/white_no_text.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/logos/white_text.png",
+      "image": "./assets/images/logos/white_text_high_res.png",
       "resizeMode": "contain",
       "backgroundColor": "#fafafa"
     },

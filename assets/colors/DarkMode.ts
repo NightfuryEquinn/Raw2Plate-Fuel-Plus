@@ -8,6 +8,8 @@ export const DarkMode = {
   blue: "#87D4E9",
   americanBlue: "#016FD0",
   visaBlue: "#1434CB",
+  grabGreen: "#0b7d3e",
+  halfGrabGreen: "#0b7d3e80",
   lightGreen: "#ECFACD",
   green: "#D7F498",
   darkGreen: "#96BA49",

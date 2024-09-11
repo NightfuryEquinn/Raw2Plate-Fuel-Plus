@@ -141,37 +141,74 @@ export const addOrderService = async ( theOrder: Order, theOrderItems: any[] ) =
       awsInstance.post( "/orderItem", 
         {
           orderItemId: 0,
+          quantity: item.quantity,
           itemId: item.itemId,
           orderId: item.orderId
         }
       )
     )
     
-    try {
-      const orderItemRes = await Promise.all( updatedOrderItemsRequest )
-      console.log( "DONE - addAllOrderItems: ", orderItemRes.map( res => res.data ) )
-    } catch ( error ) {
-      console.error( "ERROR - addAllOrderItems: ", error )
-      
-      throw error
-    }
+    const updatedOrderItemsResponse = await Promise.all( updatedOrderItemsRequest )
+    console.log( "DONE - addAllOrderItems: ", updatedOrderItemsResponse.map( res => res.data ) )
 
     const deleteCartRequest = updatedOrderItems.map( item => 
       awsInstance.delete( `/cart/${ item.cartId }` )
     )
 
-    try {
-      const orderItemRes = await Promise.all( deleteCartRequest )
-      console.log( "DONE - deleteAllCartItems: ", orderItemRes.map( res => res.data ) )
-    } catch ( error ) {
-      console.error( "ERROR - deleteAllCartItems: ", error )
-
-      throw error
-    }
+    const deleteCartResponse = await Promise.all( deleteCartRequest )
+    console.log( "DONE - deleteAllCartItems: ", deleteCartResponse.map( res => res.data ) )
 
     return orderRes.data
   } catch ( error ) {
     console.error( "ERROR - addOrderService: ", error )
+
+    throw error
+  }
+}
+
+/**
+ * Cancel order
+ */
+export const cancelOrderService = async ( theOrder: Order ) => {
+  try {
+    const res: ApiRes<ReduxState[]> = await awsInstance.put( `/order/${ theOrder.orderId }`, theOrder )
+
+    console.log( "DONE - cancelOrderService: ", res.data )
+    return res.data
+  } catch ( error ) {
+    console.error( "ERROR - cancelOrderService: ", error )
+
+    throw error
+  }
+}
+
+/**
+ * Fetch first active order
+ */
+export const fetchFirstActiveOrderService = async ( theUserId: number ) => {
+  try {
+    const res: ApiRes<ReduxState[]> = await awsInstance.get( `/order/user/${ theUserId }` )
+
+    console.log( "DONE - fetchFirstActiveOrderService: ", res.data )
+    return res.data
+  } catch ( error ) {
+    console.error( "ERROR - fetchFirstActiveOrderService: ", error )
+
+    throw error
+  }
+}
+
+/**
+ * Fetch the active order items
+ */
+export const fetchActiveOrderItemsService = async ( theOrderId: number ) => {
+  try {
+    const res: ApiRes<ReduxState[]> = await awsInstance.get( `/order/user/${ theOrderId }/items` )
+
+    console.log( "DONE - fetchActiveOrderItemsService: ", res.data )
+    return res.data
+  } catch ( error ) {
+    console.error( "ERROR - fetchActiveOrderItemsService: ", error )
 
     throw error
   }

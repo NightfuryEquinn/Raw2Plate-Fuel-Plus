@@ -154,7 +154,6 @@ export const bookmarkRecipe = ( theBookmark: Bookmark ) => {
 
     try {
       const res = await bookmarkRecipeService( theBookmark )
-
       dispatch( bookmarkRecipeSuccess( res ) )
     } catch ( error: any ) {
       dispatch( bookmarkRecipeFailure( error.message ) )

@@ -14,7 +14,7 @@ import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'rea
 import { SafeAreaView } from 'react-native-safe-area-context'
 import IconFA from "react-native-vector-icons/FontAwesome"
 import { useDispatch, useSelector } from "react-redux"
-import { addOrder } from "redux/actions/groceryAction"
+import { addOrder, fetchFirstActiveOrder } from "redux/actions/groceryAction"
 import { drivers, Status } from "redux/models/Order"
 import { AppDispatch, RootState } from "redux/reducers/store"
 
@@ -76,39 +76,49 @@ export default function Payment( { navigation, route }: any ) {
   }
 
   const placeOrder = () => {
-    const randomIndex = Math.floor( Math.random() * drivers.length )
-    const randomDriver = drivers[ randomIndex ]
-
-    dispatch( addOrder(
-      {
-        orderId: 0,
-        receiver: receiver,
-        contact: contact,
-        address: address,
-        totalPrice: total,
-        paidWith: methodCategory[ method ].iconName,
-        status: Status.active,
-        date: dayjs().toISOString(),
-        orderTime: dayjs().format( "YYYY-MM-DD h:mm:ss a" ).toString(),
-        deliveredTime: "",
-        driver: randomDriver,
-        userId: userSession.userId
-      },
-      data[ 0 ].cartItems
-    ))
-
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "BrowseStore" }]
-    })
-
-    Alert.alert(
-      "Success!",
-      "Your order has been placed, please view it in your active order.",
-      [
-        { text: "I Understood", style: "default" },
-      ]
-    )
+    if ( data[ 0 ].activeOrder ) {
+      Alert.alert(
+        "Active order!",
+        "You currently have an active and ongoing order! Please wait for it to be delivered before issuing another!",
+        [
+          { text: "I Understood", style: "default" },
+        ]
+      )
+    } else {
+      const randomIndex = Math.floor( Math.random() * drivers.length )
+      const randomDriver = drivers[ randomIndex ]
+  
+      dispatch( addOrder(
+        {
+          orderId: 0,
+          receiver: receiver,
+          contact: contact,
+          address: address,
+          totalPrice: total,
+          paidWith: methodCategory[ method ].iconName,
+          status: Status.pending,
+          date: dayjs().format( "YYYY-MM-DD HH:mm:ss" ).toString(),
+          orderTime: dayjs().format( "YYYY-MM-DD HH:mm:ss" ).toString(),
+          deliveredTime: "",
+          driver: randomDriver,
+          userId: userSession.userId
+        },
+        data[ 0 ].cartItems
+      ))
+  
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "BrowseStore" }]
+      })
+  
+      Alert.alert(
+        "Success!",
+        "Your order has been placed, please view it in your active order.",
+        [
+          { text: "I Understood", style: "default" },
+        ]
+      )
+    }
   }
 
   const { fontsLoaded } = useFontFromContext()
@@ -130,6 +140,12 @@ export default function Payment( { navigation, route }: any ) {
 
     getUserSession()
   }, [])
+
+  useEffect(() => {
+    if ( userSession && !data[ 0 ]?.activeOrder ) {
+      dispatch( fetchFirstActiveOrder( userSession.userId ) )
+    }
+  }, [ userSession ])
 
   return (
     loading ? <Loading /> :

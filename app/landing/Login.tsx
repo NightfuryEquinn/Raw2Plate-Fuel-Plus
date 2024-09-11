@@ -185,7 +185,7 @@ export default function Login( { navigation }: any ) {
               }}
               name="google"
               text="Login with Google"
-              color={ LightMode.black }
+              color={ LightMode.red }
               textColor={ LightMode.white }
               borderRadius={ 10 }
             />

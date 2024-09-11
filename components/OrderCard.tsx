@@ -4,8 +4,10 @@ import PropTypes from 'prop-types'
 import React, { Fragment } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import Spacer from './Spacer'
+import dayjs from 'dayjs'
+import EmptyContent from './EmptyContent'
 
-export default function OrderCard( { title }: any ) {
+export default function OrderCard( { data, itemData, title }: any ) {
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
@@ -23,24 +25,29 @@ export default function OrderCard( { title }: any ) {
       <View style={ s.container }>
         <View style={ s.topContainer }>
           <Image 
-            source={ require( "../assets/images/grocery_hardcoded/food_merchant.jpg" ) }
+            source={{ uri: data.storeImage }}
             resizeMode="cover"
             style={ s.image }
           />
 
           <View style={ s.topTextContainer }>
-            <Text style={ s.topHeading }>Order #2202407142146</Text>
+            <Text style={ s.topHeading }>Order #{ data.orderId }</Text>
 
             <View>
-              <Text style={ s.topPrice }>RM 41.50</Text>
-              <Text style={ s.method }>Paid with Visa</Text>
+              <Text style={ s.topPrice }>RM { data.totalPrice.toFixed( 2 ) }</Text>
+              <Text style={ s.method }>Paid with { data.paidWith === "cc-visa" ? "Visa" : data.paidWith === "cc-mastercard" ? "Mastercard" : "American Express" }</Text>
             </View>
           </View>
         </View>
 
         <Spacer size={ 10 } />
 
-        <Text style={ s.completed }>Completed at 2:40 pm by <Text style={ s.grey }>Mr. Jason Doe</Text></Text>
+        {
+          data && data[ 0 ]?.activeOrder ?
+            <Text style={ s.completed }>Completed at { dayjs( data.deliveredTime ).format( 'h:mm a' ) }. Received by <Text style={ s.grey }>Mr. { data.receiver } - { data.contact }</Text></Text>
+          :
+            null
+        }
 
         <View style={ s.emptyDivider }></View>
 
@@ -52,38 +59,31 @@ export default function OrderCard( { title }: any ) {
           />
 
           <View style={ s.middleWrapper }>
-            <Text style={ s.address }><Text style={ s.yellow }>From</Text> Food Merchant Pavilion Bukit Jalil</Text>
-            <Text style={ s.address }><Text style={ s.yellow }>To</Text> F3-03, Arena Green Apartment, 57000 Bukit Jalil, Wilayah Persekutuan Kuala Lumpur</Text>
+            <Text style={ s.address }><Text style={ s.yellow }>From</Text> { data.storeName }</Text>
+            <Text style={ s.address }><Text style={ s.yellow }>To</Text> { data.address }</Text>
           </View>
         </View>
 
         <View style={ s.emptyDivider }></View>
 
         <View>
-          <View style={ s.itemContainer }>
-            <Text style={ s.name }>Romaine Lettuce</Text>
-            <Text style={ s.price }>3 / RM 29.40</Text>
-          </View>
+          {
+            itemData && itemData.length > 0 ?
+              itemData.map(( item: any, index: number ) => (
+                <View key={ index } style={ s.itemContainer }>
+                  <Text style={ s.name }>{ item.name }</Text>
+                  <Text style={ s.price }>{ item.quantity } * { item.price } / RM { ( item.quantity * item.price ).toFixed( 2 ) }</Text>
+                </View>
+              ))
+            :
+              <Fragment>
+                <EmptyContent 
+                  message="Unable to load item details in the order..."
+                />
 
-          <View style={ s.itemContainer }>
-            <Text style={ s.name }>Romaine Lettuce</Text>
-            <Text style={ s.price }>3 / RM 29.40</Text>
-          </View>
-
-          <View style={ s.itemContainer }>
-            <Text style={ s.name }>Romaine Lettuce</Text>
-            <Text style={ s.price }>3 / RM 29.40</Text>
-          </View>
-
-          <View style={ s.itemContainer }>
-            <Text style={ s.name }>Romaine Lettuce</Text>
-            <Text style={ s.price }>3 / RM 29.40</Text>
-          </View>
-
-          <View style={ s.itemContainer }>
-            <Text style={ s.name }>Romaine Lettuce</Text>
-            <Text style={ s.price }>3 / RM 29.40</Text>
-          </View>
+                <Spacer size={ 7.5 } />
+              </Fragment>
+          }
         </View>
       </View>
     </Fragment>
@@ -210,5 +210,7 @@ const s = StyleSheet.create({
 })
 
 OrderCard.propTypes = {
+  data: PropTypes.any.isRequired,
+  itemData: PropTypes.any,
   title: PropTypes.string.isRequired
 }
