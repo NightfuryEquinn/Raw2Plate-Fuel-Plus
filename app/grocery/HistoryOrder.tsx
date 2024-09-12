@@ -43,6 +43,7 @@ export default function HistoryOrder() {
     setModal( !modal )
   }
 
+  // Refresh twice to see result, redux state issues
   const onRefresh = async () => {
     setRefreshing( true )
 

@@ -1,7 +1,8 @@
 import { awsInstance } from "config/apisInstance"
 import { Cart } from "redux/models/Cart"
+import { GroceryItem } from "redux/models/GroceryItem"
+import { GroceryList } from "redux/models/GroceryList"
 import { Order } from "redux/models/Order"
-import { OrderItem } from "redux/models/OrderItem"
 import { ReduxState } from "redux/types/stateTypes"
 
 interface ApiRes<T> {
@@ -225,6 +226,86 @@ export const fetchOrderHistoryService = async ( theUserId: number ) => {
     return res.data
   } catch ( error ) {
     console.error( "ERROR - fetchOrderHistoryService: ", error )
+
+    throw error
+  }
+}
+
+/** 
+ * Fetch grocery list 
+ */
+export const fetchGroceryListService = async ( theUserId: number ) => {
+  try {
+    const res: ApiRes<ReduxState[]> = await awsInstance.get( `/grocerylist/user/${ theUserId }` )
+
+    console.log( "DONE - fetchGroceryListService: ", res.data )
+    return res.data
+  } catch ( error ) {
+    console.error( "ERROR - fetchGroceryListService: ", error )
+
+    throw error
+  }
+}
+
+/**
+ * Check and add grocery list
+ */
+export const checkAddGroceryListService = async ( theGroceryList: GroceryList ) => {
+  try {
+    const res: ApiRes<ReduxState[]> = await awsInstance.post( `/grocerylist`, theGroceryList )
+
+    console.log( "DONE - checkAddGroceryListService: ", res.data )
+    return res.data
+  } catch ( error ) {
+    console.error( "ERROR - checkAddGroceryListService: ", error )
+
+    throw error
+  }
+}
+
+/**
+ * Add grocery list
+ */
+export const addGroceryListService = async ( theGroceryItem: GroceryItem ) => {
+  try {
+    const res: ApiRes<ReduxState[]> = await awsInstance.post( `/groceryitem`, theGroceryItem )
+
+    console.log( "DONE - addGroceryListService: ", res.data )
+    return res.data
+  } catch ( error ) {
+    console.error( "ERROR - addGroceryListService: ", error )
+
+    throw error
+  }
+}
+
+/**
+ * Update grocery list
+ */
+export const updateGroceryListService = async ( theGroceryItem: GroceryItem ) => {
+  try {
+    const res: ApiRes<ReduxState[]> = await awsInstance.put( `/groceryitem/${ theGroceryItem.groceryItemId }`, theGroceryItem )
+
+    console.log( "DONE - updateGroceryListService: ", res.data )
+    return res.data
+  } catch ( error ) {
+    console.error( "ERROR - updateGroceryListService: ", error )
+
+    throw error
+  }
+}
+
+/**
+ * Delete grocery list
+ */
+export const deleteGroceryListService = async ( theGroceryItemId: number ) => {
+  try {
+    const res: ApiRes<ReduxState[]> = await awsInstance.delete( `/groceryitem/${ theGroceryItemId }` )
+
+    console.log( "DONE - deleteGroceryListService: ", res.data )
+    return res.data
+  } catch ( error ) {
+    console.error( "ERROR - deleteGroceryListService: ", error )
 
     throw error
   }

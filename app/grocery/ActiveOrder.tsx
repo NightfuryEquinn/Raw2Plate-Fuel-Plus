@@ -31,6 +31,7 @@ export default function ActiveOrder() {
     setModal( !modal )
   }
 
+  // Refresh twice to see result, redux state issues
   const onRefresh = async () => {
     setRefreshing( true )
 
@@ -142,8 +143,7 @@ export default function ActiveOrder() {
                 <Spacer size={ 15 } />
 
                 <OrderCard 
-                  data={ data[ 0 ].activeOrder }
-                  itemData={ data[ 0 ].orderItems }
+                  orderData={ data[ 0 ].activeOrder }
                   title={ `Order Review | Status: ${ data[ 0 ].activeOrder.status }` }            
                 />
               </Fragment>

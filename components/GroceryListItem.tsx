@@ -12,7 +12,7 @@ export default function GroceryListItem( { data, onChecked, onDelete }: any ) {
         onPress={ onChecked }
         style={ s.listContainer }
       >
-        { data.checked ?
+        { data.isCompleted ?
           <Image 
             source={ require( "../assets/images/icons/checked.png" ) }
             resizeMode="contain"

@@ -1,3 +1,4 @@
+import Loading from 'app/Loading';
 import { LightMode } from 'assets/colors/LightMode';
 import HoriSwipeCard from 'components/HoriSwipeCard';
 import Spacer from 'components/Spacer';
@@ -11,8 +12,13 @@ import { FlatList, Image, Pressable, ScrollView, StyleSheet, Text, TouchableWith
 import Animated, { LinearTransition, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import IconMA from 'react-native-vector-icons/MaterialIcons';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from 'redux/reducers/store';
 
 export default function CalendarOverview( { navigation }: any ) {
+  const dispatch: AppDispatch = useDispatch()
+  const { data, loading, error } = useSelector(( state: RootState ) => state.recipe )
+
   const [ active, setActive ] = useState( 0 )
   const margin = useSharedValue( 0 )
 
@@ -20,7 +26,7 @@ export default function CalendarOverview( { navigation }: any ) {
     if ( active === index ) {
       return
     } else {
-      margin.value = withTiming( 7.5, { duration: 250 } )
+      margin.value = withTiming( 10, { duration: 250 } )
       setActive( index )
     }
   }
@@ -40,10 +46,11 @@ export default function CalendarOverview( { navigation }: any ) {
   }
 
   useEffect(() => {
-    margin.value = withTiming( 7.5, { duration: 250 } )
+    margin.value = withTiming( 10, { duration: 250 } )
   }, [])
   
   return (
+    loading ? <Loading /> :
     <SafeAreaView style={ s.container }>        
       <View style={{ flex: 1 }}>
         <TopBar />
@@ -188,6 +195,6 @@ const s = StyleSheet.create({
   },
   "flatList": {
     margin: -15, 
-    marginTop: -7.5
+    marginTop: -10
   }
 })

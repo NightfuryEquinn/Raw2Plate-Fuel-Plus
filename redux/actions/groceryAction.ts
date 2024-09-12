@@ -1,9 +1,11 @@
 import { Cart } from "redux/models/Cart"
+import { GroceryItem } from "redux/models/GroceryItem"
+import { GroceryList } from "redux/models/GroceryList"
 import { Order } from "redux/models/Order"
 import { OrderItem } from "redux/models/OrderItem"
 import { AppDispatch } from "redux/reducers/store"
-import { addItemCartService, addOrderService, cancelOrderService, deleteItemCartService, fetchFirstActiveOrderService, fetchInCartService, fetchOneStoreService, fetchOrderHistoryService, fetchOrderItemsService, fetchStoreItemService, fetchStoreService, updateItemCartService } from "redux/services/grcoeryServices"
-import { ADD_ITEM_CART_FAILURE, ADD_ITEM_CART_LOADING, ADD_ITEM_CART_SUCCESS, ADD_ORDER_FAILURE, ADD_ORDER_LOADING, ADD_ORDER_SUCCESS, CANCEL_ORDER_FAILURE, CANCEL_ORDER_LOADING, CANCEL_ORDER_SUCCESS, DELETE_ITEM_CART_FAILURE, DELETE_ITEM_CART_LOADING, DELETE_ITEM_CART_SUCCESS, FETCH_FIRST_ACTIVE_ORDER_FAILURE, FETCH_FIRST_ACTIVE_ORDER_LOADING, FETCH_FIRST_ACTIVE_ORDER_SUCCESS, FETCH_IN_CART_FAILURE, FETCH_IN_CART_LOADING, FETCH_IN_CART_SUCCESS, FETCH_ONE_STORE_FAILURE, FETCH_ONE_STORE_LOADING, FETCH_ONE_STORE_SUCCESS, FETCH_ORDER_HISTORY_FAILURE, FETCH_ORDER_HISTORY_LOADING, FETCH_ORDER_HISTORY_SUCCESS, FETCH_ORDER_ITEMS_FAILURE, FETCH_ORDER_ITEMS_LOADING, FETCH_ORDER_ITEMS_SUCCESS, FETCH_STORE_FAILURE, FETCH_STORE_ITEM_FAILURE, FETCH_STORE_ITEM_LOADING, FETCH_STORE_ITEM_SUCCESS, FETCH_STORE_LOADING, FETCH_STORE_SUCCESS, UPDATE_ITEM_CART_FAILURE, UPDATE_ITEM_CART_LOADING, UPDATE_ITEM_CART_SUCCESS } from "redux/types/actionTypes"
+import { addGroceryListService, addItemCartService, addOrderService, cancelOrderService, checkAddGroceryListService, deleteGroceryListService, deleteItemCartService, fetchFirstActiveOrderService, fetchGroceryListService, fetchInCartService, fetchOneStoreService, fetchOrderHistoryService, fetchOrderItemsService, fetchStoreItemService, fetchStoreService, updateGroceryListService, updateItemCartService } from "redux/services/grcoeryServices"
+import { ADD_GROCERY_LIST_FAILURE, ADD_GROCERY_LIST_LOADING, ADD_GROCERY_LIST_SUCCESS, ADD_ITEM_CART_FAILURE, ADD_ITEM_CART_LOADING, ADD_ITEM_CART_SUCCESS, ADD_ORDER_FAILURE, ADD_ORDER_LOADING, ADD_ORDER_SUCCESS, CANCEL_ORDER_FAILURE, CANCEL_ORDER_LOADING, CANCEL_ORDER_SUCCESS, CHECK_ADD_GROCERY_LIST_FAILURE, CHECK_ADD_GROCERY_LIST_LOADING, CHECK_ADD_GROCERY_LIST_SUCCESS, DELETE_GROCERY_LIST_FAILURE, DELETE_GROCERY_LIST_LOADING, DELETE_GROCERY_LIST_SUCCESS, DELETE_ITEM_CART_FAILURE, DELETE_ITEM_CART_LOADING, DELETE_ITEM_CART_SUCCESS, FETCH_FIRST_ACTIVE_ORDER_FAILURE, FETCH_FIRST_ACTIVE_ORDER_LOADING, FETCH_FIRST_ACTIVE_ORDER_SUCCESS, FETCH_GROCERY_LIST_FAILURE, FETCH_GROCERY_LIST_LOADING, FETCH_GROCERY_LIST_SUCCESS, FETCH_IN_CART_FAILURE, FETCH_IN_CART_LOADING, FETCH_IN_CART_SUCCESS, FETCH_ONE_STORE_FAILURE, FETCH_ONE_STORE_LOADING, FETCH_ONE_STORE_SUCCESS, FETCH_ORDER_HISTORY_FAILURE, FETCH_ORDER_HISTORY_LOADING, FETCH_ORDER_HISTORY_SUCCESS, FETCH_ORDER_ITEMS_FAILURE, FETCH_ORDER_ITEMS_LOADING, FETCH_ORDER_ITEMS_SUCCESS, FETCH_STORE_FAILURE, FETCH_STORE_ITEM_FAILURE, FETCH_STORE_ITEM_LOADING, FETCH_STORE_ITEM_SUCCESS, FETCH_STORE_LOADING, FETCH_STORE_SUCCESS, UPDATE_GROCERY_LIST_FAILURE, UPDATE_GROCERY_LIST_LOADING, UPDATE_GROCERY_LIST_SUCCESS, UPDATE_ITEM_CART_FAILURE, UPDATE_ITEM_CART_LOADING, UPDATE_ITEM_CART_SUCCESS } from "redux/types/actionTypes"
 
 /**
  * Fetch stores
@@ -383,6 +385,166 @@ export const fetchOrderHistory = ( theUserId: number ) => {
       dispatch( fetchOrderHistorySuccess( res ) )
     } catch ( error: any ) {
       dispatch( fetchOrderHistoryFailure( error.message ) )
+
+      throw error
+    }
+  }
+}
+
+/** 
+ * Fetch grocery list 
+ */
+const fetchGroceryListLoading = () => ({
+  type: FETCH_GROCERY_LIST_LOADING
+})
+
+const fetchGroceryListSuccess = ( data: any[] ) => ({
+  type: FETCH_GROCERY_LIST_SUCCESS,
+  payload: data
+})
+
+const fetchGroceryListFailure = ( error: string ) => ({
+  type: FETCH_GROCERY_LIST_FAILURE,
+  payload: error
+})
+
+export const fetchGroceryList = ( theUserId: number ) => {
+  return async ( dispatch: AppDispatch ) => {
+    dispatch( fetchGroceryListLoading() )
+
+    try {
+      const res = await fetchGroceryListService( theUserId )
+      dispatch( fetchGroceryListSuccess( res ) )
+    } catch ( error: any ) {
+      dispatch( fetchGroceryListFailure( error.message ) )
+
+      throw error
+    }
+  }
+}
+
+/**
+ * Check and add grocery list
+ */
+const checkAddGroceryListLoading = () => ({
+  type: CHECK_ADD_GROCERY_LIST_LOADING
+})
+
+const checkAddGroceryListSuccess = ( data: any[] ) => ({
+  type: CHECK_ADD_GROCERY_LIST_SUCCESS,
+  payload: data
+})
+
+const checkAddGroceryListFailure = ( error: string ) => ({
+  type: CHECK_ADD_GROCERY_LIST_FAILURE,
+  payload: error
+})
+
+export const checkAddGroceryList = ( theGroceryList: GroceryList ) => {
+  return async ( dispatch: AppDispatch ) => {
+    dispatch( checkAddGroceryListLoading() )
+
+    try {
+      const res = await checkAddGroceryListService( theGroceryList )
+      dispatch( checkAddGroceryListSuccess( res ) )
+    } catch ( error: any ) {
+      dispatch( checkAddGroceryListFailure( error.message ) )
+
+      throw error
+    }
+  }
+}
+
+/**
+ * Add grocery list
+ */
+const addGroceryListLoading = () => ({
+  type: ADD_GROCERY_LIST_LOADING
+})
+
+const addGroceryListSuccess = ( data: any[] ) => ({
+  type: ADD_GROCERY_LIST_SUCCESS,
+  payload: data
+})
+
+const addGroceryListFailure = ( error: string ) => ({
+  type: ADD_GROCERY_LIST_FAILURE,
+  payload: error
+})
+
+export const addGroceryList = ( theGroceryItem: GroceryItem ) => {
+  return async ( dispatch: AppDispatch ) => {
+    dispatch( addGroceryListLoading() )
+
+    try {
+      const res = await addGroceryListService( theGroceryItem )
+      dispatch( addGroceryListSuccess( res ) )
+    } catch ( error: any ) {
+      dispatch( addGroceryListFailure( error.message ) )
+
+      throw error
+    }
+  }
+}
+
+/**
+ * Update grocery list
+ */
+const updateGroceryListLoading = () => ({
+  type: UPDATE_GROCERY_LIST_LOADING
+})
+
+const updateGroceryListSuccess = ( data: any[] ) => ({
+  type: UPDATE_GROCERY_LIST_SUCCESS,
+  payload: data
+})
+
+const updateGroceryListFailure = ( error: string ) => ({
+  type: UPDATE_GROCERY_LIST_FAILURE,
+  payload: error
+})
+
+export const updateGroceryList = ( theGroceryItem: GroceryItem ) => {
+  return async ( dispatch: AppDispatch ) => {
+    dispatch( updateGroceryListLoading() )
+
+    try {
+      const res = await updateGroceryListService( theGroceryItem )
+      dispatch( updateGroceryListSuccess( res ) )
+    } catch ( error: any ) {
+      dispatch( updateGroceryListFailure( error.message ) )
+
+      throw error
+    }
+  }
+}
+
+/**
+ * Delete grocery list
+ */
+const deleteGroceryListLoading = () => ({
+  type: DELETE_GROCERY_LIST_LOADING
+})
+
+const deleteGroceryListSuccess = ( data: any[] ) => ({
+  type: DELETE_GROCERY_LIST_SUCCESS,
+  payload: data
+})
+
+const deleteGroceryListFailure = ( error: string ) => ({
+  type: DELETE_GROCERY_LIST_FAILURE,
+  payload: error
+})
+
+export const deleteGroceryList = ( theGroceryItem: number ) => {
+  return async ( dispatch: AppDispatch ) => {
+    dispatch( deleteGroceryListLoading() )
+
+    try {
+      const res = await deleteGroceryListService( theGroceryItem )
+      dispatch( deleteGroceryListSuccess( res ) )
+    } catch ( error: any ) {
+      dispatch( deleteGroceryListFailure( error.message ) )
 
       throw error
     }

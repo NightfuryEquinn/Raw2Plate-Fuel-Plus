@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Loading from 'app/Loading'
 import { LightMode } from 'assets/colors/LightMode'
 import AddGroceryListItemCard from 'components/AddGroceryListItemCard'
 import AddGroceryListItemModal from 'components/AddGroceryListItemModal'
@@ -5,35 +7,98 @@ import GroceryListItem from 'components/GroceryListItem'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
-import { forGroceryList } from 'data/dummyData'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useDispatch, useSelector } from 'react-redux'
+import { addGroceryList, checkAddGroceryList, deleteGroceryList, fetchGroceryList, updateGroceryList } from 'redux/actions/groceryAction'
+import { AppDispatch, RootState } from 'redux/reducers/store'
 
 export default function GroceryList() {
+  const [ userSession, setUserSession ] = useState<any>( null )
+
+  const dispatch: AppDispatch = useDispatch()
+  const { data, loading, error } = useSelector(( state: RootState ) => state.grocery )
+
   const [ modal, setModal ] = useState( false )
   const [ name, setName ] = useState( "" )
+  const [ refreshing, setRefreshing ] = useState( false )
 
   const ListItem = ( { item, index }: any ) => (
     <GroceryListItem 
       key={ index }
       data={ item }
-      onChecked={ () => console.log( "Toggle Checked" ) }
-      onDelete={ () => console.log( "Delete" ) }
+      onChecked={ () => {
+        dispatch( updateGroceryList(
+          {
+            ...item,
+            isCompleted: !item.isCompleted
+          }
+        ))
+      }}
+      onDelete={ () => {
+        dispatch( deleteGroceryList( item.groceryItemId ) )
+      }}
     />
   )
 
   const showModal = () => {
     setModal( !modal )
   }
+
+  // Refresh twice to see result, redux state issues
+  const onRefresh = async () => {
+    setRefreshing( true )
+
+    if ( userSession ) {
+      dispatch( fetchGroceryList( userSession.userId ) )
+
+      dispatch( checkAddGroceryList(
+        {
+          groceryListId: 0,
+          userId: userSession.userId
+        }
+      ))
+    }
+
+    setRefreshing( false )
+  }
   
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
     return null
-  } 
+  }
+
+  useEffect(() => {
+    const getUserSession = async () => {
+      const theUserSession = await AsyncStorage.getItem( "@user_session" )
+
+      if ( theUserSession !== null ) {
+        const parsed = JSON.parse( theUserSession )
+
+        setUserSession( parsed )
+      }
+    } 
+
+    getUserSession()
+  }, [])
+
+  useEffect(() => {
+    if ( userSession && !data[ 0 ].groceryList ) {
+      dispatch( fetchGroceryList( userSession.userId ) )
+
+      dispatch( checkAddGroceryList(
+        {
+          groceryListId: 0,
+          userId: userSession.userId
+        }
+      ))
+    }
+  }, [ userSession ])
   
   return (
+    loading ? <Loading /> :
     <SafeAreaView style={ s.container }>        
       <View style={{ flex: 1 }}>
         <TopBar />
@@ -49,12 +114,14 @@ export default function GroceryList() {
         <Spacer size={ 20 } />
 
         <FlatList 
+          refreshing={ refreshing }
+          onRefresh={ onRefresh }
           style={ s.flatList }
           showsVerticalScrollIndicator={ false }
           contentContainerStyle={{ padding: 20 }}
-          data={ forGroceryList }
+          data={ data[ 0 ]?.groceryItems }
           renderItem={ ListItem }
-          keyExtractor={ data => data.id.toString() }
+          keyExtractor={ data => data.groceryItemId.toString() }
           ItemSeparatorComponent={ () => <Spacer size={ 15 } /> }
           ListHeaderComponent={ () => (
             <AddGroceryListItemCard 
@@ -73,6 +140,17 @@ export default function GroceryList() {
           showModal()
         }}
         onConfirm={ () => {
+          if ( name ) {
+            dispatch( addGroceryList(
+              {
+                groceryItemId: 0,
+                name: name,
+                isCompleted: false,
+                groceryListId: data[ 0 ].groceryList.groceryListId
+              }
+            ))
+          }
+
           showModal()
         }}
       />
