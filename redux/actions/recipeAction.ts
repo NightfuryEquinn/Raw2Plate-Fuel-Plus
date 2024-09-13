@@ -1,7 +1,8 @@
 import { Bookmark } from "redux/models/Bookmark";
+import { Meal } from "redux/models/Meal";
 import { AppDispatch } from "redux/reducers/store";
-import { bookmarkRecipeService, discoverSearchService, fetchRandomService, fetchRecipeInfoService, fetchRecipeIngreStepsService } from "redux/services/recipeServices";
-import { BOOKMARK_FAILURE, BOOKMARK_LOADING, BOOKMARK_SUCCESS, DISCOVER_SEARCH_FAILURE, DISCOVER_SEARCH_LOADING, DISCOVER_SEARCH_SUCCESS, FETCH_RANDOM_FAILURE, FETCH_RANDOM_LOADING, FETCH_RANDOM_SUCCESS, FETCH_RECIPE_INFO_FAILURE, FETCH_RECIPE_INFO_LOADING, FETCH_RECIPE_INFO_SUCCESS, FETCH_RECIPE_INGRE_STEPS_FAILURE, FETCH_RECIPE_INGRE_STEPS_LOADING, FETCH_RECIPE_INGRE_STEPS_SUCCESS } from "redux/types/actionTypes";
+import { addRecipesPlannerService, bookmarkRecipeService, discoverSearchService, fetchPlannerRecipesService, fetchRandomService, fetchRecipeInfoService, fetchRecipeIngreStepsService, fetchRecipePlannerTrackerInfoService } from "redux/services/recipeServices";
+import { ADD_RECIPE_PLANNER_FAILURE, ADD_RECIPE_PLANNER_LOADING, ADD_RECIPE_PLANNER_SUCCESS, BOOKMARK_FAILURE, BOOKMARK_LOADING, BOOKMARK_SUCCESS, DISCOVER_SEARCH_FAILURE, DISCOVER_SEARCH_LOADING, DISCOVER_SEARCH_SUCCESS, FETCH_PLANNER_RECIPES_FAILURE, FETCH_PLANNER_RECIPES_LOADING, FETCH_PLANNER_RECIPES_SUCCESS, FETCH_RANDOM_FAILURE, FETCH_RANDOM_LOADING, FETCH_RANDOM_SUCCESS, FETCH_RECIPE_INFO_FAILURE, FETCH_RECIPE_INFO_LOADING, FETCH_RECIPE_INFO_SUCCESS, FETCH_RECIPE_INGRE_STEPS_FAILURE, FETCH_RECIPE_INGRE_STEPS_LOADING, FETCH_RECIPE_INGRE_STEPS_SUCCESS, FETCH_RECIPE_PLANNER_TRACKER_INFO_FAILURE, FETCH_RECIPE_PLANNER_TRACKER_INFO_LOADING, FETCH_RECIPE_PLANNER_TRACKER_INFO_SUCCESS } from "redux/types/actionTypes";
 
 /**
  * Fetch random recipes
@@ -166,10 +167,98 @@ export const bookmarkRecipe = ( theBookmark: Bookmark ) => {
 /**
  * Fetch planner recipes
  */
+const fetchPlannerRecipesLoading = () => ({
+  type: FETCH_PLANNER_RECIPES_LOADING
+})
+
+const fetchPlannerRecipesSuccess = ( data: any[] ) => ({
+  type: FETCH_PLANNER_RECIPES_SUCCESS,
+  payload: data
+})
+
+const fetchPlannerRecipesFailure = ( error: string ) => ({
+  type: FETCH_PLANNER_RECIPES_FAILURE,
+  payload: error
+})
+
+export const fetchPlannerRecipes = ( theUserId: number ) => {
+  return async ( dispatch: AppDispatch ) => {
+    dispatch( fetchPlannerRecipesLoading() )
+
+    try {
+      const res = await fetchPlannerRecipesService( theUserId )
+      dispatch( fetchPlannerRecipesSuccess( res ) )
+    } catch ( error: any ) {
+      dispatch( fetchPlannerRecipesFailure( error.message ) )
+
+      throw error
+    }
+  }
+}
 
 /**
  * Add recipes to planner
  */
+const addRecipesPlannerLoading = () => ({
+  type: ADD_RECIPE_PLANNER_LOADING
+})
+
+const addRecipesPlannerSuccess = ( data: any[] ) => ({
+  type: ADD_RECIPE_PLANNER_SUCCESS,
+  payload: data
+})
+
+const addRecipesPlannerFailure = ( error: string ) => ({
+  type: ADD_RECIPE_PLANNER_FAILURE,
+  payload: error
+})
+
+export const addRecipesPlanner = ( theUserId: number, theMeal: Meal ) => {
+  return async ( dispatch: AppDispatch ) => {
+    dispatch( addRecipesPlannerLoading() )
+
+    try {
+      const res = await addRecipesPlannerService( theUserId, theMeal )
+      dispatch( addRecipesPlannerSuccess( res ) )
+    } catch ( error: any ) {
+      dispatch( addRecipesPlannerFailure( error.message ) )
+
+      return error.response.status
+    }
+  }
+}
+
+/**
+ * Fetch planner and tracker recipes info
+ */
+const fetchRecipePlannerTrackerInfoLoading = () => ({
+  type: FETCH_RECIPE_PLANNER_TRACKER_INFO_LOADING
+})
+
+const fetchRecipePlannerTrackerInfoSuccess = ( data: any[] ) => ({
+  type: FETCH_RECIPE_PLANNER_TRACKER_INFO_SUCCESS,
+  payload: data
+})
+
+const fetchRecipePlannerTrackerInfoFailure = ( error: string ) => ({
+  type: FETCH_RECIPE_PLANNER_TRACKER_INFO_FAILURE,
+  payload: error
+})
+
+export const fetchRecipePlannerTrackerInfo = ( theRecipeIds: string ) => {
+  return async ( dispatch: AppDispatch ) => {
+    dispatch( fetchRecipePlannerTrackerInfoLoading() )
+
+    try {
+      const res = await fetchRecipePlannerTrackerInfoService( theRecipeIds )
+      dispatch( fetchRecipePlannerTrackerInfoSuccess( res ) )
+    } catch ( error: any ) {
+      dispatch( fetchRecipePlannerTrackerInfoFailure( error.message ) )
+
+      return error.response.status
+    }
+  }
+}
 
 
 /**

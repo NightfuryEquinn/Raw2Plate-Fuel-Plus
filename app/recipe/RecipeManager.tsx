@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Loading from 'app/Loading'
 import { LightMode } from 'assets/colors/LightMode'
 import CalendarModal from 'components/CalendarModal'
 import HoriCard from 'components/HoriCard'
@@ -6,26 +8,68 @@ import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
-import { ForRecipeManager, forRecipeManager } from 'data/dummyData'
+import { mealCategories } from 'data/mealCategory'
 import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useDispatch, useSelector } from 'react-redux'
+import { discoverSearch, fetchPlannerRecipes, fetchRandom, fetchRecipePlannerTrackerInfo } from 'redux/actions/recipeAction'
+import { AppDispatch, RootState } from 'redux/reducers/store'
 
-export default function RecipeManager() {
+export default function RecipeManager( {  }: any ) {
+  const [ userSession, setUserSession ] = useState<any>( null )
+
+  const dispatch: AppDispatch = useDispatch()
+  const { data, loading, error } = useSelector(( state: RootState ) => state.recipe )
+
   const [ modal, setModal ] = useState( false )
   const [ modalDate, setModalDate ] = useState( dayjs() )
 
   const [ recipeModal, setRecipeModal ] = useState( false )
   const [ changeOrAdd, setChangeOrAdd ] = useState( "" )
   const [ recipe, setRecipe ] = useState( "" )
-  const [ searchData, setSearchData ] = useState( [] )
+  const [ searchData, setSearchData ] = useState( data[ 0 ].randomRecipes?.recipes || data[ 0 ].randomRecipes?.results )
 
   const [ selectedRecipe, setSelectedRecipe ] = useState( 0 )
   const [ selectedMeal, setSelectedMeal ] = useState( 0 )
-  const [ mealIncluded, setMealIncluded ] = useState<any[]>( [] )
+  
+  const [ refreshing, setRefreshing ] = useState( false )
+  const [ refreshingModal, setRefreshingModal ] = useState( false )
 
   const mealTypes = [ "BKF", "BRH", "LUN", "TEA", "DIN" ]
+
+  const filteredPlanner = data[ 0 ]?.plannerRecipes?.filter(
+    ( item: any ) => item.mealType === mealCategories[ selectedMeal ].label && item.date === dayjs( modalDate ).format( "YYYY-MM-DD" ).toString()
+  ) || []
+
+  const filteredPlannerInfo = data[ 0 ]?.plannerRecipesInfo?.filter(
+    ( item: any, index: number ) => item.id === filteredPlanner[ index ]?.recipeId
+  ) || []
+
+  const onRefresh = async () => {
+    setRefreshing( true )
+
+    if ( userSession ) {
+      await dispatch( fetchPlannerRecipes( userSession.userId ) )
+
+      const theRecipeIds = data[ 0 ].plannerRecipes.map(
+        ( item: any ) => item.recipeId
+      ).join( "," )
+  
+      await dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
+    }
+
+    setRefreshing( false )
+  }
+
+  const onRefreshModal = () => {
+    setRefreshingModal( true )
+
+    setSearchData( data[ 0 ]?.randomRecipes?.results )
+
+    setRefreshingModal( false )
+  }
 
   const showModal = () => {
     setModal( !modal )
@@ -34,6 +78,12 @@ export default function RecipeManager() {
   const showRecipeModal = ( mode: string ) => {
     setRecipeModal( !recipeModal )
     setChangeOrAdd( mode )
+  }
+
+  const searchPress = ( recipe: string ) => {
+    dispatch( discoverSearch( recipe, 2, "", "", "", 0, 1000 ) )
+
+    setSearchData( data[ 0 ]?.randomRecipes?.results )
   }
 
   const CookItem = ( { item, index }: any ) => (
@@ -51,16 +101,41 @@ export default function RecipeManager() {
   }
 
   useEffect(() => {
-    const mealsToInclude = forRecipeManager.filter(( item: ForRecipeManager ) => (
-      dayjs( item.date, "DD-MM-YYYY" ).isSame( dayjs( modalDate ).format( "DD-MM-YYYY" ), 'day' ) &&
-      item.meal === mealTypes[ selectedMeal ]
-    ))
+    const getUserSession = async () => {
+      const theUserSession = await AsyncStorage.getItem( "@user_session" )
 
-    setMealIncluded( mealsToInclude )
-    setSelectedRecipe( 0 )
-  }, [ selectedMeal, modalDate ])
+      if ( theUserSession !== null ) {
+        const parsed = JSON.parse( theUserSession )
+
+        setUserSession( parsed )
+      }
+    } 
+
+    getUserSession()
+    
+    if ( !data[ 0 ].randomRecipes ) {
+      dispatch( fetchRandom( 2 ) )
+    }
+  }, [])
+
+  useEffect(() => {
+    if ( userSession && !data[ 0 ].plannerRecipes ) {
+      dispatch( fetchPlannerRecipes( userSession.userId ) )
+    }
+  }, [ userSession ])
+
+  useEffect(() => {
+    if ( data[ 0 ].plannerRecipes && !data[ 0 ].plannerRecipesInfo ) {
+      const theRecipeIds = data[ 0 ].plannerRecipes.map(
+        ( item: any ) => item.recipeId
+      ).join( "," )
+
+      dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
+    }
+  }, [ data ])
   
   return (
+    loading ? <Loading /> :
     <SafeAreaView style={ s.container }>
       <View style={{ flex: 1 }}>
         <TopBar />
@@ -97,10 +172,12 @@ export default function RecipeManager() {
           </View>
           
           <FlatList
+            refreshing={ refreshing }
+            onRefresh={ onRefresh }
             style={ s.flatList }
             contentContainerStyle={{ padding: 20, paddingTop: 0 }}
             showsVerticalScrollIndicator= { false }
-            data={ mealIncluded }
+            data={ filteredPlannerInfo }
             renderItem={ CookItem }
             keyExtractor={ data => data.id.toString() }
             ItemSeparatorComponent={ () => <Spacer size={ 10 } /> }
@@ -145,7 +222,7 @@ export default function RecipeManager() {
 
         <Spacer size={ 15 } />
 
-        <Text style={ s.hint }>Select meal before adding new recipes.</Text>
+        <Text style={ s.hint }>Select meal type before adding new recipes.</Text>
         <Text style={ s.hint }>Your meal planner will auto-save.</Text>
       </View>
 
@@ -157,12 +234,17 @@ export default function RecipeManager() {
       />
 
       <RecipeSelectionModal 
+        userSession={ userSession }
+        selectedMeal={ selectedMeal }
+        refreshing={ refreshingModal }
+        onRefresh={ onRefreshModal }
         changeOrAdd={ changeOrAdd }
         recipeModal={ recipeModal }
-        showRecipeModal={ showRecipeModal }
+        showRecipeModal={ () => showRecipeModal( "change" ) }
         recipe={ recipe }
         setRecipe={ setRecipe }
         searchData={ searchData }
+        searchPress={ () => searchPress( recipe ) }
       />
     </SafeAreaView>
   )
@@ -212,7 +294,7 @@ const s = StyleSheet.create({
     gap: 10
   },
   "flatList": {
-    height: 225,
+    height: 335,
     margin: -20,
     marginTop: 0,
   },

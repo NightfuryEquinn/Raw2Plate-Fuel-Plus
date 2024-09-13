@@ -6,9 +6,9 @@ import { Image, Platform, StyleSheet, Text, TouchableOpacity } from 'react-nativ
 import Animated, { LinearTransition, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 export default function HoriCard( { onPress, data, active }: any ) {
-  const width = useSharedValue( 200 )
+  const width = useSharedValue( 225 )
   const animatedStyle = useAnimatedStyle(() => ({
-    width: active ? width.value : 200,
+    width: active ? width.value : 225,
   }))
   
   const { fontsLoaded } = useFontFromContext()
@@ -18,7 +18,7 @@ export default function HoriCard( { onPress, data, active }: any ) {
   }
 
   useEffect(() => {
-    width.value = withTiming( Platform.OS === "android" ? 235 : 275, { duration: 250 } )
+    width.value = withTiming( 275, { duration: 250 } )
   }, [ active ])
   
   return (
@@ -36,11 +36,11 @@ export default function HoriCard( { onPress, data, active }: any ) {
       >
         <Image 
           resizeMode="cover"
-          source={ data.image }
+          source={{ uri: data.image }}
           style={ s.image }
         />
 
-        <Text numberOfLines={ 1 } style={ s.heading }>{ data.heading }</Text>
+        <Text numberOfLines={ 1 } style={ s.heading }>{ data.title }</Text>
       </Animated.View>
     </TouchableOpacity>
   )

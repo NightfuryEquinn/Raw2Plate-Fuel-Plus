@@ -1,5 +1,6 @@
 import { awsInstance, spoonInstance } from "config/apisInstance"
 import { Bookmark } from "redux/models/Bookmark"
+import { Meal } from "redux/models/Meal"
 import { ReduxState } from "redux/types/stateTypes"
 
 interface ApiRes<T> {
@@ -95,11 +96,51 @@ export const bookmarkRecipeService = async ( theBookmark: Bookmark ) => {
 /**
  * Fetch planner recipes
  */
+export const fetchPlannerRecipesService = async ( theUserId: number ) => {
+  try {
+    const res: ApiRes<ReduxState[]> = await awsInstance.get( `/meal/planner/${ theUserId }` )
+
+    console.log( "DONE - fetchPlannerRecipesService: ", res.data )
+    return res.data
+  } catch ( error: any ) {
+    console.error( "ERROR - fetchPlannerRecipesService: ", error )
+
+    throw error
+  }
+}
 
 /**
  * Add recipes to planner
  */
+export const addRecipesPlannerService = async ( theUserId: number, theMeal: Meal ) => {
+  try {
+    const res: ApiRes<ReduxState[]> = await awsInstance.post( `/meal/user/${ theUserId }`, theMeal )
 
+    console.log( "DONE - addRecipesPlannerService: ", res.data )
+    return res.data
+  } catch ( error: any ) {
+    console.error( "ERROR - addRecipesPlannerService: ", error )
+
+    throw error
+  }
+}
+
+/**
+ * Fetch planner and tracker recipes info
+ */
+export const fetchRecipePlannerTrackerInfoService = async ( theRecipeIds: string ) => {
+  try {
+    // Include nutrition true
+    const res: ApiRes<ReduxState[]> = await spoonInstance.get( `/recipes/informationBulk?ids=${ theRecipeIds }&includeNutrition=true` )
+    
+    console.log( "DONE - fetchRecipePlannerTrackerInfoService: ", res.data )
+    return res.data
+  } catch ( error ) {
+    console.error( "ERROR - fetchRecipePlannerTrackerInfoService: ", error )
+    
+    throw error
+  }
+}
 
 /**
  * Add recipes to tracker

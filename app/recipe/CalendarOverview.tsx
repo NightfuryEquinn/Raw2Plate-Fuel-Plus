@@ -1,5 +1,7 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loading from 'app/Loading';
 import { LightMode } from 'assets/colors/LightMode';
+import EmptyContent from 'components/EmptyContent';
 import HoriSwipeCard from 'components/HoriSwipeCard';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
@@ -13,13 +15,18 @@ import Animated, { LinearTransition, useAnimatedStyle, useSharedValue, withTimin
 import { SafeAreaView } from 'react-native-safe-area-context';
 import IconMA from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch, useSelector } from 'react-redux';
+import { fetchPlannerRecipes, fetchRecipePlannerTrackerInfo } from 'redux/actions/recipeAction';
 import { AppDispatch, RootState } from 'redux/reducers/store';
 
 export default function CalendarOverview( { navigation }: any ) {
+  const [ userSession, setUserSession ] = useState<any>( null )
+
   const dispatch: AppDispatch = useDispatch()
   const { data, loading, error } = useSelector(( state: RootState ) => state.recipe )
 
   const [ active, setActive ] = useState( 0 )
+  const [ refreshing, setRefreshing ] = useState( false )
+
   const margin = useSharedValue( 0 )
 
   const zoomPress = ( index: any ) => {
@@ -33,11 +40,42 @@ export default function CalendarOverview( { navigation }: any ) {
 
   const CookItem = ( { item, index }: any ) => (
     <HoriSwipeCard 
-      onPress={ () => console.log( "Recipe Detail" ) }
+      onPress={ () => navigation.navigate( "RecipeDetail", { recipeId: item.id, inBookmark: false } ) }
       data={ item }
       first={ index === 0 && true }
     />
   )
+
+  const animatedStyle = mealCategories.map(( _, index ) => {
+    return useAnimatedStyle(() => ({
+      marginTop: active === index ? margin.value : 0
+    }))
+  })
+
+  const filteredPlanner = data[ 0 ]?.plannerRecipes?.filter(
+    ( item: any ) => item.mealType === mealCategories[ active ].label && item.date === dayjs().format( "YYYY-MM-DD" ).toString()
+  ) || []
+
+  const filteredPlannerInfo = data[ 0 ]?.plannerRecipesInfo?.filter(
+    ( item: any, index: number ) => item.id === filteredPlanner[ index ]?.recipeId
+  ) || []
+
+  // Refresh twice to see result, redux state issues
+  const onRefresh = async () => {
+    setRefreshing( true )
+
+    if ( userSession ) {
+      await dispatch( fetchPlannerRecipes( userSession.userId ) )
+
+      const theRecipeIds = data[ 0 ].plannerRecipes.map(
+        ( item: any ) => item.recipeId
+      ).join( "," )
+  
+      await dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
+    }
+    
+    setRefreshing( false )
+  }
 
   const { fontsLoaded } = useFontFromContext()
 
@@ -46,8 +84,36 @@ export default function CalendarOverview( { navigation }: any ) {
   }
 
   useEffect(() => {
+    const getUserSession = async () => {
+      const theUserSession = await AsyncStorage.getItem( "@user_session" )
+
+      if ( theUserSession !== null ) {
+        const parsed = JSON.parse( theUserSession )
+
+        setUserSession( parsed )
+      }
+    } 
+
+    getUserSession()
+
     margin.value = withTiming( 10, { duration: 250 } )
   }, [])
+
+  useEffect(() => {
+    if ( userSession && !data[ 0 ].plannerRecipes ) {
+      dispatch( fetchPlannerRecipes( userSession.userId ) )
+    }
+  }, [ userSession ])
+
+  useEffect(() => {
+    if ( data[ 0 ].plannerRecipes && !data[ 0 ].plannerRecipesInfo ) {
+      const theRecipeIds = data[ 0 ].plannerRecipes.map(
+        ( item: any ) => item.recipeId
+      ).join( "," )
+
+      dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
+    }
+  }, [ data ])
   
   return (
     loading ? <Loading /> :
@@ -78,16 +144,12 @@ export default function CalendarOverview( { navigation }: any ) {
         >
           {
             mealCategories.map(( data: MealCategory, index: number ) => {
-              const animatedStyle = useAnimatedStyle(() => ({
-                marginTop: active === index ? margin.value : 0
-              }))
-
               return (
                 <Fragment key={ index }>                    
                   <TouchableWithoutFeedback 
                     onPress={ () => zoomPress( index ) }
                   >
-                    <Animated.View layout={ LinearTransition } style={[ s.vertContainer, animatedStyle ]}>
+                    <Animated.View layout={ LinearTransition } style={[ s.vertContainer, animatedStyle[ index ] ]}>
                       <Image 
                         resizeMode="cover"
                         style={ s.vertImage }
@@ -119,13 +181,30 @@ export default function CalendarOverview( { navigation }: any ) {
 
         <Spacer size={ 15 } />
 
-        <FlatList
-          style={ s.flatList }
-          showsVerticalScrollIndicator= { false }
-          data={ forCalendarOverview }
-          renderItem={ CookItem }
-          keyExtractor={ data => data.id.toString() }
-        />
+        {
+          data && data.length > 0 && data[ 0 ].plannerRecipes ?
+            <FlatList
+              refreshing={ refreshing }
+              onRefresh={ onRefresh }
+              style={ s.flatList }
+              showsVerticalScrollIndicator= { false }
+              data={ filteredPlannerInfo }
+              renderItem={ CookItem }
+              keyExtractor={ data => data.id.toString() }
+              ListEmptyComponent={ () => (
+                <View style={{ margin: 17.5 }}>
+                  <EmptyContent 
+                    message={ `No recipes to cook for ${ mealCategories[ active ].label }...` }
+                  />
+                </View>
+              )}
+            />
+          :
+            <EmptyContent 
+              message="Unable to fetch API..."
+            />
+        }
+        
       </View>
     </SafeAreaView>
   )
@@ -156,7 +235,6 @@ const s = StyleSheet.create({
     color: LightMode.blue
   },
   "scroll": {
-    height: 325,
     margin: -20, // Counter scroll view content container style due to drop shadow issue
     flexDirection: "row",
   },
@@ -194,6 +272,7 @@ const s = StyleSheet.create({
     color: LightMode.black
   },
   "flatList": {
+    height: 400,
     margin: -15, 
     marginTop: -10
   }

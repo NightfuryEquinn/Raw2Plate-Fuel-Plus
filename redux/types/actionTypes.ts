@@ -103,6 +103,13 @@ export const ADD_RECIPE_PLANNER_SUCCESS = "ADD_RECIPE_PLANNER_SUCCESS"
 export const ADD_RECIPE_PLANNER_FAILURE = "ADD_RECIPE_PLANNER_FAILURE"
 
 /**
+ * Fetch planner and tracker recipes info
+ */
+export const FETCH_RECIPE_PLANNER_TRACKER_INFO_LOADING = "FETCH_RECIPE_PLANNER_TRACKER_INFO_LOADING"
+export const FETCH_RECIPE_PLANNER_TRACKER_INFO_SUCCESS = "FETCH_RECIPE_PLANNER_TRACKER_INFO_SUCCESS"
+export const FETCH_RECIPE_PLANNER_TRACKER_INFO_FAILURE = "FETCH_RECIPE_PLANNER_TRACKER_INFO_FAILURE"
+
+/**
  * Add recipes to tracker
  */
 export const ADD_RECIPE_TRACKER_LOADING = "ADD_RECIPE_TRACKER_LOADING"
@@ -112,6 +119,7 @@ export const ADD_RECIPE_TRACKER_FAILURE = "ADD_RECIPE_TRACKER_FAILURE"
 /**
  * ------------------------ TRACKER ------------------------
  */
+
 
 /**
  * ------------------------ GROCERY ------------------------

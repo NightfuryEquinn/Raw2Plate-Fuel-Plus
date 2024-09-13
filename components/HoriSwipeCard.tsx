@@ -20,17 +20,17 @@ export default function HoriSwipeCard( { onPress, data, first }: any ) {
       <Image 
         resizeMode="cover"
         style={ s.image }
-        source={ data.image }
+        source={{ uri: data.image }}
       />
 
       <View style={ s.detailContainer }>
         <View style={ s.detailHeadingWrapper }>
-          <Text numberOfLines={ 2 } style={ s.detailHeading }>{ data.heading }</Text>
+          <Text numberOfLines={ 2 } style={ s.detailHeading }>{ data.title }</Text>
         </View>
         
         <View style={ s.detailWrapper }>
-          <Text style={ s.sub }>{ data.sub }</Text>
-          <Text style={[ s.sub, s.yellow ]}>{ data.desc }</Text>
+          <Text style={ s.sub }>Est. Cooking Time</Text>
+          <Text style={[ s.sub, s.yellow ]}>{ data.readyInMinutes } minutes</Text>
         </View>
       </View>
     </TouchableOpacity>

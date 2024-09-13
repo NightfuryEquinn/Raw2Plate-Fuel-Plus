@@ -1,3 +1,4 @@
+import Loading from 'app/Loading';
 import { LightMode } from 'assets/colors/LightMode';
 import HoriScrollRecipes from 'components/HoriScrollRecipes';
 import Spacer from 'components/Spacer';
@@ -10,6 +11,8 @@ import { Dimensions, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOp
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DatePicker from 'react-native-ui-datepicker';
 import IconMA from 'react-native-vector-icons/MaterialIcons';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from 'redux/reducers/store';
 
 interface DateItem {
   dayOfWeek: string,
@@ -17,6 +20,9 @@ interface DateItem {
 }
 
 export default function ViewCalendar( { navigation }: any ) {
+  const dispatch: AppDispatch = useDispatch()
+  const { data, loading, error } = useSelector(( state: RootState ) => state.recipe )
+
   const today = dayjs()
   const [ currentMonth, setCurrentMonth ] = useState( today )
   const [ selectedDate, setSelectedDate ] = useState( today.date() )
@@ -77,6 +83,7 @@ export default function ViewCalendar( { navigation }: any ) {
   }, [ selectedDate, dates ])
   
   return (
+    loading ? <Loading /> :
     <SafeAreaView style={ s.container }>
       <View style={{ flex: 1 }}>
         <TopBar />

@@ -1,6 +1,4 @@
 import { ImageSourcePropType } from "react-native";
-import { browseStoreCategories, BrowseStoreCategory } from "./browseStoreCategory";
-import { groceryItemCategory, GroceryItemCategory } from "./groceryItemCategory";
 
 export type ForCalendarOverview = {
   id: number,
@@ -14,15 +12,6 @@ export type ForViewCalendar = {
   id: number,
   image: ImageSourcePropType,
   heading: string
-}
-
-export type ForRecipeManager = {
-  id: number,
-  image: ImageSourcePropType,
-  meal: string,
-  heading: string,
-  date: string,
-  author: string
 }
 
 export type ForTimer = {
@@ -45,24 +34,6 @@ export type ForMainTracker = {
   minerals: {},
   image: ImageSourcePropType,
   date: string,
-}
-
-export type ForGroceryList = {
-  id: number,
-  name: string,
-  checked: boolean
-}
-
-export type CartItem = {
-  id: number,
-  item: GroceryItemCategory,
-  quantity: number
-}
-
-export type ForInCart = {
-  id: number,
-  theStore: BrowseStoreCategory,
-  items: CartItem[]
 }
 
 export const forCalendarOverview: ForCalendarOverview[] = [
@@ -141,57 +112,6 @@ export const forViewCalendar: ForViewCalendar[] = [
     "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
   },
-]
-
-export const forRecipeManager: ForRecipeManager[] = [
-  // {
-  //   "id": 1,
-  //   "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
-  //   "heading": "Brill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
-  //   "meal": "BKF",
-  //   "date": "29-07-2024",
-  //   "author": "Sacrilegious Anonymous Illegal Horse"
-  // },
-  // {
-  //   "id": 2,
-  //   "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
-  //   "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
-  //   "meal": "BKF",
-  //   "date": "31-07-2024",
-  //   "author": "Sacrilegious Anonymous Illegal Horse"
-  // },
-  // {
-  //   "id": 3,
-  //   "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
-  //   "heading": "Drill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
-  //   "meal": "LUN",
-  //   "date": "31-07-2024",
-  //   "author": "Sacrilegious Anonymous Illegal Horse"
-  // },
-  // {
-  //   "id": 4,
-  //   "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
-  //   "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
-  //   "meal": "LUN",
-  //   "date": "31-07-2024",
-  //   "author": "Sacrilegious Anonymous Illegal Horse"
-  // },
-  // {
-  //   "id": 5,
-  //   "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
-  //   "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
-  //   "meal": "TEA",
-  //   "date": "02-08-2024",
-  //   "author": "Sacrilegious Anonymous Illegal Horse"
-  // },
-  // {
-  //   "id": 6,
-  //   "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
-  //   "heading": "Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables", 
-  //   "meal": "DIN",
-  //   "date": "02-08-2024",
-  //   "author": "Sacrilegious Anonymous Illegal Horse"
-  // },
 ]
 
 export const forTimer: ForTimer[] = [
@@ -355,93 +275,5 @@ export const forMainTracker: ForMainTracker[] = [
     },
     "image": require( "../assets/images/placeholders/garlic_salmon.jpg" ), 
     "date": "17-08-2024",
-  }
-]
-
-export const forGroceryList: ForGroceryList[] = [
-  {
-    id: 1,
-    name: "Bread",
-    checked: true
-  },
-  {
-    id: 2,
-    name: "Grill Garlic Salmon with Grill Garlic Salmon with Lemon and Herbs Chilled Frozen Vegetables",
-    checked: false
-  },
-  {
-    id: 3,
-    name: "Bread",
-    checked: true
-  },
-  {
-    id: 4,
-    name: "Bread",
-    checked: true
-  }
-]
-
-export const forInCart: ForInCart[] = [
-  {
-    id: 1,
-    theStore: browseStoreCategories[ 0 ],
-    items: [
-      {
-        id: 1,
-        item: groceryItemCategory[ 0 ],
-        quantity: 2
-      },
-      {
-        id: 2,
-        item: groceryItemCategory[ 3 ],
-        quantity: 1
-      },
-      {
-        id: 3,
-        item: groceryItemCategory[ 6 ],
-        quantity: 8
-      },
-      {
-        id: 4,
-        item: groceryItemCategory[ 8 ],
-        quantity: 5
-      },
-      {
-        id: 5,
-        item: groceryItemCategory[ 10 ],
-        quantity: 34
-      }
-    ]
-  },
-  {
-    id: 2,
-    theStore: browseStoreCategories[ 3 ],
-    items: [
-      {
-        id: 1,
-        item: groceryItemCategory[ 0 ],
-        quantity: 2
-      },
-      {
-        id: 2,
-        item: groceryItemCategory[ 3 ],
-        quantity: 1
-      },
-      {
-        id: 3,
-        item: groceryItemCategory[ 6 ],
-        quantity: 8
-      },
-      {
-        id: 4,
-        item: groceryItemCategory[ 8 ],
-        quantity: 5
-      },
-      {
-        id: 5,
-        item: groceryItemCategory[ 10 ],
-        quantity: 34
-      }
-    ]
   }
 ]

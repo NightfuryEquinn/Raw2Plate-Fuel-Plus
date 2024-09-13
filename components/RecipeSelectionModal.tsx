@@ -1,20 +1,60 @@
 import { LightMode } from 'assets/colors/LightMode'
 import { useFontFromContext } from 'context/FontProvider'
-import { forRecipeManager } from 'data/dummyData'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { FlatList, Modal, StyleSheet, Text, View } from 'react-native'
+import { Alert, FlatList, Modal, StyleSheet, Text, View } from 'react-native'
 import HoriCardWithCTA from './HoriCardWithCTA'
 import LinedTextField from './LinedTextField'
 import RoundedBorderButton from './RoundedBorderButton'
 import Spacer from './Spacer'
+import { AppDispatch, RootState } from 'redux/reducers/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { addRecipesPlanner } from 'redux/actions/recipeAction'
+import { mealCategories } from 'data/mealCategory'
 
-export default function RecipeSelectionModal( { changeOrAdd, recipeModal, showRecipeModal, recipe, setRecipe, searchData }: any ) {
+export default function RecipeSelectionModal( { userSession, selectedMeal, refreshing, onRefresh, changeOrAdd, recipeModal, showRecipeModal, recipe, setRecipe, searchData, searchPress }: any ) {
+  const dispatch: AppDispatch = useDispatch()
+  
   const SearchItem = ( { item, index }: any ) => (
     <HoriCardWithCTA 
       key={ index }
       changeOrAdd={ changeOrAdd }
-      onPress={ showRecipeModal }
+      onPress={ async () => {
+        if ( changeOrAdd === "change" ) {
+
+        } else {
+          const res = await dispatch( addRecipesPlanner(
+            userSession.userId,
+            {
+              mealId: 0,
+              mealType: mealCategories[ selectedMeal ].label,
+              recipeId: item.id,
+              plannerId: 0,
+              trackerId: 0,
+            }
+          ))
+
+          if ( res === 400 ) {
+            Alert.alert(
+              "Existed!",
+              "This recipe has already been added at this meal time!",
+              [
+                { text: "I Understood", style: "default" },
+              ]
+            )
+          } else {
+            Alert.alert(
+              "Success!",
+              "This recipe has been added!",
+              [
+                { text: "I Understood", style: "default" },
+              ]
+            )
+          }
+        }
+
+        showRecipeModal() 
+      }}
       data={ item }
     />
   )
@@ -48,13 +88,26 @@ export default function RecipeSelectionModal( { changeOrAdd, recipeModal, showRe
               setText={ setRecipe }
             />
 
+            <RoundedBorderButton 
+              onPress={ searchPress } 
+              color={ LightMode.lightBlack } 
+              text="Search" 
+              textColor={ LightMode.white }
+              borderRadius={ 10 }
+              marginHori={ 0 }    
+            />
+
+            <Spacer size={ 10 } />
+
             <View style={{ flex: 1 }}>
               <View style={ s.flatListWrapper }>
                 <FlatList 
+                  refreshing={ refreshing }
+                  onRefresh={ onRefresh }
                   style={ s.flatList }
                   contentContainerStyle={{ padding: 20, paddingTop: 10 }}
                   showsVerticalScrollIndicator= { false }
-                  data={ forRecipeManager }
+                  data={ searchData }
                   renderItem={ SearchItem }
                   keyExtractor={ data => data.id.toString() }
                   ItemSeparatorComponent={ () => <Spacer size={ 10 } /> }
@@ -131,10 +184,15 @@ const s = StyleSheet.create({
 })
 
 RecipeSelectionModal.propTypes = {
+  userSession: PropTypes.any.isRequired,
+  selectedMeal: PropTypes.number.isRequired,
+  refreshing: PropTypes.bool.isRequired,
+  onRefresh: PropTypes.func.isRequired,
   changeOrAdd: PropTypes.string.isRequired,
   recipeModal: PropTypes.bool.isRequired,
   showRecipeModal: PropTypes.func.isRequired,
   recipe: PropTypes.string.isRequired,
   setRecipe: PropTypes.func.isRequired,
-  searchData: PropTypes.any.isRequired
+  searchData: PropTypes.any.isRequired,
+  searchPress: PropTypes.func.isRequired
 }
