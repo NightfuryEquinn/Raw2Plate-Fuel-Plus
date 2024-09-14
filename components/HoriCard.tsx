@@ -1,5 +1,6 @@
 import { LightMode } from 'assets/colors/LightMode'
 import { useFontFromContext } from 'context/FontProvider'
+import { capitalizeWords } from 'data/formatData'
 import PropTypes from 'prop-types'
 import React, { useEffect } from 'react'
 import { Image, Platform, StyleSheet, Text, TouchableOpacity } from 'react-native'
@@ -40,7 +41,7 @@ export default function HoriCard( { onPress, data, active }: any ) {
           style={ s.image }
         />
 
-        <Text numberOfLines={ 1 } style={ s.heading }>{ data.title }</Text>
+        <Text numberOfLines={ 1 } style={ s.heading }>{ capitalizeWords( data.title ) }</Text>
       </Animated.View>
     </TouchableOpacity>
   )

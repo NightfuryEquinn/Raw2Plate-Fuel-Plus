@@ -10,7 +10,7 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function RecipeNarration( { navigation, route }: any ) {
-  const { recipeSteps } = route.params
+  const { recipeTitle, recipeSteps } = route.params
 
   const [ numberSteps, setNumberSteps ] = useState( 0 )
   const [ isRecord, setIsRecord ] = useState( false )
@@ -137,7 +137,7 @@ export default function RecipeNarration( { navigation, route }: any ) {
         <Spacer size={ 20 } />
 
         <View style={ s.titleContainer }>
-          <Text style={ s.title }>Parmesan Garlic Linguine Pasta</Text>
+          <Text style={ s.title }>{ recipeTitle }</Text>
         </View>
 
         <Spacer size={ 10 } />

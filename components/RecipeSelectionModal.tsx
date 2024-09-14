@@ -1,16 +1,16 @@
 import { LightMode } from 'assets/colors/LightMode'
 import { useFontFromContext } from 'context/FontProvider'
+import { mealCategories } from 'data/mealCategory'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Alert, FlatList, Modal, StyleSheet, Text, View } from 'react-native'
+import { useDispatch } from 'react-redux'
+import { addRecipesPlanner } from 'redux/actions/recipeAction'
+import { AppDispatch } from 'redux/reducers/store'
 import HoriCardWithCTA from './HoriCardWithCTA'
 import LinedTextField from './LinedTextField'
 import RoundedBorderButton from './RoundedBorderButton'
 import Spacer from './Spacer'
-import { AppDispatch, RootState } from 'redux/reducers/store'
-import { useDispatch, useSelector } from 'react-redux'
-import { addRecipesPlanner } from 'redux/actions/recipeAction'
-import { mealCategories } from 'data/mealCategory'
 
 export default function RecipeSelectionModal( { userSession, date, selectedMeal, refreshing, onRefresh, changeOrAdd, recipeModal, showRecipeModal, recipe, setRecipe, searchData, searchPress }: any ) {
   const dispatch: AppDispatch = useDispatch()
@@ -21,7 +21,7 @@ export default function RecipeSelectionModal( { userSession, date, selectedMeal,
       changeOrAdd={ changeOrAdd }
       onPress={ async () => {
         if ( changeOrAdd === "change" ) {
-
+          // Do nothing
         } else {
           const res = await dispatch( addRecipesPlanner(
             userSession.userId,

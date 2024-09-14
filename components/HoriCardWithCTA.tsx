@@ -1,4 +1,5 @@
 import { LightMode } from 'assets/colors/LightMode'
+import { capitalizeWords } from 'data/formatData'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
@@ -15,7 +16,7 @@ export default function HoriCardWithCTA( { changeOrAdd, onPress, data }: any ) {
 
       <View style={ s.detailContainer }>
         <View style={ s.detailHeadingWrapper }>
-          <Text numberOfLines={ 2 } style={ s.detailHeading }>{ data.title }</Text>
+          <Text numberOfLines={ 2 } style={ s.detailHeading }>{ capitalizeWords( data.title ) }</Text>
         </View>
         
         {

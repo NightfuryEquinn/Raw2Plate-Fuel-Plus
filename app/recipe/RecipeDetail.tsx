@@ -7,13 +7,14 @@ import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
+import { capitalizeWords } from 'data/formatData'
 import dayjs from 'dayjs'
 import React, { Fragment, useEffect, useState } from 'react'
 import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
 import { useDispatch, useSelector } from 'react-redux'
-import { bookmarkRecipe, fetchRecipeInfo, fetchRecipeIngreSteps } from 'redux/actions/recipeAction'
+import { addRecipesPlanner, bookmarkRecipe, fetchRecipeInfo, fetchRecipeIngreSteps } from 'redux/actions/recipeAction'
 import { deleteBookmark } from 'redux/actions/userAction'
 import { AppDispatch, RootState } from 'redux/reducers/store'
 
@@ -35,11 +36,11 @@ export default function RecipeDetail( { navigation, route }: any ) {
   const [ dropValue, setDropValue ] = useState( "" )
 
   const dropItems = [
-    { label: 'Breakfast', value: 'BKF' },
-    { label: 'Brunch', value: 'BRH' },
-    { label: 'Lunch', value: 'LUN' },
-    { label: 'Tea Time', value: 'TEA' },
-    { label: 'Dinner', value: 'DIN' }
+    { label: 'Breakfast', value: 'Breakfast' },
+    { label: 'Brunch', value: 'Brunch' },
+    { label: 'Lunch', value: 'Lunch' },
+    { label: 'Tea Time', value: 'Tea Time' },
+    { label: 'Dinner', value: 'Dinner' }
   ]
 
   const [ trackModal, setTrackModal ] = useState( false )
@@ -149,8 +150,54 @@ export default function RecipeDetail( { navigation, route }: any ) {
         ]
       )
 
+      console.error( "Error adding recipe to planner: ", error )
+    }
+  }
+
+  const addToPlannerPress = async () => {
+    try {
+      const res = await dispatch( addRecipesPlanner(
+        userSession.userId,
+        dayjs( modalDate ).format( "YYYY-MM-DD" ).toString(),
+        {
+          mealId: 0,
+          mealType: dropValue,
+          recipeId: recipeId,
+          plannerId: 0,
+          trackerId: 0
+        }
+      ))
+
+      if ( res === 400 ) {
+        Alert.alert(
+          "Conflict!",
+          "You have another similar recipe on the same meal, same day!",
+          [
+            { text: "Huh?", style: "default" },
+          ]
+        )
+      } else {
+        Alert.alert(
+          "Success!",
+          `The recipe has been added to ${ dropValue } on ${ dayjs( modalDate ).format( "YYYY-MM-DD" ).toString() }!`,
+          [
+            { text: "I Understood", style: "default" },
+          ]
+        )
+      }
+    } catch ( error: any ) {
+      Alert.alert(
+        "Error!",
+        "Unknown error occured, please try again!",
+        [
+          { text: "I Understood", style: "default" },
+        ]
+      )
+
       console.error( "Error deleting bookmark: ", error )
     }
+
+    showModal()
   }
 
   const { fontsLoaded } = useFontFromContext()
@@ -191,7 +238,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
 
         <Spacer size={ 20 } />
 
-        <Text style={ s.heading }>{ recipeInfo.title }</Text>
+        <Text style={ s.heading }>{ capitalizeWords( recipeInfo.title ) }</Text>
 
         <Spacer size={ 20 } />
 
@@ -412,7 +459,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
           </View>
           
           <RoundedBorderButton 
-            onPress={ () => navigation.navigate( "RecipeNarration", { recipeSteps: displaySteps } ) }
+            onPress={ () => navigation.navigate( "RecipeNarration", { recipeTitle: capitalizeWords( recipeInfo.title ), recipeSteps: displaySteps } ) }
             color={ LightMode.yellow }
             text="Start Cooking"
             textColor={ LightMode.white }      
@@ -432,11 +479,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
         dropItems={ dropItems }
         setOpenDrop={ setOpenDrop }
         setDropValue={ setDropValue }
-        save={ () => {
-          console.log( "Save to Planner" )
-          console.log( dropValue )
-          showModal()
-        }}
+        save={ addToPlannerPress }
       />
 
       <AddRecipeToTrackerModal 

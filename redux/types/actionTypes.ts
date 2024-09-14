@@ -117,16 +117,14 @@ export const DELETE_PLANNER_RECIPES_SUCCESS = "DELETE_PLANNER_RECIPES_SUCCESS"
 export const DELETE_PLANNER_RECIPES_FAILURE = "DELETE_PLANNER_RECIPES_FAILURE"
 
 /**
+ * ------------------------ TRACKER ------------------------
+ */
+/**
  * Add recipes to tracker
  */
 export const ADD_RECIPE_TRACKER_LOADING = "ADD_RECIPE_TRACKER_LOADING"
 export const ADD_RECIPE_TRACKER_SUCCESS = "ADD_RECIPE_TRACKER_SUCCESS"
 export const ADD_RECIPE_TRACKER_FAILURE = "ADD_RECIPE_TRACKER_FAILURE"
-
-/**
- * ------------------------ TRACKER ------------------------
- */
-
 
 /**
  * ------------------------ GROCERY ------------------------

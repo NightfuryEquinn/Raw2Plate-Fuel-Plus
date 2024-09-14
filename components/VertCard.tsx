@@ -1,5 +1,6 @@
 import { LightMode } from 'assets/colors/LightMode'
 import { useFontFromContext } from 'context/FontProvider'
+import { capitalizeWords } from 'data/formatData'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
@@ -24,7 +25,7 @@ export default function VertCard( { onPress, width, height, fontSize, textAlign,
           source={{ uri: data.image }}
         />
 
-        <Text numberOfLines={ 2 } style={[ s.sub, { fontSize: fontSize, textAlign: textAlign } ]}>{ data.title }</Text>
+        <Text numberOfLines={ 2 } style={[ s.sub, { fontSize: fontSize, textAlign: textAlign } ]}>{ capitalizeWords( data.title ) }</Text>
       </View>
     </TouchableOpacity>
   )
