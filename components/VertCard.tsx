@@ -21,10 +21,10 @@ export default function VertCard( { onPress, width, height, fontSize, textAlign,
         <Image 
           resizeMode="cover"
           style={[ s.image, { width: width, height: height * 0.625 } ]}
-          source={ data.image }
+          source={{ uri: data.image }}
         />
 
-        <Text numberOfLines={ 2 } style={[ s.sub, { fontSize: fontSize, textAlign: textAlign } ]}>{ data.heading }</Text>
+        <Text numberOfLines={ 2 } style={[ s.sub, { fontSize: fontSize, textAlign: textAlign } ]}>{ data.title }</Text>
       </View>
     </TouchableOpacity>
   )

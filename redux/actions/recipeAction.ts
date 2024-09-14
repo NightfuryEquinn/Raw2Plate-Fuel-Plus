@@ -1,8 +1,8 @@
 import { Bookmark } from "redux/models/Bookmark";
 import { Meal } from "redux/models/Meal";
 import { AppDispatch } from "redux/reducers/store";
-import { addRecipesPlannerService, bookmarkRecipeService, discoverSearchService, fetchPlannerRecipesService, fetchRandomService, fetchRecipeInfoService, fetchRecipeIngreStepsService, fetchRecipePlannerTrackerInfoService } from "redux/services/recipeServices";
-import { ADD_RECIPE_PLANNER_FAILURE, ADD_RECIPE_PLANNER_LOADING, ADD_RECIPE_PLANNER_SUCCESS, BOOKMARK_FAILURE, BOOKMARK_LOADING, BOOKMARK_SUCCESS, DISCOVER_SEARCH_FAILURE, DISCOVER_SEARCH_LOADING, DISCOVER_SEARCH_SUCCESS, FETCH_PLANNER_RECIPES_FAILURE, FETCH_PLANNER_RECIPES_LOADING, FETCH_PLANNER_RECIPES_SUCCESS, FETCH_RANDOM_FAILURE, FETCH_RANDOM_LOADING, FETCH_RANDOM_SUCCESS, FETCH_RECIPE_INFO_FAILURE, FETCH_RECIPE_INFO_LOADING, FETCH_RECIPE_INFO_SUCCESS, FETCH_RECIPE_INGRE_STEPS_FAILURE, FETCH_RECIPE_INGRE_STEPS_LOADING, FETCH_RECIPE_INGRE_STEPS_SUCCESS, FETCH_RECIPE_PLANNER_TRACKER_INFO_FAILURE, FETCH_RECIPE_PLANNER_TRACKER_INFO_LOADING, FETCH_RECIPE_PLANNER_TRACKER_INFO_SUCCESS } from "redux/types/actionTypes";
+import { addRecipesPlannerService, bookmarkRecipeService, deletePlannerRecipesService, discoverSearchService, fetchPlannerRecipesService, fetchRandomService, fetchRecipeInfoService, fetchRecipeIngreStepsService, fetchRecipePlannerTrackerInfoService } from "redux/services/recipeServices";
+import { ADD_RECIPE_PLANNER_FAILURE, ADD_RECIPE_PLANNER_LOADING, ADD_RECIPE_PLANNER_SUCCESS, BOOKMARK_FAILURE, BOOKMARK_LOADING, BOOKMARK_SUCCESS, DELETE_PLANNER_RECIPES_FAILURE, DELETE_PLANNER_RECIPES_LOADING, DELETE_PLANNER_RECIPES_SUCCESS, DISCOVER_SEARCH_FAILURE, DISCOVER_SEARCH_LOADING, DISCOVER_SEARCH_SUCCESS, FETCH_PLANNER_RECIPES_FAILURE, FETCH_PLANNER_RECIPES_LOADING, FETCH_PLANNER_RECIPES_SUCCESS, FETCH_RANDOM_FAILURE, FETCH_RANDOM_LOADING, FETCH_RANDOM_SUCCESS, FETCH_RECIPE_INFO_FAILURE, FETCH_RECIPE_INFO_LOADING, FETCH_RECIPE_INFO_SUCCESS, FETCH_RECIPE_INGRE_STEPS_FAILURE, FETCH_RECIPE_INGRE_STEPS_LOADING, FETCH_RECIPE_INGRE_STEPS_SUCCESS, FETCH_RECIPE_PLANNER_TRACKER_INFO_FAILURE, FETCH_RECIPE_PLANNER_TRACKER_INFO_LOADING, FETCH_RECIPE_PLANNER_TRACKER_INFO_SUCCESS } from "redux/types/actionTypes";
 
 /**
  * Fetch random recipes
@@ -213,12 +213,12 @@ const addRecipesPlannerFailure = ( error: string ) => ({
   payload: error
 })
 
-export const addRecipesPlanner = ( theUserId: number, theMeal: Meal ) => {
+export const addRecipesPlanner = ( theUserId: number, theDate: string, theMeal: Meal ) => {
   return async ( dispatch: AppDispatch ) => {
     dispatch( addRecipesPlannerLoading() )
 
     try {
-      const res = await addRecipesPlannerService( theUserId, theMeal )
+      const res = await addRecipesPlannerService( theUserId, theDate, theMeal )
       dispatch( addRecipesPlannerSuccess( res ) )
     } catch ( error: any ) {
       dispatch( addRecipesPlannerFailure( error.message ) )
@@ -260,6 +260,37 @@ export const fetchRecipePlannerTrackerInfo = ( theRecipeIds: string ) => {
   }
 }
 
+/**
+ * Delete planner recipes
+ */
+const deletePlannerRecipesLoading = () => ({
+  type: DELETE_PLANNER_RECIPES_LOADING
+})
+
+const deletePlannerRecipesSuccess = ( data: any[] ) => ({
+  type: DELETE_PLANNER_RECIPES_SUCCESS,
+  payload: data
+})
+
+const deletePlannerRecipesFailure = ( error: string ) => ({
+  type: DELETE_PLANNER_RECIPES_FAILURE,
+  payload: error
+})
+
+export const deletePlannerRecipes = ( theNumber: number ) => {
+  return async ( dispatch: AppDispatch ) => {
+    dispatch( deletePlannerRecipesLoading() )
+
+    try {
+      const res = await deletePlannerRecipesService( theNumber )
+      dispatch( deletePlannerRecipesSuccess( res ) )
+    } catch ( error: any ) {
+      dispatch( deletePlannerRecipesFailure( error.message ) )
+
+      return error.response.status
+    }
+  }
+}
 
 /**
  * Add recipes to tracker

@@ -2,19 +2,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import Loading from 'app/Loading'
 import { LightMode } from 'assets/colors/LightMode'
 import CalendarModal from 'components/CalendarModal'
+import ConfirmationModal from 'components/ConfirmationModal'
 import HoriCard from 'components/HoriCard'
 import RecipeSelectionModal from 'components/RecipeSelectionModal'
 import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
-import { mealCategories } from 'data/mealCategory'
+import { mealCategories, MealCategory } from 'data/mealCategory'
 import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
-import { discoverSearch, fetchPlannerRecipes, fetchRandom, fetchRecipePlannerTrackerInfo } from 'redux/actions/recipeAction'
+import { deletePlannerRecipes, discoverSearch, fetchPlannerRecipes, fetchRandom, fetchRecipePlannerTrackerInfo } from 'redux/actions/recipeAction'
 import { AppDispatch, RootState } from 'redux/reducers/store'
 
 export default function RecipeManager( {  }: any ) {
@@ -37,23 +38,28 @@ export default function RecipeManager( {  }: any ) {
   const [ refreshing, setRefreshing ] = useState( false )
   const [ refreshingModal, setRefreshingModal ] = useState( false )
 
-  const mealTypes = [ "BKF", "BRH", "LUN", "TEA", "DIN" ]
+  const [ confirmModal, setConfirmModal ] = useState( false )
 
   const filteredPlanner = data[ 0 ]?.plannerRecipes?.filter(
-    ( item: any ) => item.mealType === mealCategories[ selectedMeal ].label && item.date === dayjs( modalDate ).format( "YYYY-MM-DD" ).toString()
+    ( item: any ) => item.date === dayjs( modalDate ).format( "YYYY-MM-DD" ).toString()
   ) || []
 
   const filteredPlannerInfo = data[ 0 ]?.plannerRecipesInfo?.filter(
-    ( item: any, index: number ) => item.id === filteredPlanner[ index ]?.recipeId
+    ( item: any, index: number ) => 
+      item.id === filteredPlanner[ index ]?.recipeId &&
+      mealCategories[ selectedMeal ].label === filteredPlanner[ index ]?.mealType
   ) || []
-
+  
   const onRefresh = async () => {
     setRefreshing( true )
 
     if ( userSession ) {
       await dispatch( fetchPlannerRecipes( userSession.userId ) )
 
-      const theRecipeIds = data[ 0 ].plannerRecipes.map(
+      const theRecipeIds = data[ 0 ].plannerRecipes.filter(
+        ( item: any ) =>
+          item.date === dayjs( modalDate ).format( "YYYY-MM-DD" ).toString()
+      ).map(
         ( item: any ) => item.recipeId
       ).join( "," )
   
@@ -78,6 +84,10 @@ export default function RecipeManager( {  }: any ) {
   const showRecipeModal = ( mode: string ) => {
     setRecipeModal( !recipeModal )
     setChangeOrAdd( mode )
+  }
+
+  const showConfirmModal = () => {
+    setConfirmModal( !confirmModal )
   }
 
   const searchPress = ( recipe: string ) => {
@@ -119,6 +129,10 @@ export default function RecipeManager( {  }: any ) {
   }, [])
 
   useEffect(() => {
+    onRefresh()
+  }, [ modalDate ])
+
+  useEffect(() => {
     if ( userSession && !data[ 0 ].plannerRecipes ) {
       dispatch( fetchPlannerRecipes( userSession.userId ) )
     }
@@ -126,7 +140,10 @@ export default function RecipeManager( {  }: any ) {
 
   useEffect(() => {
     if ( data[ 0 ].plannerRecipes && !data[ 0 ].plannerRecipesInfo ) {
-      const theRecipeIds = data[ 0 ].plannerRecipes.map(
+      const theRecipeIds = data[ 0 ].plannerRecipes.filter(
+        ( item: any ) =>
+          item.date === dayjs( modalDate ).format( "YYYY-MM-DD" ).toString()
+      ).map(
         ( item: any ) => item.recipeId
       ).join( "," )
 
@@ -159,15 +176,17 @@ export default function RecipeManager( {  }: any ) {
         <View style={ s.manager }>
           <View style={ s.leftManager }>
             {
-              mealTypes.map(( meal: string, index: number ) => (
-                <TouchableOpacity
-                  activeOpacity={ 0.5 } 
-                  onPress={ () => setSelectedMeal( index ) }
-                  style={[ s.mealBlock, selectedMeal === index ? { backgroundColor: LightMode.green } : { backgroundColor: LightMode.white } ]}
-                >
-                  <Text style={ s.meal }>{ meal }</Text>
-                </TouchableOpacity>
-              ))
+              mealCategories.map(( meal: MealCategory, index: number ) => { 
+                return (
+                  <TouchableOpacity
+                    activeOpacity={ 0.5 } 
+                    onPress={ () => setSelectedMeal( index ) }
+                    style={[ s.mealBlock, selectedMeal === index ? { backgroundColor: LightMode.green } : { backgroundColor: LightMode.white } ]}
+                  >
+                    <Text style={ s.meal }>{ meal.abbr }</Text>
+                  </TouchableOpacity>
+                )
+              })
             }
           </View>
           
@@ -187,24 +206,12 @@ export default function RecipeManager( {  }: any ) {
         <Spacer size={ 45 } />
 
         <RoundedBorderButton 
-          onPress={ () => console.log( "Remove" ) }
+          onPress={ () => showConfirmModal() }
           icon="MA"
           name="delete"
           text="Remove Selected Recipe"
           color={ LightMode.red }
           textColor={ LightMode.white }
-          borderRadius={ 10 }
-        />
-
-        <Spacer size={ 10 } />
-
-        <RoundedBorderButton 
-          onPress={ () => showRecipeModal( "change" ) }
-          icon="MA"
-          name="change-circle"
-          text="Change Selected Recipe"
-          color={ LightMode.white }
-          textColor={ LightMode.black }
           borderRadius={ 10 }
         />
 
@@ -223,7 +230,7 @@ export default function RecipeManager( {  }: any ) {
         <Spacer size={ 15 } />
 
         <Text style={ s.hint }>Select meal type before adding new recipes.</Text>
-        <Text style={ s.hint }>Your meal planner will auto-save.</Text>
+        <Text style={ s.hint }>Your meal planner will auto-save. Refresh to see changes.</Text>
       </View>
 
       <CalendarModal 
@@ -235,6 +242,7 @@ export default function RecipeManager( {  }: any ) {
 
       <RecipeSelectionModal 
         userSession={ userSession }
+        date={ dayjs( modalDate ).format( "YYYY-MM-DD" ).toString() }
         selectedMeal={ selectedMeal }
         refreshing={ refreshingModal }
         onRefresh={ onRefreshModal }
@@ -245,6 +253,19 @@ export default function RecipeManager( {  }: any ) {
         setRecipe={ setRecipe }
         searchData={ searchData }
         searchPress={ () => searchPress( recipe ) }
+      />
+
+      <ConfirmationModal 
+        modal={ confirmModal }
+        showModal={ showConfirmModal }
+        message="Delete this recipe? This cannot be undone."
+        onCancel={ () => {
+          showConfirmModal()
+        }}
+        onConfirm={ () => {
+          dispatch( deletePlannerRecipes( filteredPlanner[ selectedRecipe ].mealId ) )
+          showConfirmModal()
+        }}
       />
     </SafeAreaView>
   )
@@ -294,7 +315,7 @@ const s = StyleSheet.create({
     gap: 10
   },
   "flatList": {
-    height: 335,
+    height: 385,
     margin: -20,
     marginTop: 0,
   },

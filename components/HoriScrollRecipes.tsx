@@ -1,12 +1,13 @@
 import { LightMode } from 'assets/colors/LightMode'
 import { useFontFromContext } from 'context/FontProvider'
 import { forViewCalendar } from 'data/dummyData'
+import PropTypes from 'prop-types'
 import React from 'react'
 import { FlatList, StyleSheet, Text, View } from 'react-native'
-import AddRecipeVertCard from './AddRecipeVertCard'
+import EmptyRecipeVertCard from './EmptyRecipeVertCard'
 import VertCard from './VertCard'
 
-export default function HoriScrollRecipes( { title, data, onPressAddRecipe }: any ) {
+export default function HoriScrollRecipes( { navigation, title, data }: any ) {
   const cardDimensions = {
     width: 125,
     height: 150
@@ -14,7 +15,7 @@ export default function HoriScrollRecipes( { title, data, onPressAddRecipe }: an
   
   const CookItem = ( { item, index }: any ) => (
     <VertCard 
-      onPress={ () => console.log( "Pressed" ) }
+      onPress={ () => navigation.navigate( "RecipeDetail", { recipeId: item.id, inBookmark: false } ) }
       width={ cardDimensions.width }
       height={ cardDimensions.height }
       data={ item }
@@ -41,9 +42,8 @@ export default function HoriScrollRecipes( { title, data, onPressAddRecipe }: an
         data={ data }
         renderItem={ CookItem }
         keyExtractor={ data => data.id.toString() }
-        ListFooterComponent={ 
-          <AddRecipeVertCard
-            onPress={ onPressAddRecipe }
+        ListEmptyComponent={ 
+          <EmptyRecipeVertCard
             width={ cardDimensions.width } 
             height={ cardDimensions.height } 
           /> 
@@ -65,3 +65,9 @@ const s = StyleSheet.create({
     marginTop: -10,
   },
 })
+
+HoriScrollRecipes.propTypes = {
+  navigation: PropTypes.any.isRequired,
+  title: PropTypes.string.isRequired,
+  data: PropTypes.any.isRequired
+}

@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addRecipesPlanner } from 'redux/actions/recipeAction'
 import { mealCategories } from 'data/mealCategory'
 
-export default function RecipeSelectionModal( { userSession, selectedMeal, refreshing, onRefresh, changeOrAdd, recipeModal, showRecipeModal, recipe, setRecipe, searchData, searchPress }: any ) {
+export default function RecipeSelectionModal( { userSession, date, selectedMeal, refreshing, onRefresh, changeOrAdd, recipeModal, showRecipeModal, recipe, setRecipe, searchData, searchPress }: any ) {
   const dispatch: AppDispatch = useDispatch()
   
   const SearchItem = ( { item, index }: any ) => (
@@ -25,6 +25,7 @@ export default function RecipeSelectionModal( { userSession, selectedMeal, refre
         } else {
           const res = await dispatch( addRecipesPlanner(
             userSession.userId,
+            date,
             {
               mealId: 0,
               mealType: mealCategories[ selectedMeal ].label,
@@ -185,6 +186,7 @@ const s = StyleSheet.create({
 
 RecipeSelectionModal.propTypes = {
   userSession: PropTypes.any.isRequired,
+  date: PropTypes.string.isRequired,
   selectedMeal: PropTypes.number.isRequired,
   refreshing: PropTypes.bool.isRequired,
   onRefresh: PropTypes.func.isRequired,

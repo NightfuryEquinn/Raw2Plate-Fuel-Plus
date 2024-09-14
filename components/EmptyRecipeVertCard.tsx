@@ -1,11 +1,10 @@
 import { LightMode } from 'assets/colors/LightMode';
 import { useFontFromContext } from 'context/FontProvider';
-import PropTypes from 'prop-types';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import IconMA from 'react-native-vector-icons/MaterialIcons';
 
-export default function AddRecipeVertCard( { onPress, width, height }: any ) {
+export default function EmptyRecipeVertCard( { width, height }: any ) {
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
@@ -13,29 +12,25 @@ export default function AddRecipeVertCard( { onPress, width, height }: any ) {
   }
   
   return (
-    <TouchableOpacity 
-      activeOpacity={ 0.5 }
-      onPress={ onPress }
+    <View 
       style={[ s.container, { width: width, height: height } ]}
     >
       <View style={ s.wrapper }>
-        <View style={ s.iconContainer }>
-          <IconMA
-            name="add"
-            color={ LightMode.blue }
-            size={ 32 }
-          />
-        </View>
+        <Image 
+          source={ require( "../assets/images/icons/cancel.png" ) }
+          resizeMode="cover"
+          style={ s.emptyIcon }
+        />
 
-        <Text style={ s.iconText }>Add Recipe</Text>
+
+        <Text style={ s.iconText }>No Recipes</Text>
       </View>
-    </TouchableOpacity>
+    </View>
   )
 }
 
 const s = StyleSheet.create({
   "container": {
-    marginLeft: 15,
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
@@ -54,17 +49,9 @@ const s = StyleSheet.create({
     alignItems: "center",
     gap: 10
   },
-  "iconContainer": {
-    borderRadius: 10,
-    backgroundColor: LightMode.white,
-    shadowColor: LightMode.black,
-    shadowOffset: {
-      width: 4,
-      height: 4
-    },
-    shadowOpacity: 0.375,
-    shadowRadius: 6,
-    elevation: 10,
+  "emptyIcon": {
+    height: 44,
+    width: 44
   },
   "iconText": {
     fontFamily: "fjalla",
@@ -72,9 +59,3 @@ const s = StyleSheet.create({
     color: LightMode.black
   }
 })
-
-AddRecipeVertCard.propTypes = {
-  onPress: PropTypes.func.isRequired,
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
-}

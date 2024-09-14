@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loading from 'app/Loading';
 import { LightMode } from 'assets/colors/LightMode';
 import HoriScrollRecipes from 'components/HoriScrollRecipes';
@@ -5,6 +6,7 @@ import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import { useFontFromContext } from 'context/FontProvider';
 import { forViewCalendar } from 'data/dummyData';
+import { mealCategories, MealCategory } from 'data/mealCategory';
 import dayjs from 'dayjs';
 import React, { useEffect, useRef, useState } from 'react';
 import { Dimensions, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -12,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import DatePicker from 'react-native-ui-datepicker';
 import IconMA from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch, useSelector } from 'react-redux';
+import { fetchPlannerRecipes, fetchRecipePlannerTrackerInfo } from 'redux/actions/recipeAction';
 import { AppDispatch, RootState } from 'redux/reducers/store';
 
 interface DateItem {
@@ -20,6 +23,8 @@ interface DateItem {
 }
 
 export default function ViewCalendar( { navigation }: any ) {
+  const [ userSession, setUserSession ] = useState<any>( null )
+
   const dispatch: AppDispatch = useDispatch()
   const { data, loading, error } = useSelector(( state: RootState ) => state.recipe )
 
@@ -63,6 +68,10 @@ export default function ViewCalendar( { navigation }: any ) {
     return dates
   }
 
+  const filteredPlanner = data[ 0 ]?.plannerRecipes?.filter(
+    ( item: any ) => item.date === dayjs( `${ currentMonth.year() }-${ currentMonth.month() + 1 }-${ selectedDate }` ).format( "YYYY-MM-DD" )
+  ) || []
+
   const dates = generateDates()
 
   const { fontsLoaded } = useFontFromContext()
@@ -70,6 +79,36 @@ export default function ViewCalendar( { navigation }: any ) {
   if ( !fontsLoaded ) {
     return null
   }
+
+  useEffect(() => {
+    const getUserSession = async () => {
+      const theUserSession = await AsyncStorage.getItem( "@user_session" )
+
+      if ( theUserSession !== null ) {
+        const parsed = JSON.parse( theUserSession )
+
+        setUserSession( parsed )
+      }
+    } 
+
+    getUserSession()
+  }, [])
+
+  useEffect(() => {
+    if ( userSession && !data[ 0 ].plannerRecipes ) {
+      dispatch( fetchPlannerRecipes( userSession.userId ) )
+    }
+  }, [ userSession ])
+
+  useEffect(() => {
+    if ( data[ 0 ].plannerRecipes && !data[ 0 ].plannerRecipesInfo ) {
+      const theRecipeIds = data[ 0 ].plannerRecipes.map(
+        ( item: any ) => item.recipeId
+      ).join( "," )
+
+      dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
+    }
+  }, [ data ])
 
   useEffect(() => {
     const selectedIndex = dates.findIndex( date => date.dayOfMonth === selectedDate )
@@ -178,17 +217,25 @@ export default function ViewCalendar( { navigation }: any ) {
           showsVerticalScrollIndicator={ false }
         >
           {
-            [ "Breakfast", "Brunch", "Lunch", "Tea Time", "Dinner" ].map(( meal: string, index: number ) => (
-              <View key={ index }>
-                <HoriScrollRecipes 
-                  title={ meal }
-                  data={ forViewCalendar }
-                  onPressAddRecipe={ () => console.log( "Add Recipe" ) }
-                />
+            mealCategories.map(( meal: MealCategory, index: number ) => {
+              const filteredPlannerInfo = data[ 0 ]?.plannerRecipesInfo?.filter(
+                ( item: any, index: number ) => 
+                  item.id === filteredPlanner[ index ]?.recipeId &&
+                  meal.label === filteredPlanner[ index ]?.mealType
+              ) || []
+              
+              return (
+                <View key={ index }>
+                  <HoriScrollRecipes
+                    navigation={ navigation }
+                    title={ meal.label }
+                    data={ filteredPlannerInfo }
+                  />
 
-                <Spacer size={ 20 } />
-              </View>
-            ))
+                  <Spacer size={ 20 } />
+                </View>
+              )
+            })
           }
         </ScrollView>
       </View>

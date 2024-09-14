@@ -112,9 +112,9 @@ export const fetchPlannerRecipesService = async ( theUserId: number ) => {
 /**
  * Add recipes to planner
  */
-export const addRecipesPlannerService = async ( theUserId: number, theMeal: Meal ) => {
+export const addRecipesPlannerService = async ( theUserId: number, theDate: string, theMeal: Meal ) => {
   try {
-    const res: ApiRes<ReduxState[]> = await awsInstance.post( `/meal/user/${ theUserId }`, theMeal )
+    const res: ApiRes<ReduxState[]> = await awsInstance.post( `/meal/user/${ theUserId }/${ theDate }`, theMeal )
 
     console.log( "DONE - addRecipesPlannerService: ", res.data )
     return res.data
@@ -137,6 +137,22 @@ export const fetchRecipePlannerTrackerInfoService = async ( theRecipeIds: string
     return res.data
   } catch ( error ) {
     console.error( "ERROR - fetchRecipePlannerTrackerInfoService: ", error )
+    
+    throw error
+  }
+}
+
+/**
+ * Delete planner recipes
+ */
+export const deletePlannerRecipesService = async ( theMealId: number ) => {
+  try {
+    const res: ApiRes<ReduxState[]> = await awsInstance.delete( `/meal/${ theMealId }` )
+    
+    console.log( "DONE - deletePlannerRecipesService: ", res.data )
+    return res.data
+  } catch ( error ) {
+    console.error( "ERROR - deletePlannerRecipesService: ", error )
     
     throw error
   }

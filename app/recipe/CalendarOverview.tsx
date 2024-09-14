@@ -33,7 +33,7 @@ export default function CalendarOverview( { navigation }: any ) {
     if ( active === index ) {
       return
     } else {
-      margin.value = withTiming( 10, { duration: 250 } )
+      margin.value = withTiming( 12.5, { duration: 250 } )
       setActive( index )
     }
   }
@@ -53,11 +53,13 @@ export default function CalendarOverview( { navigation }: any ) {
   })
 
   const filteredPlanner = data[ 0 ]?.plannerRecipes?.filter(
-    ( item: any ) => item.mealType === mealCategories[ active ].label && item.date === dayjs().format( "YYYY-MM-DD" ).toString()
+    ( item: any ) => item.date === dayjs().format( "YYYY-MM-DD" ).toString()
   ) || []
 
   const filteredPlannerInfo = data[ 0 ]?.plannerRecipesInfo?.filter(
-    ( item: any, index: number ) => item.id === filteredPlanner[ index ]?.recipeId
+    ( item: any, index: number ) => 
+      item.id === filteredPlanner[ index ]?.recipeId &&
+      mealCategories[ active ].label === filteredPlanner[ index ]?.mealType
   ) || []
 
   // Refresh twice to see result, redux state issues
@@ -67,7 +69,10 @@ export default function CalendarOverview( { navigation }: any ) {
     if ( userSession ) {
       await dispatch( fetchPlannerRecipes( userSession.userId ) )
 
-      const theRecipeIds = data[ 0 ].plannerRecipes.map(
+      const theRecipeIds = data[ 0 ].plannerRecipes.filter(
+        ( item: any ) =>
+          item.date === dayjs().format( "YYYY-MM-DD" ).toString()
+      ).map(
         ( item: any ) => item.recipeId
       ).join( "," )
   
@@ -75,6 +80,7 @@ export default function CalendarOverview( { navigation }: any ) {
     }
     
     setRefreshing( false )
+    setActive( 0 )
   }
 
   const { fontsLoaded } = useFontFromContext()
@@ -95,8 +101,10 @@ export default function CalendarOverview( { navigation }: any ) {
     } 
 
     getUserSession()
+    
+    setActive( 0 )
 
-    margin.value = withTiming( 10, { duration: 250 } )
+    margin.value = withTiming( 12.5, { duration: 250 } )
   }, [])
 
   useEffect(() => {
@@ -107,7 +115,10 @@ export default function CalendarOverview( { navigation }: any ) {
 
   useEffect(() => {
     if ( data[ 0 ].plannerRecipes && !data[ 0 ].plannerRecipesInfo ) {
-      const theRecipeIds = data[ 0 ].plannerRecipes.map(
+      const theRecipeIds = data[ 0 ].plannerRecipes.filter(
+        ( item: any ) =>
+          item.date === dayjs().format( "YYYY-MM-DD" ).toString()
+      ).map(
         ( item: any ) => item.recipeId
       ).join( "," )
 
@@ -182,7 +193,7 @@ export default function CalendarOverview( { navigation }: any ) {
         <Spacer size={ 15 } />
 
         {
-          data && data.length > 0 && data[ 0 ].plannerRecipes ?
+          data && data.length > 0 ?
             <FlatList
               refreshing={ refreshing }
               onRefresh={ onRefresh }
@@ -194,7 +205,7 @@ export default function CalendarOverview( { navigation }: any ) {
               ListEmptyComponent={ () => (
                 <View style={{ margin: 17.5 }}>
                   <EmptyContent 
-                    message={ `No recipes to cook for ${ mealCategories[ active ].label }...` }
+                    message={ `No recipes to cook at ${ mealCategories[ active ].label.toLowerCase() }...` }
                   />
                 </View>
               )}
