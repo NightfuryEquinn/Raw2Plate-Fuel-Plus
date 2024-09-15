@@ -120,11 +120,27 @@ export const DELETE_PLANNER_RECIPES_FAILURE = "DELETE_PLANNER_RECIPES_FAILURE"
  * ------------------------ TRACKER ------------------------
  */
 /**
- * Add recipes to tracker
+ * Add manual recipes to tracker
  */
-export const ADD_RECIPE_TRACKER_LOADING = "ADD_RECIPE_TRACKER_LOADING"
-export const ADD_RECIPE_TRACKER_SUCCESS = "ADD_RECIPE_TRACKER_SUCCESS"
-export const ADD_RECIPE_TRACKER_FAILURE = "ADD_RECIPE_TRACKER_FAILURE"
+export const ADD_MANUAL_RECIPE_TRACKER_LOADING = "ADD_MANUAL_RECIPE_TRACKER_LOADING"
+export const ADD_MANUAL_RECIPE_TRACKER_SUCCESS = "ADD_MANUAL_RECIPE_TRACKER_SUCCESS"
+export const ADD_MANUAL_RECIPE_TRACKER_FAILURE = "ADD_MANUAL_RECIPE_TRACKER_FAILURE"
+
+/**
+ * Get recipes nutrients info
+ */
+export const FETCH_RECIPE_NUTRIENTS_LOADING = "FETCH_RECIPE_NUTRIENTS_LOADING"
+export const FETCH_RECIPE_NUTRIENTS_SUCCESS = "FETCH_RECIPE_NUTRIENTS_SUCCESS"
+export const FETCH_RECIPE_NUTRIENTS_FAILURE = "FETCH_RECIPE_NUTRIENTS_FAILURE"
+
+/**
+ * Fetch tracker recipes
+ */
+
+/**
+ * Delete manual added recipes
+ */
+
 
 /**
  * ------------------------ GROCERY ------------------------

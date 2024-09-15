@@ -17,7 +17,7 @@ export default function RecipeMoreDetails( { name, image, calories, carbo, prote
       <View style={ s.topContainer }>
         <Image 
           resizeMode="cover"
-          source={ image }
+          source={{ uri: image }}
           style={ s.image }
         />
 
@@ -114,7 +114,6 @@ const s = StyleSheet.create({
     color: LightMode.black
   },
   "botContainer": {
-    flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
     gap: 15,

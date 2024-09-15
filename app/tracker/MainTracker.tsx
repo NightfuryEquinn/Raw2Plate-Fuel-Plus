@@ -10,6 +10,8 @@ import { Dimensions, Image, Modal, Pressable, ScrollView, StyleSheet, Text, Touc
 import { SafeAreaView } from 'react-native-safe-area-context'
 import DatePicker from 'react-native-ui-datepicker'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from 'redux/reducers/store'
 
 interface DateItem {
   dayOfWeek: string,
@@ -17,6 +19,11 @@ interface DateItem {
 }
 
 export default function MainTracker( { navigation }: any ) {
+  const [ userSession, setUserSession ] = useState<any>( null )
+
+  const dispatch: AppDispatch = useDispatch()
+  const { data, loading, error } = useSelector(( state: RootState ) => state.recipe )
+
   const today = dayjs()
   const [ currentMonth, setCurrentMonth ] = useState( today )
   const [ selectedDate, setSelectedDate ] = useState( today.date() )

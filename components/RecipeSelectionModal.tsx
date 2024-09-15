@@ -11,49 +11,62 @@ import HoriCardWithCTA from './HoriCardWithCTA'
 import LinedTextField from './LinedTextField'
 import RoundedBorderButton from './RoundedBorderButton'
 import Spacer from './Spacer'
+import { addManualRecipesTracker } from 'redux/actions/trackerAction'
 
-export default function RecipeSelectionModal( { userSession, date, selectedMeal, refreshing, onRefresh, changeOrAdd, recipeModal, showRecipeModal, recipe, setRecipe, searchData, searchPress }: any ) {
+export default function RecipeSelectionModal({ 
+  setSelectedRecipe,
+  userSession, date, selectedMeal, 
+  refreshing, onRefresh, 
+  changeOrAdd, 
+  recipeModal, showRecipeModal, 
+  recipe, setRecipe, 
+  searchData, searchPress 
+}: any ) {
   const dispatch: AppDispatch = useDispatch()
+
+  const ctaPress = async ( item: any ) => {
+    if ( changeOrAdd === "change" ) {
+      // Sub for getting the recipe id for review while adding in tracker
+      setSelectedRecipe( item )
+    } else {
+      const res = await dispatch( addRecipesPlanner(
+        userSession.userId,
+        date,
+        {
+          mealId: 0,
+          mealType: mealCategories[ selectedMeal ].label,
+          recipeId: item.id,
+          plannerId: 0,
+          trackerId: 0,
+        }
+      ))
+
+      if ( res === 400 ) {
+        Alert.alert(
+          "Existed!",
+          "This recipe has already been added at this meal time!",
+          [
+            { text: "I Understood", style: "default" },
+          ]
+        )
+      } else {
+        Alert.alert(
+          "Success!",
+          "This recipe has been added!",
+          [
+            { text: "I Understood", style: "default" },
+          ]
+        )
+      }
+    }
+  }
   
   const SearchItem = ( { item, index }: any ) => (
     <HoriCardWithCTA 
       key={ index }
       changeOrAdd={ changeOrAdd }
-      onPress={ async () => {
-        if ( changeOrAdd === "change" ) {
-          // Do nothing
-        } else {
-          const res = await dispatch( addRecipesPlanner(
-            userSession.userId,
-            date,
-            {
-              mealId: 0,
-              mealType: mealCategories[ selectedMeal ].label,
-              recipeId: item.id,
-              plannerId: 0,
-              trackerId: 0,
-            }
-          ))
-
-          if ( res === 400 ) {
-            Alert.alert(
-              "Existed!",
-              "This recipe has already been added at this meal time!",
-              [
-                { text: "I Understood", style: "default" },
-              ]
-            )
-          } else {
-            Alert.alert(
-              "Success!",
-              "This recipe has been added!",
-              [
-                { text: "I Understood", style: "default" },
-              ]
-            )
-          }
-        }
-
+      onPress={ () => {
+        ctaPress( item )
         showRecipeModal() 
       }}
       data={ item }
@@ -78,7 +91,7 @@ export default function RecipeSelectionModal( { userSession, date, selectedMeal,
           <View style={ s.modalWrapper }>
             <View style={ s.modalHeadingWrapper }>
               <View style={ s.modalHeading }>
-                <Text style={ s.modalHeadingTitle }>{ changeOrAdd === "change" ? "Change Selected Recipe" : "Add New Recipe" }</Text>
+                <Text style={ s.modalHeadingTitle }>{ changeOrAdd === "change" ? "Select Recipe" : "Add New Recipe" }</Text>
               </View>
             </View>
 
@@ -185,6 +198,7 @@ const s = StyleSheet.create({
 })
 
 RecipeSelectionModal.propTypes = {
+  setSelectedRecipe: PropTypes.func,
   userSession: PropTypes.any.isRequired,
   date: PropTypes.string.isRequired,
   selectedMeal: PropTypes.number.isRequired,

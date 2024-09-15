@@ -94,7 +94,7 @@ export default function RecipeManager( {  }: any ) {
     dispatch( discoverSearch( recipe, 2, "", "", "", 0, 1000 ) )
 
     setSearchData( data[ 0 ]?.randomRecipes?.results )
-  }
+  } 
 
   const CookItem = ( { item, index }: any ) => (
     <HoriCard

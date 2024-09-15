@@ -15,7 +15,7 @@ interface ApiRes<T> {
 export const fetchRandomService = async ( theNumber: number ) => {
   try {
     // Limit license true
-    const res: ApiRes<ReduxState[]> = await spoonInstance.get( `/recipes/random?limitLicense=true&number=${ theNumber }` )
+    const res: ApiRes<ReduxState[]> = await spoonInstance.get( `/recipes/random?limitLicense=true&number=${ theNumber }&includeNutrition=true` )
 
     console.log( "DONE - fetchRandomService: ", res.data )
     return res.data
@@ -157,7 +157,3 @@ export const deletePlannerRecipesService = async ( theMealId: number ) => {
     throw error
   }
 }
-
-/**
- * Add recipes to tracker
- */
