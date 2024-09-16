@@ -29,7 +29,7 @@ export const addManualRecipesTrackerService = async ( theUserId: number, theDate
  */
 export const fetchRecipesNutrientsService = async ( theRecipeId: number ) => {
   try {
-    const res: ApiRes<ReduxState[]> = await spoonInstance.get( `/recipes/${ theRecipeId }/nutritionWidget.json` )
+    const res: ApiRes<any[]> = await spoonInstance.get( `/recipes/${ theRecipeId }/nutritionWidget.json` )
 
     const appendRecipeIdData = {
       ...res.data,
@@ -44,3 +44,12 @@ export const fetchRecipesNutrientsService = async ( theRecipeId: number ) => {
     throw error
   }
 }
+
+/**
+ * Fetch tracker recipes
+ */
+
+
+/**
+ * Delete manual added recipes
+ */

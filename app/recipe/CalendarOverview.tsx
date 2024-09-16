@@ -111,9 +111,7 @@ export default function CalendarOverview( { navigation }: any ) {
     if ( userSession && !data[ 0 ].plannerRecipes ) {
       dispatch( fetchPlannerRecipes( userSession.userId ) )
     }
-  }, [ userSession ])
 
-  useEffect(() => {
     if ( data[ 0 ].plannerRecipes && !data[ 0 ].plannerRecipesInfo ) {
       const theRecipeIds = data[ 0 ].plannerRecipes.filter(
         ( item: any ) =>
@@ -124,7 +122,7 @@ export default function CalendarOverview( { navigation }: any ) {
 
       dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
     }
-  }, [ data ])
+  }, [ userSession, data ])
   
   return (
     loading ? <Loading /> :

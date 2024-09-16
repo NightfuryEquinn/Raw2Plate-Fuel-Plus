@@ -21,6 +21,7 @@ import { addManualRecipesTracker, fetchRecipesNutrients } from 'redux/actions/tr
 import { mealCategories } from 'data/mealCategory'
 import EmptyContent from 'components/EmptyContent'
 import { capitalizeWords } from 'data/formatData'
+import { ScrollView } from 'react-native-gesture-handler'
 
 export default function ManualAdd( { navigation }: any ) {
   const [ userSession, setUserSession ] = useState<any>( null )
@@ -36,7 +37,7 @@ export default function ManualAdd( { navigation }: any ) {
 
   const [ recipeModal, setRecipeModal ] = useState( false )
   const [ recipe, setRecipe ] = useState( "" )
-  const [ searchData, setSearchData ] = useState( recipeData.data[ 0 ].randomRecipes?.recipes || recipeData.data[ 0 ].randomRecipes?.results )
+  const [ searchData, setSearchData ] = useState( recipeData.data[ 0 ]?.randomRecipes?.recipes || recipeData.data[ 0 ]?.randomRecipes?.results )
 
   const [ refreshing, setRefreshing ] = useState( false )
 
@@ -74,7 +75,7 @@ export default function ManualAdd( { navigation }: any ) {
   const onRefresh = async () => {
     setRefreshing( true )
 
-    setSearchData( recipeData.data[ 0 ]?.randomRecipes?.results )
+    setSearchData( recipeData.data[ 0 ]?.randomRecipes?.recipes || recipeData.data[ 0 ]?.randomRecipes?.results )
 
     setRefreshing( false )
   }
@@ -82,7 +83,7 @@ export default function ManualAdd( { navigation }: any ) {
   const searchPress = ( recipe: string ) => {
     dispatch( discoverSearch( recipe, 2, "", "", "", 0, 1000 ) )
 
-    setSearchData( recipeData.data[ 0 ]?.randomRecipes?.results )
+    setSearchData( recipeData.data[ 0 ]?.randomRecipes?.recipes || recipeData.data[ 0 ]?.randomRecipes?.results )
   }
 
   const addToTrackerPress = async () => {
@@ -161,7 +162,7 @@ export default function ManualAdd( { navigation }: any ) {
 
     getUserSession()
     
-    if ( !recipeData.data[ 0 ].randomRecipes ) {
+    if ( !recipeData.data[ 0 ]?.randomRecipes ) {
       dispatch( fetchRandom( 2 ) )
     }
   }, [])
@@ -173,14 +174,14 @@ export default function ManualAdd( { navigation }: any ) {
   }, [ selectedRecipe ])
 
   useEffect(() => {
-    if ( trackerData.data[ 0 ].cacheRecipesNutrients ) {
-      const theRecipeNutrients = trackerData.data[ 0 ].cacheRecipesNutrients.filter(( item: any ) =>
+    if ( trackerData.data[ 0 ]?.cacheRecipesNutrients ) {
+      const theRecipeNutrients = trackerData.data[ 0 ]?.cacheRecipesNutrients?.filter(( item: any ) =>
         item.recipeId === selectedRecipe.id
       )
 
       setRecipeNutrients( theRecipeNutrients )
     }
-  }, [ trackerData.data[ 0 ].cacheRecipesNutrients ])
+  }, [ trackerData.data[ 0 ]?.cacheRecipesNutrients ])
   
   return (
     recipeData.loading || trackerData.loading ? <Loading /> :
@@ -204,6 +205,10 @@ export default function ManualAdd( { navigation }: any ) {
 
         <Spacer size={ 30 } />
 
+        <ScrollView
+          style={{ margin: -20 }}
+          contentContainerStyle={{ padding: 20 }}
+        >
         <View style={ s.manualContainer }>
           <Text style={ s.manual }>Manual Input?</Text>
 
@@ -268,33 +273,43 @@ export default function ManualAdd( { navigation }: any ) {
         </View> 
 
         {
-          !manual && trackerData && trackerData.data.length > 0 && trackerData.data[ 0 ].cacheRecipesNutrients && selectedRecipe.length !== 0 && recipeNutrients.length !== 0 ?
+          trackerData && trackerData.data.length > 0 && trackerData.data[ 0 ]?.cacheRecipesNutrients && selectedRecipe.length !== 0 && recipeNutrients.length !== 0 ?
             <RecipeMoreDetails 
               name={ capitalizeWords( selectedRecipe?.title ) }
               image={ selectedRecipe?.image }
-              calories={ recipeNutrients[ 1 ]?.nutrients[ 0 ]?.amount.toFixed( 2 ) }
-              carbo={ recipeNutrients[ 1 ]?.nutrients[ 3 ]?.amount }
-              protein={ recipeNutrients[ 1 ]?.nutrients[ 8 ]?.amount }
-              fibers={ recipeNutrients[ 1 ]?.nutrients[ 11 ]?.amount }
-              sugars={ recipeNutrients[ 1 ]?.nutrients[ 5 ]?.amount }
-              fats={ recipeNutrients[ 1 ]?.nutrients[ 1 ]?.amount }
-              cholesterols={ recipeNutrients[ 1 ]?.nutrients[ 6 ]?.amount }
+              calories={ recipeNutrients[ 0 ]?.nutrients[ 0 ]?.amount.toFixed( 2 ) }
+              carbo={ recipeNutrients[ 0 ]?.nutrients[ 3 ]?.amount }
+              protein={ recipeNutrients[ 0 ]?.nutrients[ 8 ]?.amount }
+              fibers={ recipeNutrients[ 0 ]?.nutrients[ 11 ]?.amount }
+              sugars={ recipeNutrients[ 0 ]?.nutrients[ 5 ]?.amount }
+              fats={ recipeNutrients[ 0 ]?.nutrients[ 1 ]?.amount }
+              cholesterols={ recipeNutrients[ 0 ]?.nutrients[ 6 ]?.amount }
             />
+          : manual ?
+            <Fragment>
+              <Spacer size={ 10 } />
+
+              <EmptyContent 
+                message="No review available for manual inputs..."
+              />
+            </Fragment>
           :
             <Fragment>
               <Spacer size={ 10 } />
 
               <EmptyContent 
-                message="Select a recipe to review calories and nutrients"
+                message="Select a recipe to review calories and nutrients..."
               />
             </Fragment>
         }
-        
-        <Spacer size={ 20 } />
+
+        </ScrollView>
+
+        <Spacer size={ 30 } />
 
         <Text style={ s.hintText }>NOTE: Detailed nutrient information about a manually inserted recipe will not be generated. Only calories will be recorded.</Text>
-      
-        <Spacer size={ 30 } />
+
+        <Spacer size={ 10 } />
 
         <RoundedBorderButton 
           onPress={ addToTrackerPress }

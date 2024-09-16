@@ -66,3 +66,12 @@ export const fetchRecipesNutrients = ( theRecipeId: number ) => {
     }
   }
 }
+
+/**
+ * Fetch tracker recipes
+ */
+
+
+/**
+ * Delete manual added recipes
+ */

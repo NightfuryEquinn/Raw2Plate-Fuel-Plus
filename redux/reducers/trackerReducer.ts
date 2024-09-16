@@ -52,10 +52,17 @@ export const trackerReducer = (
         loading: false,
         data: [{
           ...state.data[ 0 ],
-          cacheRecipesNutrients: [
-            ...state.data[ 0 ].cacheRecipesNutrients, 
-            action.payload
-          ]
+          cacheRecipesNutrients: 
+            state.data[ 0 ].cacheRecipesNutrients.some(
+              ( item: any ) => item.recipeId === action.payload.recipeId
+            ) 
+            ? 
+            state.data[ 0 ].cacheRecipesNutrients
+            : 
+            [
+              ...state.data[ 0 ].cacheRecipesNutrients,
+              action.payload
+            ]
         }]
       }
 
