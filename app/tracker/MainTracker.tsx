@@ -1,9 +1,11 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Loading from 'app/Loading'
 import { LightMode } from 'assets/colors/LightMode'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import TrackerPieChart from 'components/TrackerPieChart'
 import { useFontFromContext } from 'context/FontProvider'
-import { ForMainTracker, forMainTracker } from 'data/dummyData'
+import { forMainTracker } from 'data/dummyData'
 import dayjs from 'dayjs'
 import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions, Image, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
@@ -11,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import DatePicker from 'react-native-ui-datepicker'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
 import { useDispatch, useSelector } from 'react-redux'
+import { fetchTrackerManual, fetchTrackerRecipes } from 'redux/actions/trackerAction'
 import { AppDispatch, RootState } from 'redux/reducers/store'
 
 interface DateItem {
@@ -22,13 +25,15 @@ export default function MainTracker( { navigation }: any ) {
   const [ userSession, setUserSession ] = useState<any>( null )
 
   const dispatch: AppDispatch = useDispatch()
-  const { data, loading, error } = useSelector(( state: RootState ) => state.recipe )
+  const { data, loading, error } = useSelector(( state: RootState ) => state.tracker )
 
   const today = dayjs()
   const [ currentMonth, setCurrentMonth ] = useState( today )
   const [ selectedDate, setSelectedDate ] = useState( today.date() )
   const scrollRef = useRef<ScrollView>( null )
 
+  const [ cal, setCal ] = useState( 0 )
+  const [ manualCal, setManualCal ] = useState( 0 )
   const [ carbs, setCarbs ] = useState( 0 )
   const [ proteins, setProteins ] = useState( 0 )
   const [ fibers, setFibers ] = useState( 0 )
@@ -78,6 +83,27 @@ export default function MainTracker( { navigation }: any ) {
   }
 
   useEffect(() => {
+    const getUserSession = async () => {
+      const theUserSession = await AsyncStorage.getItem( "@user_session" )
+
+      if ( theUserSession !== null ) {
+        const parsed = JSON.parse( theUserSession )
+
+        setUserSession( parsed )
+      }
+    } 
+
+    getUserSession()
+  }, [])
+
+  useEffect(() => {
+    if ( userSession && ( !data[ 0 ].trackerRecipes || !data[ 0 ].trackerManual ) ) {
+      dispatch( fetchTrackerRecipes( userSession.userId ))
+      dispatch( fetchTrackerManual( userSession.userId ) )
+    }
+  }, [ userSession ])
+
+  useEffect(() => {
     const selectedIndex = dates.findIndex( date => date.dayOfMonth === selectedDate )
 
     if ( scrollRef.current && selectedIndex !== -1 ) {
@@ -87,29 +113,43 @@ export default function MainTracker( { navigation }: any ) {
       })
     }
 
+    let totalCal = 0
+    let totalManualCal = 0
     let totalCarbs = 0
     let totalProtein = 0
     let totalFibers = 0
     let totalFats = 0
 
-    const mealsToInclude = forMainTracker.filter(( data: ForMainTracker ) => (
-      dayjs( data.date, "DD-MM-YYYY" ).isSame( dayjs( modalDate ).format( "DD-MM-YYYY" ), 'day' )
+    const mealsToInclude = data[ 0 ].trackerRecipes.filter(( item: any ) => (
+      item.date === dayjs( `${ currentMonth.year() }-${ currentMonth.month() + 1 }-${ selectedDate }` ).format( "YYYY-MM-DD" )
     ))
 
-    mealsToInclude.forEach(( data: ForMainTracker ) => {
-      totalCarbs += data.carbo
-      totalProtein += data.protein
-      totalFibers += data.fibers
-      totalFats += data.fats
+    mealsToInclude.forEach(( data: any ) => {
+      totalCal += data.recipeNutrients[ 0 ].amount
+      totalCarbs += data.recipeNutrients[ 3 ].amount
+      totalProtein += data.recipeNutrients[ 8 ].amount
+      totalFibers += data.recipeNutrients[ 11 ].amount
+      totalFats += data.recipeNutrients[ 1 ].amount
     })
 
-    setCarbs( totalCarbs )
-    setProteins( totalProtein )
-    setFibers( totalFibers )
-    setFats( totalFats )
+    const manualToInclude = data[ 0 ].trackerManual.filter(( item: any ) =>
+      item.date === dayjs( `${ currentMonth.year() }-${ currentMonth.month() + 1 }-${ selectedDate }` ).format( "YYYY-MM-DD" )
+    )
+
+    manualToInclude.forEach(( data: any ) => {
+      totalManualCal += data.calories
+    })
+
+    setCal( +totalCal.toFixed( 0 ) )
+    setManualCal( +totalManualCal.toFixed( 0 ) )
+    setCarbs( +totalCarbs.toFixed( 2 ) )
+    setProteins( +totalProtein.toFixed( 2 ) )
+    setFibers( +totalFibers.toFixed( 2 ) )
+    setFats( +totalFats.toFixed( 2 ) )
   }, [ selectedDate, dates ])
   
   return (
+    loading ? <Loading /> :
     <SafeAreaView style={ s.container }>
       <View style={{ flex: 1 }}>
         <TopBar />
@@ -184,16 +224,18 @@ export default function MainTracker( { navigation }: any ) {
 
         <Spacer size={ 30 } />
 
-        <Text style={ s.heading }>Total Calories Consumed (kcal)</Text>
+        <Text style={ s.heading }>Total Calories (kcal)</Text>
 
-        <Text style={ s.headingSub }>2430</Text>
+        <Text style={ s.headingSub }>{ cal } ({ manualCal })</Text>
+
+        <Spacer size={ 10 } />
 
         <ScrollView
           showsVerticalScrollIndicator={ false }
           style={{ height: Dimensions.get( "window" ).height * 0.625 }}
         >
           { 
-            forMainTracker.length !== 0 ?
+            cal !== 0 && manualCal !== 0 ?
               <TrackerPieChart 
                 carbs={ carbs } 
                 proteins={ proteins } 
@@ -220,7 +262,7 @@ export default function MainTracker( { navigation }: any ) {
                 <Text style={ s.main }>Carbohydrates</Text>
               </View>
               
-              <Text style={ s.secondary }>{ carbs } kcal</Text>
+              <Text style={ s.secondary }>{ carbs } gram(s)</Text>
             </View>
 
             <View style={ s.section }>
@@ -234,7 +276,7 @@ export default function MainTracker( { navigation }: any ) {
                 <Text style={ s.main }>Proteins</Text>
               </View>
               
-              <Text style={ s.secondary }>{ proteins } kcal</Text>
+              <Text style={ s.secondary }>{ proteins } gram(s)</Text>
             </View>
 
             <View style={ s.section }>
@@ -248,7 +290,7 @@ export default function MainTracker( { navigation }: any ) {
                 <Text style={ s.main }>Fibers</Text>
               </View>
               
-              <Text style={ s.secondary }>{ fibers } kcal</Text>
+              <Text style={ s.secondary }>{ fibers } gram(s)</Text>
             </View>
 
             <View style={ s.section }>
@@ -262,7 +304,7 @@ export default function MainTracker( { navigation }: any ) {
                 <Text style={ s.main }>Fats</Text>
               </View>
               
-              <Text style={ s.secondary }>{ fats } kcal</Text>
+              <Text style={ s.secondary }>{ fats } gram(s)</Text>
             </View>
           </View>
         </ScrollView>
@@ -271,7 +313,7 @@ export default function MainTracker( { navigation }: any ) {
 
         <View style={ s.ctaContainer }>
           <View style={ s.textWrapper }>
-            <Text style={ s.hint }>For more details, refer to daily intakes or daily nutrients from side menu.</Text>
+            <Text style={ s.hint }>Manually inputted calories are separated in brackets. For more details, refer to daily intakes or daily nutrients from side menu.</Text>
           </View>
           
           <TouchableOpacity

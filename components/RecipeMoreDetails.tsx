@@ -1,11 +1,17 @@
-import { View, Text, StyleSheet, Image } from 'react-native'
-import React from 'react'
-import { useFontFromContext } from 'context/FontProvider'
 import { LightMode } from 'assets/colors/LightMode'
-import Spacer from './Spacer'
+import { useFontFromContext } from 'context/FontProvider'
 import PropTypes from 'prop-types'
+import React, { Fragment } from 'react'
+import { Image, StyleSheet, Text, View } from 'react-native'
+import RoundedBorderButton from './RoundedBorderButton'
+import Spacer from './Spacer'
+import { AppDispatch } from 'redux/reducers/store'
+import { useDispatch } from 'react-redux'
+import { deleteManual } from 'redux/actions/trackerAction'
 
-export default function RecipeMoreDetails( { name, image, calories, carbo, protein, fibers, fats, cholesterols, sugars }: any ) {
+export default function RecipeMoreDetails( { fromManual, manualId, name, image, calories, carbo, protein, fibers, fats, cholesterols, sugars }: any ) {
+  const dispatch: AppDispatch = useDispatch()
+  
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
@@ -15,11 +21,15 @@ export default function RecipeMoreDetails( { name, image, calories, carbo, prote
   return (
     <View style={ s.container }>
       <View style={ s.topContainer }>
-        <Image 
-          resizeMode="cover"
-          source={{ uri: image }}
-          style={ s.image }
-        />
+        {
+          image && !fromManual && (
+            <Image 
+              resizeMode="cover"
+              source={{ uri: image }}
+              style={ s.image }
+            />
+          )
+        }
 
         <View style={ s.topSideContainer }>
           <Text style={ s.heading }>{ name }</Text>
@@ -29,40 +39,53 @@ export default function RecipeMoreDetails( { name, image, calories, carbo, prote
 
       <Spacer size={ 10 } />
 
-      <View style={ s.botContainer }>
-        <View style={ s.botSection }>
-          <View style={ s.box }>
-            <Text style={ s.boxTitle }>Carbohydrates</Text>
-            <Text style={ s.boxSub }>{ carbo | 0 } { carbo > 0 ? "grams" : "gram" }</Text>
-          </View>
+      {
+        !fromManual ?
+          <View style={ s.botContainer }>
+            <View style={ s.botSection }>
+              <View style={ s.box }>
+                <Text style={ s.boxTitle }>Carbohydrates</Text>
+                <Text style={ s.boxSub }>{ carbo | 0 } { carbo > 0 ? "grams" : "gram" }</Text>
+              </View>
 
-          <View style={ s.box }>
-            <Text style={ s.boxTitle }>Proteins</Text>
-            <Text style={ s.boxSub }>{ protein | 0 } { protein > 0 ? "grams" : "gram" }</Text>
-          </View>
+              <View style={ s.box }>
+                <Text style={ s.boxTitle }>Proteins</Text>
+                <Text style={ s.boxSub }>{ protein | 0 } { protein > 0 ? "grams" : "gram" }</Text>
+              </View>
 
-          <View style={ s.box }>
-            <Text style={ s.boxTitle }>Fibers</Text>
-            <Text style={ s.boxSub }>{ fibers | 0 } { fibers > 0 ? "grams" : "gram" }</Text>
-          </View>
+              <View style={ s.box }>
+                <Text style={ s.boxTitle }>Fibers</Text>
+                <Text style={ s.boxSub }>{ fibers | 0 } { fibers > 0 ? "grams" : "gram" }</Text>
+              </View>
 
-          <View style={ s.box }>
-            <Text style={ s.boxTitle }>Sugars</Text>
-            <Text style={ s.boxSub }>{ sugars | 0 } { sugars > 0 ? "grams" : "gram" }</Text>
-          </View>
-        </View>
-        <View style={ s.botSection }>
-          <View style={ s.box }>
-            <Text style={ s.boxTitle }>Fats</Text>
-            <Text style={ s.boxSub }>{ fats | 0 } { fats > 0 ? "grams" : "gram" }</Text>
-          </View>
+              <View style={ s.box }>
+                <Text style={ s.boxTitle }>Sugars</Text>
+                <Text style={ s.boxSub }>{ sugars | 0 } { sugars > 0 ? "grams" : "gram" }</Text>
+              </View>
+            </View>
 
-          <View style={ s.box }>
-            <Text style={ s.boxTitle }>Cholesterol</Text>
-            <Text style={ s.boxSub }>{ cholesterols | 0 } { cholesterols > 0 ? "grams" : "gram" }</Text>
+            <View style={ s.botSection }>
+              <View style={ s.box }>
+                <Text style={ s.boxTitle }>Fats</Text>
+                <Text style={ s.boxSub }>{ fats | 0 } { fats > 0 ? "grams" : "gram" }</Text>
+              </View>
+
+              <View style={ s.box }>
+                <Text style={ s.boxTitle }>Cholesterol</Text>
+                <Text style={ s.boxSub }>{ cholesterols | 0 } { cholesterols > 0 ? "grams" : "gram" }</Text>
+              </View>
+            </View>  
           </View>
-        </View>
-      </View>
+        :
+          <RoundedBorderButton 
+            onPress={ () => dispatch( deleteManual( manualId ) ) }
+            text="Delete"
+            color={ LightMode.red }
+            textColor={ LightMode.white }
+            borderRadius={ 10 }
+            marginHori={ 0 }
+          />
+      }
     </View>
   )
 }
@@ -91,7 +114,7 @@ const s = StyleSheet.create({
   "image": {
     borderRadius: 10,
     width: 125,
-    height: "auto"
+    height: 75
   },
   "topSideContainer": {
     flex: 1,
@@ -141,6 +164,8 @@ const s = StyleSheet.create({
 })
 
 RecipeMoreDetails.propTypes = {
+  fromManual: PropTypes.bool,
+  manualId: PropTypes.number,
   name: PropTypes.string.isRequired, 
   image: PropTypes.any.isRequired, 
   calories: PropTypes.number.isRequired, 
@@ -150,4 +175,9 @@ RecipeMoreDetails.propTypes = {
   fats: PropTypes.number, 
   cholesterols: PropTypes.number, 
   sugars: PropTypes.number
+}
+
+RecipeMoreDetails.defaultProps = {
+  fromManual: false,
+  manualId: 0
 }

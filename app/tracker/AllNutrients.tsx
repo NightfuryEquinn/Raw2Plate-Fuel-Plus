@@ -1,14 +1,19 @@
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Pressable, Modal, Dimensions, Image } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
-import dayjs from 'dayjs'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Loading from 'app/Loading'
+import { LightMode } from 'assets/colors/LightMode'
+import Spacer from 'components/Spacer'
+import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
+import { NutrientCategory, nutrientCategory } from 'data/nutrientCategory'
+import dayjs from 'dayjs'
+import React, { useEffect, useRef, useState } from 'react'
+import { Dimensions, Image, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import DatePicker from 'react-native-ui-datepicker'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import TopBar from 'components/TopBar'
-import Spacer from 'components/Spacer'
-import { LightMode } from 'assets/colors/LightMode'
-import { NutrientCategory, nutrientCategory } from 'data/nutrientCategory'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchTrackerRecipes } from 'redux/actions/trackerAction'
+import { AppDispatch, RootState } from 'redux/reducers/store'
 
 interface DateItem {
   dayOfWeek: string,
@@ -16,6 +21,11 @@ interface DateItem {
 }
 
 export default function AllNutrients() {
+  const [ userSession, setUserSession ] = useState<any>( null )
+
+  const dispatch: AppDispatch = useDispatch()
+  const { data, loading, error } = useSelector(( state: RootState ) => state.tracker )
+
   const today = dayjs()
   const [ currentMonth, setCurrentMonth ] = useState( today )
   const [ selectedDate, setSelectedDate ] = useState( today.date() )
@@ -65,6 +75,26 @@ export default function AllNutrients() {
   }
 
   useEffect(() => {
+    const getUserSession = async () => {
+      const theUserSession = await AsyncStorage.getItem( "@user_session" )
+
+      if ( theUserSession !== null ) {
+        const parsed = JSON.parse( theUserSession )
+
+        setUserSession( parsed )
+      }
+    } 
+
+    getUserSession()
+  }, [])
+
+  useEffect(() => {
+    if ( userSession && !data[ 0 ].trackerRecipes ) {
+      dispatch( fetchTrackerRecipes( userSession.userId ))
+    }
+  }, [ userSession ])
+
+  useEffect(() => {
     const selectedIndex = dates.findIndex( date => date.dayOfMonth === selectedDate )
 
     if ( scrollRef.current && selectedIndex !== -1 ) {
@@ -78,6 +108,7 @@ export default function AllNutrients() {
   }, [ selectedDate, dates ])
   
   return (
+    loading ? <Loading /> :
     <SafeAreaView style={ s.container }>
       <View style={{ flex: 1 }}>
         <TopBar />

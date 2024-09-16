@@ -48,8 +48,64 @@ export const fetchRecipesNutrientsService = async ( theRecipeId: number ) => {
 /**
  * Fetch tracker recipes
  */
+export const fetchTrackerRecipesService = async ( theUserId: number ) => {
+  try {
+    const res: ApiRes<ReduxState[]> = await awsInstance.get( `/meal/tracker/${ theUserId }` )
 
+    if ( !res || res.data.length === 0 ) {
+      return []
+    }
+
+    const recipesWithNutrients = await Promise.all(
+      res.data.map( async ( recipe: any ) => {
+        const recipeNutrientsData = await spoonInstance.get( `/recipes/${ recipe.recipeId }/nutritionWidget.json` )
+        const recipeInfo = await spoonInstance.get( `/recipes/${ recipe.recipeId }/information` )
+        
+        return {
+          ...recipe,
+          recipeNutrients: recipeNutrientsData.data.nutrients,
+          recipeInfo: recipeInfo.data
+        }
+      })
+    )
+
+    console.log( "DONE - fetchTrackerRecipesService: Include nutrition: ", recipesWithNutrients )
+    return recipesWithNutrients
+  } catch ( error ) {
+    console.error( "ERROR - fetchTrackerRecipesService: ", error )
+
+    throw error
+  }
+}
+
+/**
+ * Fetch tracker manual recipes
+ */
+export const fetchTrackerManualService = async ( theUserId: number ) => {
+  try {
+    const res: ApiRes<ReduxState[]> = await awsInstance.get( `/manualmeal/tracker/${ theUserId }` )
+
+    console.log( "DONE - fetchTrackerManualService: ", res.data )
+    return res.data
+  } catch ( error ) {
+    console.error( "ERROR - fetchTrackerManualService: ", error )
+
+    throw error
+  }
+}
 
 /**
  * Delete manual added recipes
  */
+export const deleteManualService = async ( theManualId: number ) => {
+  try {
+    const res: ApiRes<ReduxState[]> = await awsInstance.delete( `/manualmeal/${ theManualId }` )
+
+    console.log( "DONE - deleteManualService: ", res.data )
+    return res.data
+  } catch ( error ) {
+    console.error( "ERROR - deleteManualService: ", error )
+
+    throw error
+  }
+}
