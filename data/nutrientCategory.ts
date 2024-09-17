@@ -4,6 +4,7 @@ export type NutrientCategory = {
   source: ImageSourcePropType
   label: string
   measurement: string
+  total?: number
 }
 
 export const nutrientCategory: NutrientCategory[] = [

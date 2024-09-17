@@ -6,7 +6,6 @@ import HoriSwipeCard from 'components/HoriSwipeCard';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import { useFontFromContext } from 'context/FontProvider';
-import { forCalendarOverview } from 'data/dummyData';
 import { mealCategories, MealCategory } from 'data/mealCategory';
 import dayjs from 'dayjs';
 import React, { Fragment, useEffect, useState } from 'react';

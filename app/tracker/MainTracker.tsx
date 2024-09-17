@@ -5,7 +5,6 @@ import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import TrackerPieChart from 'components/TrackerPieChart'
 import { useFontFromContext } from 'context/FontProvider'
-import { forMainTracker } from 'data/dummyData'
 import dayjs from 'dayjs'
 import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions, Image, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
@@ -75,6 +74,42 @@ export default function MainTracker( { navigation }: any ) {
   }
 
   const dates = generateDates()
+
+  const tabulateNutrients = () => {
+    let totalCal = 0
+    let totalManualCal = 0
+    let totalCarbs = 0
+    let totalProtein = 0
+    let totalFibers = 0
+    let totalFats = 0
+
+    const mealsToInclude = data[ 0 ].trackerRecipes.filter(( item: any ) => (
+      item.date === dayjs( `${ currentMonth.year() }-${ currentMonth.month() + 1 }-${ selectedDate }` ).format( "YYYY-MM-DD" )
+    ))
+
+    mealsToInclude.forEach(( data: any ) => {
+      totalCal += data.recipeNutrients[ 0 ].amount
+      totalCarbs += data.recipeNutrients[ 3 ].amount
+      totalProtein += data.recipeNutrients[ 8 ].amount
+      totalFibers += data.recipeNutrients[ 11 ].amount
+      totalFats += data.recipeNutrients[ 1 ].amount
+    })
+
+    const manualToInclude = data[ 0 ].trackerManual.filter(( item: any ) =>
+      item.date === dayjs( `${ currentMonth.year() }-${ currentMonth.month() + 1 }-${ selectedDate }` ).format( "YYYY-MM-DD" )
+    )
+
+    manualToInclude.forEach(( data: any ) => {
+      totalManualCal += data.calories
+    })
+
+    setCal( +totalCal.toFixed( 0 ) )
+    setManualCal( +totalManualCal.toFixed( 0 ) )
+    setCarbs( +totalCarbs.toFixed( 2 ) )
+    setProteins( +totalProtein.toFixed( 2 ) )
+    setFibers( +totalFibers.toFixed( 2 ) )
+    setFats( +totalFats.toFixed( 2 ) )
+  }
   
   const { fontsLoaded } = useFontFromContext()
 
@@ -112,41 +147,13 @@ export default function MainTracker( { navigation }: any ) {
         animated: true,
       })
     }
-
-    let totalCal = 0
-    let totalManualCal = 0
-    let totalCarbs = 0
-    let totalProtein = 0
-    let totalFibers = 0
-    let totalFats = 0
-
-    const mealsToInclude = data[ 0 ].trackerRecipes.filter(( item: any ) => (
-      item.date === dayjs( `${ currentMonth.year() }-${ currentMonth.month() + 1 }-${ selectedDate }` ).format( "YYYY-MM-DD" )
-    ))
-
-    mealsToInclude.forEach(( data: any ) => {
-      totalCal += data.recipeNutrients[ 0 ].amount
-      totalCarbs += data.recipeNutrients[ 3 ].amount
-      totalProtein += data.recipeNutrients[ 8 ].amount
-      totalFibers += data.recipeNutrients[ 11 ].amount
-      totalFats += data.recipeNutrients[ 1 ].amount
-    })
-
-    const manualToInclude = data[ 0 ].trackerManual.filter(( item: any ) =>
-      item.date === dayjs( `${ currentMonth.year() }-${ currentMonth.month() + 1 }-${ selectedDate }` ).format( "YYYY-MM-DD" )
-    )
-
-    manualToInclude.forEach(( data: any ) => {
-      totalManualCal += data.calories
-    })
-
-    setCal( +totalCal.toFixed( 0 ) )
-    setManualCal( +totalManualCal.toFixed( 0 ) )
-    setCarbs( +totalCarbs.toFixed( 2 ) )
-    setProteins( +totalProtein.toFixed( 2 ) )
-    setFibers( +totalFibers.toFixed( 2 ) )
-    setFats( +totalFats.toFixed( 2 ) )
   }, [ selectedDate, dates ])
+
+  useEffect(() => {
+    if ( data && data[ 0 ].trackerRecipes && data[ 0 ].trackerManual ) {
+      tabulateNutrients()
+    }
+  }, [ data, currentMonth, selectedDate ])
   
   return (
     loading ? <Loading /> :

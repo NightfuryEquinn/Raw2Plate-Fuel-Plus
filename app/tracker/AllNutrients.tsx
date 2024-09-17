@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { current } from '@reduxjs/toolkit'
 import Loading from 'app/Loading'
 import { LightMode } from 'assets/colors/LightMode'
+import EmptyContent from 'components/EmptyContent'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
@@ -30,6 +32,8 @@ export default function AllNutrients() {
   const [ currentMonth, setCurrentMonth ] = useState( today )
   const [ selectedDate, setSelectedDate ] = useState( today.date() )
   const scrollRef = useRef<ScrollView>( null )
+
+  const [ nutrients, setNutrients ] = useState<NutrientCategory[]>( [] )
 
   const [ modal, setModal ] = useState( false )
   const [ modalDate, setModalDate ] = useState( today )
@@ -67,6 +71,31 @@ export default function AllNutrients() {
   }
 
   const dates = generateDates()
+
+  const tabulateNutrients = () => {
+    let totalNutrients: NutrientCategory[] = nutrientCategory.map( nutrient => ({
+      ...nutrient,
+      total: 0
+    }))
+
+    if ( data[ 0 ].trackerRecipes ) {
+      const mealsToInclude = data[ 0 ].trackerRecipes.filter(( item: any ) =>
+        item.date === dayjs( `${ currentMonth.year() }-${ currentMonth.month() + 1 }-${ selectedDate }` ).format( "YYYY-MM-DD" )
+      )
+
+      mealsToInclude.forEach(( data: any ) => {
+        data.recipeNutrients.forEach(( nutrient: any ) => {
+          const nutrientIndex = totalNutrients.findIndex(( totalNutrient ) => totalNutrient.label.toLowerCase() === nutrient.name.toLowerCase() )
+  
+          if ( nutrientIndex !== -1 ) {
+            totalNutrients[ nutrientIndex ].total += nutrient.amount || 0 
+          }
+        }) 
+      })
+    }
+
+    setNutrients( totalNutrients )
+  }
   
   const { fontsLoaded } = useFontFromContext()
 
@@ -103,9 +132,13 @@ export default function AllNutrients() {
         animated: true,
       })
     }
-
-    // TODO: Get recipes nutritions to combine and display each nutrient value
   }, [ selectedDate, dates ])
+
+  useEffect(() => {
+    if ( data && data[ 0 ].trackerRecipes ) {
+      tabulateNutrients()
+    }
+  }, [ data, currentMonth, selectedDate ])
   
   return (
     loading ? <Loading /> :
@@ -192,7 +225,8 @@ export default function AllNutrients() {
           style={ s.nestedScroll }
         >
           {
-            nutrientCategory.map(( data: NutrientCategory, index: number ) => (
+            nutrients && nutrients.length > 0 ?
+            nutrients.map(( data: NutrientCategory, index: number ) => (
               <View 
                 key={ index } 
                 style={[ 
@@ -210,9 +244,13 @@ export default function AllNutrients() {
                   <Text style={ s.nutrientText }>{ data.label }</Text>
                 </View>
 
-                <Text style={ s.nutrientSub }>50 { data.measurement }</Text>
+                <Text style={ s.nutrientSub }>{ data.total?.toFixed( 2 ) } { data.measurement }</Text>
               </View>
             ))
+            :
+            <EmptyContent 
+              message="No recipes to analyze nutrients..."
+            />
           }
         </ScrollView>
       </View>
