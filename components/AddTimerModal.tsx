@@ -2,12 +2,14 @@ import { LightMode } from 'assets/colors/LightMode'
 import { useFontFromContext } from 'context/FontProvider'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
 import WheelPicker from 'react-native-wheely'
 import LinedTextField from './LinedTextField'
 import RoundedBorderButton from './RoundedBorderButton'
 import Spacer from './Spacer'
+import dayjs from 'dayjs'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function AddTimerModal( { modal, showModal, hour, min, sec, purpose, active, setHour, setMin, setSec, setPurpose, setActive }: any ) {
   const options: any[] = [
@@ -43,7 +45,45 @@ export default function AddTimerModal( { modal, showModal, hour, min, sec, purpo
 
   const timeOptions = ( range: number ) => {
     return Array.from( { length: range }, ( _, i ) => String( i ).padStart( 2, '0' ) )
-  };
+  }
+
+  const addTimer = async ( purpose: string, hour: number, min: number, sec: number ) => {
+    try {
+      const totalSeconds = hour * 3600 + min * 60 + sec
+
+      const newTimer = {
+        purpose,
+        startTime: dayjs().valueOf(),
+        duration: totalSeconds * 1000,
+        endTime: dayjs().add( totalSeconds, "second" ).valueOf()
+      }
+
+      const storedTimers = await AsyncStorage.getItem( "@timers" )
+      const timers = storedTimers ? JSON.parse( storedTimers ) : []
+
+      timers.push( newTimer )
+
+      await AsyncStorage.setItem( "@timers", JSON.stringify( timers ) )
+      
+      Alert.alert(
+        "Timer added!",
+        "Bao will notify you later when the timer is up!",
+        [
+          { text: "I Understood", style: "default" },
+        ]
+      )
+    } catch ( error ) {
+      console.error( "Error adding timer: ", error )
+
+      Alert.alert(
+        "Failed!",
+        "Unknown error occured, please try again!",
+        [
+          { text: "I Understood", style: "default" },
+        ]
+      )
+    }
+  }
   
   const { fontsLoaded } = useFontFromContext()
 
@@ -69,7 +109,6 @@ export default function AddTimerModal( { modal, showModal, hour, min, sec, purpo
 
             <Spacer size={ 20 } />
 
-            
             <View style={ s.content }>
               <Text style={ s.contentTitle }>Duration</Text>
 
@@ -162,7 +201,7 @@ export default function AddTimerModal( { modal, showModal, hour, min, sec, purpo
                   active === options.length - 1 &&
                   <LinedTextField 
                     name="notes" 
-                    text="" 
+                    text={ purpose }
                     placeholder="What's the timer for?" 
                     setText={ ( text: string ) => setPurpose( text ) }                
                   />
@@ -174,7 +213,10 @@ export default function AddTimerModal( { modal, showModal, hour, min, sec, purpo
 
             <View style={ s.buttonContainer }>
               <RoundedBorderButton 
-                onPress={ showModal }
+                onPress={ () => {
+                  addTimer( purpose, hour, min, sec )
+                  showModal()
+                }}
                 text="Done"
                 color={ LightMode.yellow }
                 textColor={ LightMode.white }

@@ -7,6 +7,10 @@
       "ios",
       "android"
     ],
+    "notification": {
+      "icon": "./assets/images/logos/white_text_high_res.png",
+      "color": "#FEFFFF"
+    },
     "backgroundColor": "#FAFAFA",
     "version": "1.0.0",
     "orientation": "portrait",

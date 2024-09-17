@@ -3,12 +3,13 @@ import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
 import { Audio } from 'expo-av'
 import * as Location from 'expo-location'
-import * as Notifications from 'expo-notifications';
+import * as Notifications from 'expo-notifications'
 import React, { useEffect, useState } from 'react'
 import { Alert, Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useSelector } from 'react-redux'
 import { RootState } from 'redux/reducers/store'
+import Loading from './Loading'
 
 export default function Settings() {
   const { data, loading, error } = useSelector(( state: RootState ) => state.user )
@@ -129,6 +130,7 @@ export default function Settings() {
   }, [])
 
   return (
+    loading ? <Loading /> :
     <SafeAreaView style={ s.container }>
       <View style={{ flex: 1 }}>
         <TopBar />

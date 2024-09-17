@@ -1,6 +1,5 @@
 import { LightMode } from 'assets/colors/LightMode'
 import { useFontFromContext } from 'context/FontProvider'
-import { forViewCalendar } from 'data/dummyData'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { FlatList, StyleSheet, Text, View } from 'react-native'
@@ -21,7 +20,7 @@ export default function HoriScrollRecipes( { navigation, title, data }: any ) {
       data={ item }
       fontSize={ 14 }
       textAlign="left"
-      last={ index === forViewCalendar.length - 1 && true }
+      last={ index === data.length - 1 && true }
     />
   )
   

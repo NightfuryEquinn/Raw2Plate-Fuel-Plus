@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { LightMode } from 'assets/colors/LightMode'
 import AddTimerHoriCard from 'components/AddTimerHoriCard'
 import AddTimerModal from 'components/AddTimerModal'
@@ -6,12 +7,15 @@ import TimerHoriCard from 'components/TimerHoriCard'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
 import { forTimer } from 'data/dummyData'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function Timer() {
   const [ modal, setModal ] = useState( false )
+  const [ timers, setTimers ] = useState( [] )
+  const [ refreshing, setRefreshing ] = useState( false )
+
   const [ hour, setHour ] = useState( 0 )
   const [ min, setMin ] = useState( 0 )
   const [ sec, setSec ] = useState( 0 )
@@ -21,9 +25,10 @@ export default function Timer() {
   const TimerItem = ( { item, index }: any ) => (
     <TimerHoriCard
       key={ index }
-      heading={ item.heading }
-      timeInSec={ item.timeInSec }
-      isRunning={ item.isRunning }
+      timer={ item }
+      heading={ item.purpose }
+      timeInSec={ item.duration / 1000 }
+      isRunning={ true }
     />
   )
 
@@ -31,11 +36,43 @@ export default function Timer() {
     setModal( !modal )
   }
 
+  const onRefresh = () => {
+    const loadTimers = async () => {
+      try { 
+        const savedTimers = await AsyncStorage.getItem( "@timers" )
+
+        if ( savedTimers ) {
+          setTimers( JSON.parse( savedTimers ) )
+        }
+      } catch ( error ) {
+        console.error( "Error getting saved timers: ", error )
+      }
+    }
+
+    loadTimers()
+  }
+
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
     return null
   } 
+
+  useEffect(() => {
+    const loadTimers = async () => {
+      try { 
+        const savedTimers = await AsyncStorage.getItem( "@timers" )
+
+        if ( savedTimers ) {
+          setTimers( JSON.parse( savedTimers ) )
+        }
+      } catch ( error ) {
+        console.error( "Error getting saved timers: ", error )
+      }
+    }
+
+    loadTimers()
+  }, [])
   
   return (
     <SafeAreaView style={ s.container }>        
@@ -53,12 +90,14 @@ export default function Timer() {
         <Spacer size={ 20 } />
 
         <FlatList 
+          refreshing={ refreshing }
+          onRefresh={ onRefresh }
           style={ s.flatList }
           showsVerticalScrollIndicator={ false }
           contentContainerStyle={{ padding: 20 }}
-          data={ forTimer }
+          data={ timers }
           renderItem={ TimerItem }
-          keyExtractor={ data => data.id.toString() }
+          keyExtractor={ ( _, index ) => index.toString() }
           ItemSeparatorComponent={ () => <Spacer size={ 15 } /> }
           ListHeaderComponent={
             <AddTimerHoriCard 

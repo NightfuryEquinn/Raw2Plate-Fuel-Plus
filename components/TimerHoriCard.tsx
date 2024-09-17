@@ -1,12 +1,12 @@
 import { LightMode } from 'assets/colors/LightMode';
+import { triggerNotification } from 'config/notificationInstance';
 import { useFontFromContext } from 'context/FontProvider';
 import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import IconMA from 'react-native-vector-icons/MaterialIcons';
+import { Alert, Image, StyleSheet, Text, View } from 'react-native';
 
-export default function TimerHoriCard( { heading, timeInSec, isRunning }: any ) {
+export default function TimerHoriCard( { timer, heading, timeInSec, isRunning }: any ) {
   const defaultImage: any = {
     baking: require( "../assets/images/icons/baking.png" ),
     boiling: require( "../assets/images/icons/boiling.png" ),
@@ -27,8 +27,7 @@ export default function TimerHoriCard( { heading, timeInSec, isRunning }: any ) 
   }
 
   const triggerAlarm = () => {
-    Alert.alert( "Timer reminder:", `${ heading }` )
-    // TODO: Add notification reminder with sound
+    Alert.alert( `Task: ${ heading }`, `Time's up. Continue to work! Chop, chop, chop!` )
   }
   
   const { fontsLoaded } = useFontFromContext()
@@ -47,6 +46,7 @@ export default function TimerHoriCard( { heading, timeInSec, isRunning }: any ) 
     } else if ( remain === 0 ) {
       clearInterval( interval )
       triggerAlarm()
+      triggerNotification( timer )
     }
 
     return () => clearInterval( interval )
@@ -58,7 +58,7 @@ export default function TimerHoriCard( { heading, timeInSec, isRunning }: any ) 
         <View style={ s.iconWrapper }>
           <Image
             resizeMode="cover"
-            source={ defaultImage[ heading.toLowerCase() ] || require( "../assets/images/icons/timer.png" ) }
+            source={ defaultImage[ heading?.toLowerCase() ] || require( "../assets/images/icons/timer.png" ) }
             style={ s.image }
           />
         </View>
@@ -67,20 +67,6 @@ export default function TimerHoriCard( { heading, timeInSec, isRunning }: any ) 
           <Text style={ s.time }>{ convertSecondsToHMS( remain ) }</Text>
 
           <Text style={ s.heading }>{ heading }</Text>
-        </View>
-
-        <View style={ s.iconWrapper }>
-          <TouchableOpacity
-            activeOpacity={ 0.5 }
-            onPress={ () => console.log( "Delete Timer" ) }
-            style={ s.icon }
-          >
-            <IconMA 
-              name="delete"
-              color={ LightMode.red }
-              size={ 32 }
-            />
-          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -126,26 +112,11 @@ const s = StyleSheet.create({
   "iconWrapper": {
     justifyContent: "center",
     alignItems: "center"
-  },
-  "icon": {
-    width: 44,
-    height: 44,
-    borderRadius: 10,
-    backgroundColor: LightMode.white,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: LightMode.black,
-    shadowOffset: {
-      width: 4,
-      height: 4
-    },
-    shadowOpacity: 0.375,
-    shadowRadius: 6,
-    elevation: 10,
   }
 })
 
 TimerHoriCard.propTypes = {
+  timer: PropTypes.any.isRequired,
   heading: PropTypes.string.isRequired,
   timeInSec: PropTypes.number.isRequired,
   isRunning: PropTypes.bool.isRequired

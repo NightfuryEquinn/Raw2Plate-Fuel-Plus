@@ -5,11 +5,10 @@ import HoriScrollRecipes from 'components/HoriScrollRecipes';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import { useFontFromContext } from 'context/FontProvider';
-import { forViewCalendar } from 'data/dummyData';
 import { mealCategories, MealCategory } from 'data/mealCategory';
 import dayjs from 'dayjs';
 import React, { useEffect, useRef, useState } from 'react';
-import { Dimensions, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Modal, Pressable, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DatePicker from 'react-native-ui-datepicker';
 import IconMA from 'react-native-vector-icons/MaterialIcons';
@@ -35,6 +34,8 @@ export default function ViewCalendar( { navigation }: any ) {
 
   const [ modal, setModal ] = useState( false )
   const [ modalDate, setModalDate ] = useState( today )
+
+  const [ refreshing, setRefreshing ] = useState( false )
 
   const showModal = () => {
     setModal( !modal )
@@ -74,6 +75,22 @@ export default function ViewCalendar( { navigation }: any ) {
 
   const dates = generateDates()
 
+  const onRefresh = () => {
+    setRefreshing( true )
+
+    if ( userSession ) {
+      dispatch( fetchPlannerRecipes( userSession.userId ) )
+
+      const theRecipeIds = data[ 0 ].plannerRecipes.map(
+        ( item: any ) => item.recipeId
+      ).join( "," )
+
+      dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
+    }
+
+    setRefreshing( false )
+  }
+
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
@@ -108,7 +125,7 @@ export default function ViewCalendar( { navigation }: any ) {
 
       dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
     }
-  }, [ data ])
+  }, [ data[ 0 ].plannerRecipes ])
 
   useEffect(() => {
     const selectedIndex = dates.findIndex( date => date.dayOfMonth === selectedDate )
@@ -215,6 +232,12 @@ export default function ViewCalendar( { navigation }: any ) {
           contentContainerStyle={{ paddingHorizontal: 20 }}
           style={ s.nestedScroll }
           showsVerticalScrollIndicator={ false }
+          refreshControl={
+            <RefreshControl 
+              refreshing={ refreshing }
+              onRefresh={ onRefresh } 
+            />
+          }
         >
           {
             mealCategories.map(( meal: MealCategory, index: number ) => {
