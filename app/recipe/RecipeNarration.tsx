@@ -1,4 +1,4 @@
-import Voice from '@wdragon/react-native-voice'
+import Voice from '@react-native-community/voice'
 import { LightMode } from 'assets/colors/LightMode'
 import ConfirmationModal from 'components/ConfirmationModal'
 import RoundedBorderButton from 'components/RoundedBorderButton'
@@ -12,20 +12,30 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 export default function RecipeNarration( { navigation, route }: any ) {
   const { recipeTitle, recipeSteps } = route.params
 
+  let speechTimeout: any = null
+
   const [ numberSteps, setNumberSteps ] = useState( 0 )
-  const [ isRecord, setIsRecord ] = useState( false )
+
   const [ modal, setModal ] = useState( false )
 
   const showModal = () => { 
     setModal( !modal )
   }
 
-  const backStep = () => {
-    Voice.destroy().then( Voice.removeAllListeners )
+  const tellStep = () => {
+    Speech.speak( recipeSteps[ numberSteps ], {
+      pitch: 0.95,
+      rate: 0.95,
+      onDone: onRecord
+    })
+  }
 
+  const backStep = () => {
     if ( numberSteps !== 0 ) {
       setNumberSteps( numberSteps - 1 )
       Speech.stop()
+      Voice.stop()
+
       Speech.speak( recipeSteps[ numberSteps - 1 ], {
         pitch: 0.95,
         rate: 0.95,
@@ -33,6 +43,8 @@ export default function RecipeNarration( { navigation, route }: any ) {
       })
     } else {
       Speech.stop()
+      Voice.stop()
+
       Speech.speak( recipeSteps[ numberSteps ], {
         pitch: 0.95,
         rate: 0.95,
@@ -42,10 +54,10 @@ export default function RecipeNarration( { navigation, route }: any ) {
   }
 
   const nextStep = () => {
-    Voice.destroy().then( Voice.removeAllListeners )
-
     setNumberSteps( numberSteps + 1 )
     Speech.stop()
+    Voice.stop()
+
     Speech.speak( recipeSteps[ numberSteps + 1 ], {
       pitch: 0.95,
       rate: 0.95,
@@ -55,48 +67,58 @@ export default function RecipeNarration( { navigation, route }: any ) {
 
   const endStep = () => {
     Speech.stop()
-    Voice.destroy().then( Voice.removeAllListeners )
+    Voice.stop()
     navigation.goBack() 
   }
+
+  const handleSpeechCommand = ( command: string ) => {
+    if ( speechTimeout ) clearTimeout( speechTimeout );
+  
+    speechTimeout = setTimeout( () => {
+      if ( command.includes( "next" ) ) {
+        nextStep()
+      } 
+      
+      if ( command.includes( "back" ) ) {
+        backStep()
+      } 
+      if ( [ "stop", "end", "done", "finish" ].some( word => command.includes( word ) ) ) {
+        endStep()
+      } 
+      if ( [ "tell", "again", "repeat" ].some( word => command.includes( word ) ) ) {
+        tellStep()
+      }
+    }, 1000 )
+  }
+  
 
   const onSpeechStart = () => {
     console.log( "Speech Start" )
   }
 
   const onSpeechRecognized = () => {
-    console.log( "Speech Recognizing" )
+    console.log( "Speech Recognized" )
   }
 
   const onSpeechEnd = () => {
     console.log( "Speech End" )
-    setIsRecord( false )
+    onRecord()
+  }
 
-    // TODO: Auto start if didn't go to next step, avoid recalling onRecord if gone to next step
+  const onSpeechPartialResults = ( e: any ) => {
+    console.log( "Speech Partials Result: ", e.value[ 0 ] )
+
+    handleSpeechCommand( e.value[ 0 ].toLowerCase() )
   }
 
   const onSpeechResults = ( e: any ) => {
-    console.log( "Speech Result" )
-    console.log( e.value[ 0 ] )
+    console.log( "Speech Result: ", e.value[ 0 ] )
 
-    const speechText = e.value[ 0 ].toLowerCase()
-
-    if ( speechText.includes( "next" ) ) {
-      nextStep()
-    } else if ( speechText.includes( "back" ) ) {
-      backStep()
-    } else if ( speechText.includes( "stop" ) ) {
-      endStep()
-    }
+    handleSpeechCommand( e.value[ 0 ].toLowerCase() )
   }
 
   const onRecord = () => {
-    if ( isRecord ) {
-      Voice.destroy().then( Voice.removeAllListeners )
-    } else {
-      Voice.start( "en-US" )
-    }
-
-    setIsRecord( !isRecord )
+    Voice.start( "en-US" )
   }
 
   const { fontsLoaded } = useFontFromContext()
@@ -110,11 +132,12 @@ export default function RecipeNarration( { navigation, route }: any ) {
       pitch: 0.95,
       rate: 0.95,
       onDone: onRecord
-    })
+    } )
 
     Voice.onSpeechStart = onSpeechStart
     Voice.onSpeechRecognized = onSpeechRecognized
     Voice.onSpeechEnd = onSpeechEnd
+    Voice.onSpeechPartialResults = onSpeechPartialResults
     Voice.onSpeechResults = onSpeechResults
 
     return () => {

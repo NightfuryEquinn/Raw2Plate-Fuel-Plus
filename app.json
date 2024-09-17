@@ -36,9 +36,6 @@
     },
     "web": {
       "favicon": "./assets/images/logos/white_no_text.png"
-    },
-    "plugins": [
-      "@wdragon/react-native-voice"
-    ]
+    }
   }
 }

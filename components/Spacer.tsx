@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { View } from 'react-native'
 
-export default function Spacer( { horizontal, size }: any ) {
+export default function Spacer( { horizontal = false, size }: any ) {
   const defaultValue = "auto"
   
   return (
@@ -19,8 +19,4 @@ Spacer.propTypes = {
     PropTypes.string
   ]).isRequired,
   horizontal: PropTypes.bool,
-}
-
-Spacer.defaultProps = {
-  horizontal: false
 }

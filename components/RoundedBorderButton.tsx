@@ -6,7 +6,7 @@ import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import IconMA from 'react-native-vector-icons/MaterialIcons';
 
-export default function RoundedBorderButton( { onPress, disabled, icon, name, text, color, textColor, borderRadius, marginHori }: any ) {  
+export default function RoundedBorderButton( { onPress, disabled = false, icon = "FA", name = "", text, color, textColor, borderRadius, marginHori = 20 }: any ) {  
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
@@ -88,11 +88,4 @@ RoundedBorderButton.propTypes = {
     PropTypes.number,
     PropTypes.string
   ]),
-}
-
-RoundedBorderButton.defaultProps = {
-  disabled: false,
-  icon: "FA",
-  name: "",
-  marginHori: 20,
 }
