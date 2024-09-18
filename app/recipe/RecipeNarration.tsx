@@ -114,7 +114,8 @@ export default function RecipeNarration( { navigation, route }: any ) {
   }
 
   const onRecord = () => {
-    Voice.stop().then(() => Voice.start( "en-US" ) )
+    Voice.stop()
+    Voice.start( "en-US" )
   }
 
   const { fontsLoaded } = useFontFromContext()

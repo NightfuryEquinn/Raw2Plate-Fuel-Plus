@@ -59,7 +59,16 @@ export default function AppStack() {
     return !Object.values( session ).some( 
       value => value !== null && value !== '' && value !== false 
     )
-  };
+  }
+
+  const linking = {
+    prefixes: [ "bao://" ],
+    config: {
+      screens: {
+        RecipeDetail: "recipe/:id"
+      }
+    }
+  }
 
   const { fontsLoaded } = useFontFromContext()
 
@@ -68,7 +77,10 @@ export default function AppStack() {
   }
   
   return (
-    <NavigationContainer theme={ theme }>
+    <NavigationContainer 
+      theme={ theme } 
+      linking={ linking }
+    >
       { !isUserSessionEmpty( data[ 0 ].setUserSession ) ? <MainStack /> : <LandingStack /> }
     </NavigationContainer>
   )

@@ -36,6 +36,7 @@ export default function RecipeSelectionModal({
           mealId: 0,
           mealType: mealCategories[ selectedMeal ].label,
           recipeId: item.id,
+          comment: "",
           plannerId: 0,
           trackerId: 0,
         }

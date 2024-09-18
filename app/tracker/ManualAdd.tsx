@@ -95,6 +95,7 @@ export default function ManualAdd( { navigation }: any ) {
           mealId: 0,
           mealType: dropValue,
           recipeId: selectedRecipe.id,
+          comment: "",
           plannerId: 0,
           trackerId: 0,
         }

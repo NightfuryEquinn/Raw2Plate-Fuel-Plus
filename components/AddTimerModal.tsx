@@ -11,7 +11,7 @@ import Spacer from './Spacer'
 import dayjs from 'dayjs'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export default function AddTimerModal( { modal, showModal, hour, min, sec, purpose, active, setHour, setMin, setSec, setPurpose, setActive }: any ) {
+export default function AddTimerModal( { modal, showModal, loadTimers, hour, min, sec, purpose, active, setHour, setMin, setSec, setPurpose, setActive }: any ) {
   const options: any[] = [
     { 
       purpose: "Baking",
@@ -49,6 +49,7 @@ export default function AddTimerModal( { modal, showModal, hour, min, sec, purpo
 
   const addTimer = async ( purpose: string, hour: number, min: number, sec: number ) => {
     try {
+      const currentTime = dayjs()
       const totalSeconds = hour * 3600 + min * 60 + sec
 
       const newTimer = {
@@ -61,9 +62,19 @@ export default function AddTimerModal( { modal, showModal, hour, min, sec, purpo
       const storedTimers = await AsyncStorage.getItem( "@timers" )
       const timers = storedTimers ? JSON.parse( storedTimers ) : []
 
-      timers.push( newTimer )
+      // Filter expired timers and trigger notifications
+      const activeTimers = timers.filter(( timer: any ) => {
+        if ( currentTime >= timer.endTime ) {
+          return false
+        }
 
-      await AsyncStorage.setItem( "@timers", JSON.stringify( timers ) )
+        return true
+      })
+
+      activeTimers.push( newTimer )
+      loadTimers( activeTimers )
+
+      await AsyncStorage.setItem( "@timers", JSON.stringify( activeTimers ) )
       
       Alert.alert(
         "Timer added!",
@@ -217,7 +228,7 @@ export default function AddTimerModal( { modal, showModal, hour, min, sec, purpo
                   addTimer( purpose, hour, min, sec )
                   showModal()
                 }}
-                text="Done"
+                text="Add Timer"
                 color={ LightMode.yellow }
                 textColor={ LightMode.white }
                 borderRadius={ 10 }
@@ -276,7 +287,7 @@ const s = StyleSheet.create({
     color: LightMode.black,
   },
   "content": {
-    // flex: 1,
+    flex: 1,
     gap: 10,
   },
   "contentTitle": {
@@ -370,6 +381,7 @@ const s = StyleSheet.create({
 AddTimerModal.propTypes = {
   modal: PropTypes.bool.isRequired,
   showModal: PropTypes.func.isRequired,
+  loadTimers: PropTypes.any.isRequired,
   hour: PropTypes.number.isRequired,
   min: PropTypes.number.isRequired,
   sec: PropTypes.number.isRequired,

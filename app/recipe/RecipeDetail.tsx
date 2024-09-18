@@ -17,9 +17,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addRecipesPlanner, bookmarkRecipe, fetchRecipeInfo, fetchRecipeIngreSteps } from 'redux/actions/recipeAction'
 import { deleteBookmark } from 'redux/actions/userAction'
 import { AppDispatch, RootState } from 'redux/reducers/store'
+import Share from 'react-native-share';
 
 export default function RecipeDetail( { navigation, route }: any ) {
-  const { recipeId, inBookmark } = route.params
+  const { info, recipeId, inBookmark } = route.params
   const [ userSession, setUserSession ] = useState<any>( null )
 
   const dispatch: AppDispatch = useDispatch()
@@ -46,12 +47,30 @@ export default function RecipeDetail( { navigation, route }: any ) {
   const [ trackModal, setTrackModal ] = useState( false )
   const [ trackModalDate, setTrackModalDate ] = useState( dayjs() )
 
+  const [ comment, setComment ] = useState( "" )
+
   const showModal = () => {
     setModal( !modal )
   }
 
   const showTrackModal = () => {
     setTrackModal( !trackModal )
+  }
+
+  const shareRecipe = () => {
+    const recipeUrl = `bao://recipe/${ recipeId }`
+
+    const shareOptions = {
+      title: "Check out this recipe from Bao!",
+      message: `To see the information about the recipes, click here:`,
+      url: `${ recipeUrl }`,
+      
+      social: Share.Social.WHATSAPP
+    }
+
+    Share.open( shareOptions )
+      .then(( res ) => console.log( "Success sharing: ", res ) )
+      .catch(( err ) => console.error( "Error sharing: ", err ) )
   }
 
   const cacheIngredients = ( recipe: any ) => {
@@ -154,7 +173,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
     }
   }
 
-  const addToPlannerPress = async () => {
+  const addToPlannerTrackerPress = async () => {
     try {
       const res = await dispatch( addRecipesPlanner(
         userSession.userId,
@@ -163,6 +182,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
           mealId: 0,
           mealType: dropValue,
           recipeId: recipeId,
+          comment: comment,
           plannerId: 0,
           trackerId: 0
         }
@@ -256,7 +276,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
 
             <TouchableOpacity
               activeOpacity={ 0.5 }
-              onPress={ () => console.log( "Share" ) }
+              onPress={ shareRecipe }
               style={ s.iconContainer }
             >
               <IconMA 
@@ -290,6 +310,21 @@ export default function RecipeDetail( { navigation, route }: any ) {
           <Spacer size={ 20 } />
 
           <View style={ s.section }>
+            <View style={ s.sectionContainer }>
+              <Image 
+                resizeMode="cover"
+                source={ require( "../../assets/images/icons/comments.png" ) }
+                style={ s.icon }
+              />
+
+              <Text style={ s.sectionHeading }>Your Comments for Reference</Text>
+            </View>
+
+            <View style={[ s.sectionContent, { gap: 5 } ]}>
+              <Text style={ s.hintText }>NOTE: Remove and re-add the recipes to change comment.</Text>
+              <Text style={[ s.boxText, { color: LightMode.black, fontSize: 16, textTransform: "capitalize" } ]}>{ info.comment }</Text>
+            </View>
+
             <View style={ s.sectionContainer }>
               <Image 
                 resizeMode="cover"
@@ -470,6 +505,8 @@ export default function RecipeDetail( { navigation, route }: any ) {
       </View>
 
       <AddRecipeToPlannerModal 
+        comment={ comment }
+        setComment={ setComment }
         modal={ modal }
         showModal={ showModal }
         modalDate= { modalDate }
@@ -479,10 +516,12 @@ export default function RecipeDetail( { navigation, route }: any ) {
         dropItems={ dropItems }
         setOpenDrop={ setOpenDrop }
         setDropValue={ setDropValue }
-        save={ addToPlannerPress }
+        save={ addToPlannerTrackerPress }
       />
 
       <AddRecipeToTrackerModal 
+        comment={ comment }
+        setComment={ setComment }
         modal={ trackModal }
         showModal={ showTrackModal }
         modalDate={ trackModalDate }
@@ -492,11 +531,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
         dropItems={ dropItems }
         setOpenDrop={ setOpenDrop }
         setDropValue={ setDropValue }
-        save={ () => {
-          console.log( "Save to Tracker" )
-          console.log( dropValue )
-          showTrackModal()
-        }}
+        save={ addToPlannerTrackerPress }
       />
     </SafeAreaView>
   )
@@ -629,5 +664,10 @@ const s = StyleSheet.create({
     fontFamily: "cantarell",
     fontSize: 12,
     color: LightMode.white,
+  },
+  "hintText": {
+    fontFamily: "cantarell",
+    fontSize: 12,
+    color: LightMode.halfBlack
   }
 })

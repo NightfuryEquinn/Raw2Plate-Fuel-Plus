@@ -33,8 +33,9 @@ export default function Bookmark() {
   const SearchItem = ( { item, index }: any ) => (
     <HoriCardWithCTA 
       key={ index }
-      onPress={ () => navigation.navigate( "RecipeDetail", { recipeId: item.id, inBookmark: true } ) }
+      onPress={ () => navigation.navigate( "RecipeDetail", { info: item, recipeId: item.id, inBookmark: true } ) }
       data={ item }
+      changeOrAdd=""
     />
   )
 

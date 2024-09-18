@@ -3,6 +3,9 @@
   "compilerOptions": {
     "strict": true,
     "baseUrl": "./",
-    "types": ["redux-persist"]
+    "types": ["redux-persist"],
+    "paths": {
+      "@firebase/auth": ["./node_modules/@firebase/auth/dist/index.rn.d.ts"]
+    }
   },
 }

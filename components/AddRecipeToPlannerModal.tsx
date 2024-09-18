@@ -6,8 +6,9 @@ import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import DropDownPicker from 'react-native-dropdown-picker'
 import DatePicker from 'react-native-ui-datepicker'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
+import LinedTextField from './LinedTextField'
 
-export default function AddRecipeToPlannerModal( { modal, showModal, modalDate, setModalDate, openDrop, dropValue, dropItems, setOpenDrop, setDropValue, save }: any ) {
+export default function AddRecipeToPlannerModal( { comment = "", setComment = null, modal, showModal, modalDate, setModalDate, openDrop, dropValue, dropItems, setOpenDrop, setDropValue, save }: any ) {
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
@@ -52,6 +53,13 @@ export default function AddRecipeToPlannerModal( { modal, showModal, modalDate, 
             headerButtonColor={ LightMode.black }
             todayTextStyle={{ fontFamily: "fjalla" }}
             weekDaysTextStyle={{ fontFamily: "fjalla" }}
+          />
+
+          <LinedTextField 
+            name="new-label"
+            placeholder="Leave a comment..."
+            text={ comment }
+            setText={ setComment }
           />
 
           <View style={ s.buttonContainer }>
@@ -130,6 +138,8 @@ const s = StyleSheet.create({
 })
 
 AddRecipeToPlannerModal.propTypes = {
+  comment: PropTypes.string,
+  setComment: PropTypes.func,
   modal: PropTypes.bool.isRequired,
   showModal: PropTypes.func.isRequired,
   modalDate: PropTypes.any.isRequired,

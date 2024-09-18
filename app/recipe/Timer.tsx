@@ -6,6 +6,7 @@ import Spacer from 'components/Spacer'
 import TimerHoriCard from 'components/TimerHoriCard'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
+import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -31,24 +32,40 @@ export default function Timer() {
     />
   )
 
+  const loadTimers = async () => {
+    try { 
+      const currentTime = dayjs()
+      const savedTimers = await AsyncStorage.getItem( "@timers" )
+
+      if ( savedTimers ) {
+        const parsedTimers = JSON.parse( savedTimers ) 
+
+        // Filter expired timers and trigger notifications
+        const activeTimers = parsedTimers.filter(( timer: any ) => {
+          if ( currentTime >= timer.endTime ) {
+            return false
+          }
+
+          return true
+        })
+
+        setTimers( activeTimers )
+      }
+    } catch ( error ) {
+      console.error( "Error getting saved timers: ", error )
+    }
+  }
+
   const showModal = () => {
     setModal( !modal )
   }
 
   const onRefresh = () => {
-    const loadTimers = async () => {
-      try { 
-        const savedTimers = await AsyncStorage.getItem( "@timers" )
-
-        if ( savedTimers ) {
-          setTimers( JSON.parse( savedTimers ) )
-        }
-      } catch ( error ) {
-        console.error( "Error getting saved timers: ", error )
-      }
-    }
+    setRefreshing( true )
 
     loadTimers()
+
+    setRefreshing( false )
   }
 
   const { fontsLoaded } = useFontFromContext()
@@ -58,18 +75,6 @@ export default function Timer() {
   } 
 
   useEffect(() => {
-    const loadTimers = async () => {
-      try { 
-        const savedTimers = await AsyncStorage.getItem( "@timers" )
-
-        if ( savedTimers ) {
-          setTimers( JSON.parse( savedTimers ) )
-        }
-      } catch ( error ) {
-        console.error( "Error getting saved timers: ", error )
-      }
-    }
-
     loadTimers()
   }, [])
   
@@ -84,7 +89,7 @@ export default function Timer() {
 
         <Spacer size={ 5 } />
 
-        <Text style={ s.sub }>A wise once said: "Please don't burn the kitchen..."</Text>
+        <Text style={ s.sub }>A wise once said: "Refresh to see your timers..."</Text>
       
         <Spacer size={ 20 } />
 
@@ -109,6 +114,7 @@ export default function Timer() {
       <AddTimerModal 
         modal={ modal }
         showModal={ showModal }
+        loadTimers={ setTimers }
         hour={ hour }
         min={ min }
         sec={ sec }

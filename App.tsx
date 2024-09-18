@@ -5,10 +5,13 @@ import { FontProvider } from 'context/FontProvider';
 import { registerRootComponent } from 'expo';
 import * as Notifications from 'expo-notifications';
 import React, { useEffect } from 'react';
-import { Alert, Linking } from 'react-native';
+import { Alert, Linking, LogBox } from 'react-native';
 import { configureFonts, DefaultTheme, PaperProvider } from 'react-native-paper';
 import { Provider } from 'react-redux';
 import { store } from 'redux/reducers/store';
+
+// Ignore library warning due to react native versioning
+LogBox.ignoreAllLogs()
 
 export default function App() {
   const fontConfig = {
