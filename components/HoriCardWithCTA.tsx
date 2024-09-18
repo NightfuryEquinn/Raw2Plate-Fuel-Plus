@@ -5,7 +5,7 @@ import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
 
-export default function HoriCardWithCTA( { changeOrAdd, onPress, data }: any ) {
+export default function HoriCardWithCTA( { changeOrAdd = "", onPress, data }: any ) {
   return (
     <View style={ s.container }>
       <Image 
@@ -130,8 +130,4 @@ HoriCardWithCTA.propTypes = {
   changeOrAdd: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
   data: PropTypes.any.isRequired
-}
-
-HoriCardWithCTA.defaultProps = {
-  changeOrAdd: ""
 }

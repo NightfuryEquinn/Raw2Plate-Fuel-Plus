@@ -9,7 +9,7 @@ import { AppDispatch } from 'redux/reducers/store'
 import { useDispatch } from 'react-redux'
 import { deleteManual } from 'redux/actions/trackerAction'
 
-export default function RecipeMoreDetails( { fromManual, manualId, name, image, calories, carbo, protein, fibers, fats, cholesterols, sugars }: any ) {
+export default function RecipeMoreDetails( { fromManual = false, manualId = 0, name, image, calories, carbo, protein, fibers, fats, cholesterols, sugars }: any ) {
   const dispatch: AppDispatch = useDispatch()
   
   const { fontsLoaded } = useFontFromContext()
@@ -175,9 +175,4 @@ RecipeMoreDetails.propTypes = {
   fats: PropTypes.number, 
   cholesterols: PropTypes.number, 
   sugars: PropTypes.number
-}
-
-RecipeMoreDetails.defaultProps = {
-  fromManual: false,
-  manualId: 0
 }

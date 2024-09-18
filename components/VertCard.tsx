@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
-export default function VertCard( { onPress, width, height, fontSize, textAlign, data, last }: any ) {
+export default function VertCard( { onPress, width, height, fontSize = 12, textAlign = "center", data, last = false }: any ) {
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
@@ -63,10 +63,4 @@ VertCard.propTypes = {
   fontSize: PropTypes.number,
   textAlign: PropTypes.string,
   last: PropTypes.bool.isRequired,
-}
-
-VertCard.defaultProps = {
-  fontSize: 12,
-  textAlign: "center",
-  last: false
 }

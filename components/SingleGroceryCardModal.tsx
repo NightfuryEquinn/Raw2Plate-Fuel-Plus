@@ -10,7 +10,7 @@ import { AppDispatch } from 'redux/reducers/store'
 import { useDispatch } from 'react-redux'
 import { addItemCart, updateItemCart } from 'redux/actions/groceryAction'
 
-export default function SingleGroceryCardModal( { userId, data, modal, showModal, quantity, setQuantity, editable }: any ) {
+export default function SingleGroceryCardModal( { userId, data, modal, showModal, quantity, setQuantity, editable = false }: any ) {
   const dispatch: AppDispatch = useDispatch()
   
   const { fontsLoaded } = useFontFromContext()
@@ -229,8 +229,4 @@ SingleGroceryCardModal.propTypes = {
   quantity: PropTypes.number.isRequired,
   setQuantity: PropTypes.func.isRequired,
   editable: PropTypes.bool
-}
-
-SingleGroceryCardModal.defaultProps = {
-  editable: false
 }

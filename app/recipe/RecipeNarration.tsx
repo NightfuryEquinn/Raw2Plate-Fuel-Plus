@@ -5,14 +5,14 @@ import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
 import { useFontFromContext } from 'context/FontProvider'
 import * as Speech from 'expo-speech'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function RecipeNarration( { navigation, route }: any ) {
   const { recipeTitle, recipeSteps } = route.params
 
-  let speechTimeout: any = null
+  const speechTimeout = useRef<any>( null )
 
   const [ numberSteps, setNumberSteps ] = useState( 0 )
 
@@ -34,7 +34,6 @@ export default function RecipeNarration( { navigation, route }: any ) {
     if ( numberSteps !== 0 ) {
       setNumberSteps( numberSteps - 1 )
       Speech.stop()
-      Voice.stop()
 
       Speech.speak( recipeSteps[ numberSteps - 1 ], {
         pitch: 0.95,
@@ -43,7 +42,6 @@ export default function RecipeNarration( { navigation, route }: any ) {
       })
     } else {
       Speech.stop()
-      Voice.stop()
 
       Speech.speak( recipeSteps[ numberSteps ], {
         pitch: 0.95,
@@ -56,7 +54,6 @@ export default function RecipeNarration( { navigation, route }: any ) {
   const nextStep = () => {
     setNumberSteps( numberSteps + 1 )
     Speech.stop()
-    Voice.stop()
 
     Speech.speak( recipeSteps[ numberSteps + 1 ], {
       pitch: 0.95,
@@ -67,14 +64,13 @@ export default function RecipeNarration( { navigation, route }: any ) {
 
   const endStep = () => {
     Speech.stop()
-    Voice.stop()
     navigation.goBack() 
   }
 
   const handleSpeechCommand = ( command: string ) => {
-    if ( speechTimeout ) clearTimeout( speechTimeout );
+    if ( speechTimeout.current ) clearTimeout( speechTimeout.current )
   
-    speechTimeout = setTimeout( () => {
+    speechTimeout.current = setTimeout( () => {
       if ( command.includes( "next" ) ) {
         nextStep()
       } 
@@ -118,7 +114,7 @@ export default function RecipeNarration( { navigation, route }: any ) {
   }
 
   const onRecord = () => {
-    Voice.start( "en-US" )
+    Voice.stop().then(() => Voice.start( "en-US" ) )
   }
 
   const { fontsLoaded } = useFontFromContext()
@@ -128,17 +124,17 @@ export default function RecipeNarration( { navigation, route }: any ) {
   }
 
   useEffect(() => {
-    Speech.speak( recipeSteps[ numberSteps ], {
-      pitch: 0.95,
-      rate: 0.95,
-      onDone: onRecord
-    } )
-
     Voice.onSpeechStart = onSpeechStart
     Voice.onSpeechRecognized = onSpeechRecognized
     Voice.onSpeechEnd = onSpeechEnd
     Voice.onSpeechPartialResults = onSpeechPartialResults
     Voice.onSpeechResults = onSpeechResults
+
+    Speech.speak( recipeSteps[ numberSteps ], {
+      pitch: 0.95,
+      rate: 0.95,
+      onDone: onRecord
+    } )
 
     return () => {
       Voice.destroy().then( Voice.removeAllListeners )

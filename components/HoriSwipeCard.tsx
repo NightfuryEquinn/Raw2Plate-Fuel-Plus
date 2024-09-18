@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
-export default function HoriSwipeCard( { onPress, data, first }: any ) {
+export default function HoriSwipeCard( { onPress, data, first = false }: any ) {
   const { fontsLoaded } = useFontFromContext()
 
   if ( !fontsLoaded ) {
@@ -108,8 +108,4 @@ HoriSwipeCard.propTypes = {
   onPress: PropTypes.func.isRequired,
   data: PropTypes.any.isRequired,
   first: PropTypes.bool.isRequired,
-}
-
-HoriSwipeCard.defaultProps = {
-  first: false
 }
