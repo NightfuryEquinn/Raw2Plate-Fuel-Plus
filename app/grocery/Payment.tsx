@@ -142,7 +142,7 @@ export default function Payment( { navigation, route }: any ) {
   }, [])
 
   useEffect(() => {
-    if ( userSession && !data[ 0 ]?.activeOrder ) {
+    if ( userSession ) {
       dispatch( fetchFirstActiveOrder( userSession.userId ) )
     }
   }, [ userSession ])

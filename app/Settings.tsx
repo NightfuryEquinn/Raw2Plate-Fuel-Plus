@@ -41,7 +41,7 @@ export default function Settings() {
   }
 
   const getNotification = () => {
-    return microphone
+    return notification
     ? require( "../assets/images/icons/checked.png" )
     : require( "../assets/images/icons/cancel.png" ) 
   }
@@ -61,8 +61,6 @@ export default function Settings() {
     if ( darkMode ) {
       setDarkMode( false )
     } else {
-      setDarkMode( true )
-
       Alert.alert(
         "Not yet available!",
         "Dark mode will be integrated in the future. Please bear with the bugs!",
@@ -100,10 +98,10 @@ export default function Settings() {
   const toggleNotification = async () => {
     const { status } = await Notifications.requestPermissionsAsync()
 
-    if ( status === "granted" ) {
+    if ( notification ) {
       openDeviceSettings( "notification" )
     } else {
-      setNotification( true )
+      setNotification( status === "granted" )
     }
   }
 

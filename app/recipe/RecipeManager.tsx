@@ -133,7 +133,7 @@ export default function RecipeManager( {  }: any ) {
   }, [ modalDate ])
 
   useEffect(() => {
-    if ( userSession && !data[ 0 ].plannerRecipes ) {
+    if ( userSession ) {
       dispatch( fetchPlannerRecipes( userSession.userId ) )
     }
   }, [ userSession ])
@@ -149,7 +149,7 @@ export default function RecipeManager( {  }: any ) {
 
       dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
     }
-  }, [ data ])
+  }, [ data[ 0 ].plannerRecipes ])
   
   return (
     loading ? <Loading /> :

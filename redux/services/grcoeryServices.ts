@@ -21,7 +21,7 @@ export const fetchStoreService = async () => {
     console.log( "DONE - fetchStoreService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - fetchStoreService: ", error )
+    console.log( "ERROR - fetchStoreService: ", error )
 
     throw error
   }
@@ -37,7 +37,7 @@ export const fetchOneStoreService = async ( theStoreId: number ) => {
     console.log( "DONE - fetchOneStoreService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - fetchOneStoreService: ", error )
+    console.log( "ERROR - fetchOneStoreService: ", error )
 
     throw error
   }
@@ -53,7 +53,7 @@ export const fetchStoreItemService = async ( theStoreId: number ) => {
     console.log( "DONE - fetchStoreItemService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - fetchStoreItemService: ", error )
+    console.log( "ERROR - fetchStoreItemService: ", error )
 
     throw error
   }
@@ -69,7 +69,7 @@ export const fetchInCartService = async ( theUserId: number, theStoreId: number 
     console.log( "DONE - fetchInCartService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - fetchInCartService: ", error )
+    console.log( "ERROR - fetchInCartService: ", error )
 
     throw error
   }
@@ -85,7 +85,7 @@ export const addItemCartService = async ( theCart: Cart ) => {
     console.log( "DONE - addItemCartService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - addItemCartService: ", error )
+    console.log( "ERROR - addItemCartService: ", error )
 
     throw error
   }
@@ -101,7 +101,7 @@ export const updateItemCartService = async ( theCart: Cart ) => {
     console.log( "DONE - updateItemCartService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - updateItemCartService: ", error )
+    console.log( "ERROR - updateItemCartService: ", error )
 
     throw error
   }
@@ -117,7 +117,7 @@ export const deleteItemCartService = async ( theCartId: number ) => {
     console.log( "DONE - deleteItemCartService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - deleteItemCartService: ", error )
+    console.log( "ERROR - deleteItemCartService: ", error )
 
     throw error
   }
@@ -161,7 +161,7 @@ export const addOrderService = async ( theOrder: Order, theOrderItems: any[] ) =
 
     return orderRes.data
   } catch ( error ) {
-    console.error( "ERROR - addOrderService: ", error )
+    console.log( "ERROR - addOrderService: ", error )
 
     throw error
   }
@@ -177,7 +177,7 @@ export const cancelOrderService = async ( theOrder: Order ) => {
     console.log( "DONE - cancelOrderService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - cancelOrderService: ", error )
+    console.log( "ERROR - cancelOrderService: ", error )
 
     throw error
   }
@@ -193,7 +193,7 @@ export const fetchFirstActiveOrderService = async ( theUserId: number ) => {
     console.log( "DONE - fetchFirstActiveOrderService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - fetchFirstActiveOrderService: ", error )
+    console.log( "ERROR - fetchFirstActiveOrderService: ", error )
 
     throw error
   }
@@ -209,7 +209,7 @@ export const fetchOrderItemsService = async ( theOrderId: number ) => {
     console.log( "DONE - fetchOrderItemsService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - fetchOrderItemsService: ", error )
+    console.log( "ERROR - fetchOrderItemsService: ", error )
 
     throw error
   }
@@ -225,7 +225,7 @@ export const fetchOrderHistoryService = async ( theUserId: number ) => {
     console.log( "DONE - fetchOrderHistoryService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - fetchOrderHistoryService: ", error )
+    console.log( "ERROR - fetchOrderHistoryService: ", error )
 
     throw error
   }
@@ -241,7 +241,7 @@ export const fetchGroceryListService = async ( theUserId: number ) => {
     console.log( "DONE - fetchGroceryListService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - fetchGroceryListService: ", error )
+    console.log( "ERROR - fetchGroceryListService: ", error )
 
     throw error
   }
@@ -257,7 +257,7 @@ export const checkAddGroceryListService = async ( theGroceryList: GroceryList ) 
     console.log( "DONE - checkAddGroceryListService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - checkAddGroceryListService: ", error )
+    console.log( "ERROR - checkAddGroceryListService: ", error )
 
     throw error
   }
@@ -273,7 +273,7 @@ export const addGroceryListService = async ( theGroceryItem: GroceryItem ) => {
     console.log( "DONE - addGroceryListService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - addGroceryListService: ", error )
+    console.log( "ERROR - addGroceryListService: ", error )
 
     throw error
   }
@@ -289,7 +289,7 @@ export const updateGroceryListService = async ( theGroceryItem: GroceryItem ) =>
     console.log( "DONE - updateGroceryListService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - updateGroceryListService: ", error )
+    console.log( "ERROR - updateGroceryListService: ", error )
 
     throw error
   }
@@ -305,7 +305,7 @@ export const deleteGroceryListService = async ( theGroceryItemId: number ) => {
     console.log( "DONE - deleteGroceryListService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - deleteGroceryListService: ", error )
+    console.log( "ERROR - deleteGroceryListService: ", error )
 
     throw error
   }

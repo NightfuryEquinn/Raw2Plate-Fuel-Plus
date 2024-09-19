@@ -11,7 +11,7 @@ import React, { useState } from 'react'
 import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
-import { userRegister } from 'redux/actions/userAction'
+import { getTheUser, userRegister } from 'redux/actions/userAction'
 import { AppDispatch, RootState } from 'redux/reducers/store'
 
 export default function Register( { navigation }: any ) {
@@ -65,13 +65,15 @@ export default function Register( { navigation }: any ) {
             isGoogleAuth: false
           }
         ))
+      })
+      .then(() => {
+        dispatch( getTheUser( email ) )
 
         Alert.alert(
-          "Success!",
-          "User account created successfully!",
+          "Logged in!",
+          "You are ready to use Bao!",
           [
-            { text: "Cancel", style: "cancel" },
-            { text: "Proceed to Login", onPress: () => navigation.goBack() }
+            { text: "I Understood", style: "default" },
           ]
         )
       })
@@ -96,7 +98,7 @@ export default function Register( { navigation }: any ) {
           )
         }
 
-        console.error( "Error registering: ", error )
+        console.log( "Error registering: ", error )
       })
   }
 

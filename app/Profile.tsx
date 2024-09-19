@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { LightMode } from 'assets/colors/LightMode'
 import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
@@ -8,6 +7,7 @@ import { useFontFromContext } from 'context/FontProvider'
 import dayjs from 'dayjs'
 import * as ImagePicker from 'expo-image-picker'
 import { signOut } from 'firebase/auth'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import React, { useState } from 'react'
 import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { TextInput } from 'react-native-paper'
@@ -16,12 +16,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { logoutClear, updateProfile } from 'redux/actions/userAction'
 import { AppDispatch, RootState } from 'redux/reducers/store'
 import Loading from './Loading'
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 
 export default function Profile( { navigation }: any ) {
   const dispatch: AppDispatch = useDispatch()
   const { data, loading, error } = useSelector(( state: RootState ) => state.user )
-  const userInfo = data[ 0 ].setUserSession
+  const userInfo = data[ 0 ].setUserSession || []
 
   const { authInit, storageInit } = useFirebaseFromContext()
 
@@ -45,7 +44,7 @@ export default function Profile( { navigation }: any ) {
 
       return downloadUrl
     } catch ( error: any ) {
-      console.error( "Error uploading image: ", error )
+      console.log( "Error uploading image: ", error )
 
       throw error
     }
@@ -92,7 +91,7 @@ export default function Profile( { navigation }: any ) {
           ]
         )
 
-        console.error( "Error logout: ", error )
+        console.log( "Error logout: ", error )
       })
   }
 

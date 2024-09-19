@@ -3,12 +3,13 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { LightMode } from 'assets/colors/LightMode'
+import { useFirebaseFromContext } from 'context/FirebaseProvider'
 import { useFontFromContext } from 'context/FontProvider'
-import React from 'react'
+import React, { useEffect } from 'react'
 import IconEN from 'react-native-vector-icons/Entypo'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
-import { useSelector } from 'react-redux'
-import { RootState } from 'redux/reducers/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from 'redux/reducers/store'
 import AppDrawer from './AppDrawer'
 import Profile from './Profile'
 import Settings from './Settings'
@@ -34,12 +35,15 @@ import AllNutrients from './tracker/AllNutrients'
 import MainTracker from './tracker/MainTracker'
 import ManualAdd from './tracker/ManualAdd'
 import MoreDetails from './tracker/MoreDetails'
+import Loading from './Loading'
+import { getTheUser } from 'redux/actions/userAction'
 
 const Tab = createMaterialBottomTabNavigator()
 const Drawer = createDrawerNavigator()
 const Stack = createNativeStackNavigator()
 
 export default function AppStack() {
+  const dispatch: AppDispatch = useDispatch()
   const { data, loading, error } = useSelector(( state: RootState ) => state.user )
 
   const theme = {
@@ -51,18 +55,10 @@ export default function AppStack() {
     }
   }
 
-  const isUserSessionEmpty = ( session: any ) => {
-    if ( session === null ) {
-      return true
-    }
-
-    return !Object.values( session ).some( 
-      value => value !== null && value !== '' && value !== false 
-    )
-  }
+  const { user, isAuth } = useFirebaseFromContext()
 
   const linking = {
-    prefixes: [ "bao://" ],
+    prefixes: [ "https://bao.com" ],
     config: {
       screens: {
         RecipeDetail: "recipe/:id"
@@ -77,11 +73,12 @@ export default function AppStack() {
   }
   
   return (
+    loading ? <Loading /> :
     <NavigationContainer 
       theme={ theme } 
       linking={ linking }
     >
-      { !isUserSessionEmpty( data[ 0 ].setUserSession ) ? <MainStack /> : <LandingStack /> }
+      { data[ 0 ]?.setUserSession && user && isAuth ? <MainStack /> : <LandingStack /> }
     </NavigationContainer>
   )
 }

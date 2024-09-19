@@ -118,7 +118,7 @@ export default function AllNutrients() {
   }, [])
 
   useEffect(() => {
-    if ( userSession && !data[ 0 ].trackerRecipes ) {
+    if ( userSession ) {
       dispatch( fetchTrackerRecipes( userSession.userId ))
     }
   }, [ userSession ])
@@ -138,7 +138,7 @@ export default function AllNutrients() {
     if ( data && data[ 0 ].trackerRecipes ) {
       tabulateNutrients()
     }
-  }, [ data, currentMonth, selectedDate ])
+  }, [ currentMonth, selectedDate ])
   
   return (
     loading ? <Loading /> :

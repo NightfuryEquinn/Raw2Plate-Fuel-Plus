@@ -75,7 +75,7 @@ export default function HistoryOrder() {
   }, [])
 
   useEffect(() => {
-    if ( userSession && ( !data[ 0 ].pastOrders || !data[ 0 ].orderItems )) {
+    if ( userSession ) {
       dispatch( fetchOrderHistory( userSession.userId ) )
     }
   }, [ userSession, modalDate ])

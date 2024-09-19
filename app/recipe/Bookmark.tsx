@@ -77,20 +77,20 @@ export default function Bookmark() {
   }, [])
 
   useEffect(() => {
-    if ( userSession && !data[ 0 ].fetchBookmarks && !data[ 0 ].bookmarkedRecipes ) {
+    if ( userSession ) {
       dispatch( fetchBookmark( userSession.userId ) )
     }
   }, [ userSession ])
 
   useEffect(() => {
-    if ( data[ 0 ].fetchBookmarks && !data[ 0 ].bookmarkedRecipes ) {  
+    if ( data[ 0 ].fetchBookmarks ) {  
       const theRecipeIds = data[ 0 ].fetchBookmarks.map(
         ( item: any ) => item.recipeId
       ).join( "," )
 
       dispatch( fetchBookmarkInfo( theRecipeIds ) )
     }
-  }, [ data ])
+  }, [ data[ 0 ].fetchBookmarks ])
   
   return (
     loading ? <Loading /> : 
@@ -114,7 +114,7 @@ export default function Bookmark() {
         <Spacer size={ 30 } />
 
         {
-          data && data.length > 0 && data[ 0 ].fetchBookmarks && data[ 0 ].bookmarkedRecipes ?
+          data && data.length > 0 && data[ 0 ]?.fetchBookmarks && data[ 0 ]?.bookmarkedRecipes ?
             <FlatList
               refreshing={ refreshing }
               onRefresh={ onRefresh }

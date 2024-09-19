@@ -1,7 +1,7 @@
 import { Bookmark } from "redux/models/Bookmark";
 import { Meal } from "redux/models/Meal";
 import { AppDispatch } from "redux/reducers/store";
-import { addRecipesPlannerService, bookmarkRecipeService, deletePlannerRecipesService, discoverSearchService, fetchPlannerRecipesService, fetchRandomService, fetchRecipeInfoService, fetchRecipeIngreStepsService, fetchRecipePlannerTrackerInfoService } from "redux/services/recipeServices";
+import { addRecipesPlannerService, bookmarkRecipeService, deletePlannerRecipesService, discoverSearchService, fetchPlannerRecipesService, fetchRandomService, fetchRecipeInfoService, fetchRecipeIngreStepsService, fetchRecipePlannerTrackerInfoService, updateCommentService } from "redux/services/recipeServices";
 import { ADD_RECIPE_PLANNER_FAILURE, ADD_RECIPE_PLANNER_LOADING, ADD_RECIPE_PLANNER_SUCCESS, BOOKMARK_FAILURE, BOOKMARK_LOADING, BOOKMARK_SUCCESS, DELETE_PLANNER_RECIPES_FAILURE, DELETE_PLANNER_RECIPES_LOADING, DELETE_PLANNER_RECIPES_SUCCESS, DISCOVER_SEARCH_FAILURE, DISCOVER_SEARCH_LOADING, DISCOVER_SEARCH_SUCCESS, FETCH_PLANNER_RECIPES_FAILURE, FETCH_PLANNER_RECIPES_LOADING, FETCH_PLANNER_RECIPES_SUCCESS, FETCH_RANDOM_FAILURE, FETCH_RANDOM_LOADING, FETCH_RANDOM_SUCCESS, FETCH_RECIPE_INFO_FAILURE, FETCH_RECIPE_INFO_LOADING, FETCH_RECIPE_INFO_SUCCESS, FETCH_RECIPE_INGRE_STEPS_FAILURE, FETCH_RECIPE_INGRE_STEPS_LOADING, FETCH_RECIPE_INGRE_STEPS_SUCCESS, FETCH_RECIPE_PLANNER_TRACKER_INFO_FAILURE, FETCH_RECIPE_PLANNER_TRACKER_INFO_LOADING, FETCH_RECIPE_PLANNER_TRACKER_INFO_SUCCESS } from "redux/types/actionTypes";
 
 /**
@@ -286,6 +286,38 @@ export const deletePlannerRecipes = ( theNumber: number ) => {
       dispatch( deletePlannerRecipesSuccess( res ) )
     } catch ( error: any ) {
       dispatch( deletePlannerRecipesFailure( error.message ) )
+
+      return error.response.status
+    }
+  }
+}
+
+/**
+ * Update comment
+ */
+const updateCommentLoading = () => ({
+  type: DELETE_PLANNER_RECIPES_LOADING
+})
+
+const updateCommentSuccess = ( data: any[] ) => ({
+  type: DELETE_PLANNER_RECIPES_SUCCESS,
+  payload: data
+})
+
+const updateCommentFailure = ( error: string ) => ({
+  type: DELETE_PLANNER_RECIPES_FAILURE,
+  payload: error
+})
+
+export const updateComment = ( theMealId: number, theMeal: Meal ) => {
+  return async ( dispatch: AppDispatch ) => {
+    dispatch( updateCommentLoading() )
+
+    try {
+      const res = await updateCommentService( theMealId, theMeal )
+      dispatch( updateCommentSuccess( res ) )
+    } catch ( error: any ) {
+      dispatch( updateCommentFailure( error.message ) )
 
       return error.response.status
     }

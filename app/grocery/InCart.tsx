@@ -81,7 +81,7 @@ export default function InCart( { navigation, route }: any ) {
   }, [])
 
   useEffect(() => {
-    if ( userSession && ( !data[ 0 ].cartItems || data[ 0 ].cartItems[ 0 ]?.storeId !== storeId ) ) {
+    if ( userSession ) {
       dispatch( fetchInCart( userSession.userId, storeId ) )
       dispatch( fetchOneStore( storeId ) )
     }

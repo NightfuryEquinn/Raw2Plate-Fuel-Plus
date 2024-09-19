@@ -112,7 +112,7 @@ export default function ViewCalendar( { navigation }: any ) {
   }, [])
 
   useEffect(() => {
-    if ( userSession && !data[ 0 ].plannerRecipes ) {
+    if ( userSession ) {
       dispatch( fetchPlannerRecipes( userSession.userId ) )
     }
   }, [ userSession ])

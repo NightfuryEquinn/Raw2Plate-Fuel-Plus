@@ -3,6 +3,7 @@ import Loading from 'app/Loading'
 import { LightMode } from 'assets/colors/LightMode'
 import AddRecipeToPlannerModal from 'components/AddRecipeToPlannerModal'
 import AddRecipeToTrackerModal from 'components/AddRecipeToTrackerModal'
+import CommentModal from 'components/CommentModal'
 import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
 import TopBar from 'components/TopBar'
@@ -10,31 +11,40 @@ import { useFontFromContext } from 'context/FontProvider'
 import { capitalizeWords } from 'data/formatData'
 import dayjs from 'dayjs'
 import React, { Fragment, useEffect, useState } from 'react'
-import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import Share from 'react-native-share'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
 import { useDispatch, useSelector } from 'react-redux'
-import { addRecipesPlanner, bookmarkRecipe, fetchRecipeInfo, fetchRecipeIngreSteps } from 'redux/actions/recipeAction'
+import { addRecipesPlanner, bookmarkRecipe, fetchRecipeInfo, fetchRecipeIngreSteps, updateComment } from 'redux/actions/recipeAction'
 import { deleteBookmark } from 'redux/actions/userAction'
 import { AppDispatch, RootState } from 'redux/reducers/store'
-import Share from 'react-native-share';
 
 export default function RecipeDetail( { navigation, route }: any ) {
-  const { info, recipeId, inBookmark } = route.params
+  const { recipeId, inBookmark } = route.params
   const [ userSession, setUserSession ] = useState<any>( null )
 
   const dispatch: AppDispatch = useDispatch()
   const { data, loading, error } = useSelector(( state: RootState ) => state.recipe )
+  
   const recipeInfo = data[ 0 ].recipeInfo || []
   const recipeIngreSteps = data[ 0 ].recipeIngreSteps || []
 
+  const [ plannerRecipe, setPlannerRecipe ] = useState<any>( [] )
   const [ displayIngre, setDisplayIngre ] = useState<string[]>( [] )
   const [ displaySteps, setDisplaySteps ] = useState<string[]>( [] )
 
   const [ modal, setModal ] = useState( false )
   const [ modalDate, setModalDate ] = useState( dayjs() )
+  const [ trackModal, setTrackModal ] = useState( false )
+  const [ trackModalDate, setTrackModalDate ] = useState( dayjs() )
+  const [ commentModal, setCommentModal ] = useState( false )
+  const [ comment, setComment ] = useState( "" )
+
   const [ openDrop, setOpenDrop ] = useState( false )
   const [ dropValue, setDropValue ] = useState( "" )
+
+  const [ refreshing, setRefreshing ] = useState( false )
 
   const dropItems = [
     { label: 'Breakfast', value: 'Breakfast' },
@@ -44,11 +54,6 @@ export default function RecipeDetail( { navigation, route }: any ) {
     { label: 'Dinner', value: 'Dinner' }
   ]
 
-  const [ trackModal, setTrackModal ] = useState( false )
-  const [ trackModalDate, setTrackModalDate ] = useState( dayjs() )
-
-  const [ comment, setComment ] = useState( "" )
-
   const showModal = () => {
     setModal( !modal )
   }
@@ -57,20 +62,43 @@ export default function RecipeDetail( { navigation, route }: any ) {
     setTrackModal( !trackModal )
   }
 
+  const showCommentModal = () => {
+    setCommentModal( !commentModal )
+  }
+
+  const onRefresh = () => {
+    setRefreshing( true )
+
+    if ( data[ 0 ].plannerRecipes ) {
+      const viewingRecipe = data[ 0 ].plannerRecipes.filter(( item: any ) => item.recipeId === recipeId )
+      setPlannerRecipe( viewingRecipe )
+    }
+
+    if ( data[ 0 ]?.recipeInfo?.id !== recipeId ) {
+      dispatch( fetchRecipeInfo( recipeId ) )
+      dispatch( fetchRecipeIngreSteps( recipeId ) )
+    }
+
+    if ( recipeIngreSteps ) {
+      setDisplayIngre( cacheIngredients( recipeIngreSteps ) )
+      setDisplaySteps( cacheSteps( recipeIngreSteps ) )
+    }
+
+    setRefreshing( false )
+  }
+
   const shareRecipe = () => {
-    const recipeUrl = `bao://recipe/${ recipeId }`
+    const recipeUrl = `https://bao.com/recipe/${ recipeId }`
 
     const shareOptions = {
       title: "Check out this recipe from Bao!",
       message: `To see the information about the recipes, click here:`,
       url: `${ recipeUrl }`,
-      
-      social: Share.Social.WHATSAPP
     }
 
     Share.open( shareOptions )
       .then(( res ) => console.log( "Success sharing: ", res ) )
-      .catch(( err ) => console.error( "Error sharing: ", err ) )
+      .catch(( err ) => console.log( "Error sharing: ", err ) )
   }
 
   const cacheIngredients = ( recipe: any ) => {
@@ -133,7 +161,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
         ]
       )
 
-      console.error( "Error bookmarking: ", error )
+      console.log( "Error bookmarking: ", error )
     }
   }
 
@@ -169,7 +197,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
         ]
       )
 
-      console.error( "Error adding recipe to planner: ", error )
+      console.log( "Error adding recipe to planner: ", error )
     }
   }
 
@@ -214,7 +242,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
         ]
       )
 
-      console.error( "Error deleting bookmark: ", error )
+      console.log( "Error deleting bookmark: ", error )
     }
 
     showModal()
@@ -238,6 +266,13 @@ export default function RecipeDetail( { navigation, route }: any ) {
     } 
 
     getUserSession()
+  }, [])
+
+  useEffect(() => {
+    if ( data[ 0 ].plannerRecipes ) {
+      const viewingRecipe = data[ 0 ].plannerRecipes.filter(( item: any ) => item.recipeId === recipeId )
+      setPlannerRecipe( viewingRecipe )
+    }
 
     if ( data[ 0 ]?.recipeInfo?.id !== recipeId ) {
       dispatch( fetchRecipeInfo( recipeId ) )
@@ -248,7 +283,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
       setDisplayIngre( cacheIngredients( recipeIngreSteps ) )
       setDisplaySteps( cacheSteps( recipeIngreSteps ) )
     }
-  }, [ data ])
+  }, [ userSession ])
   
   return (
     loading ? <Loading /> :
@@ -266,6 +301,12 @@ export default function RecipeDetail( { navigation, route }: any ) {
           style={{ margin: -20, marginTop: -7.5, }}
           contentContainerStyle={{ padding: 20, paddingTop: 7.5 }}
           showsVerticalScrollIndicator={ false }
+          refreshControl={
+            <RefreshControl 
+              refreshing={ refreshing }
+              onRefresh={ onRefresh }
+            />
+          }
         >
 
           <View style={ s.subContainer }>
@@ -310,21 +351,29 @@ export default function RecipeDetail( { navigation, route }: any ) {
           <Spacer size={ 20 } />
 
           <View style={ s.section }>
-            <View style={ s.sectionContainer }>
-              <Image 
-                resizeMode="cover"
-                source={ require( "../../assets/images/icons/comments.png" ) }
-                style={ s.icon }
-              />
+            {
+              plannerRecipe[ 0 ] && plannerRecipe[ 0 ].comment &&
+              <Fragment>
+                <View style={ s.sectionContainer }>
+                  <Image 
+                    resizeMode="cover"
+                    source={ require( "../../assets/images/icons/comments.png" ) }
+                    style={ s.icon }
+                  />
 
-              <Text style={ s.sectionHeading }>Your Comments for Reference</Text>
-            </View>
+                  <Text style={ s.sectionHeading }>Your Comments for Reference</Text>
+                </View>
 
-            <View style={[ s.sectionContent, { gap: 5 } ]}>
-              <Text style={ s.hintText }>NOTE: Remove and re-add the recipes to change comment.</Text>
-              <Text style={[ s.boxText, { color: LightMode.black, fontSize: 16, textTransform: "capitalize" } ]}>{ info.comment }</Text>
-            </View>
+                <View style={ s.sectionContent }>
+                  <Text style={[ s.boxText, { color: LightMode.black, fontSize: 16, textTransform: "capitalize" } ]}>{ plannerRecipe[ 0 ].comment }</Text>
+                </View>
+              </Fragment>
+            }
+          </View>
 
+          <Spacer size={ 20 } />
+
+          <View style={ s.section }>
             <View style={ s.sectionContainer }>
               <Image 
                 resizeMode="cover"
@@ -491,12 +540,26 @@ export default function RecipeDetail( { navigation, route }: any ) {
                 size={ 32 }
               />
             </TouchableOpacity>
+
+            { plannerRecipe && plannerRecipe.length !== 0 && 
+              <TouchableOpacity
+                activeOpacity={ 0.5 }
+                onPress={ showCommentModal }
+                style={ s.actionIcon }
+              >
+                <IconMA 
+                  name="edit-note"
+                  color={ LightMode.black }
+                  size={ 32 }
+                />
+              </TouchableOpacity>
+            }
           </View>
           
           <RoundedBorderButton 
             onPress={ () => navigation.navigate( "RecipeNarration", { recipeTitle: capitalizeWords( recipeInfo.title ), recipeSteps: displaySteps } ) }
             color={ LightMode.yellow }
-            text="Start Cooking"
+            text="Cooking"
             textColor={ LightMode.white }      
             borderRadius={ 10 }
             marginHori={ 0 }
@@ -532,6 +595,27 @@ export default function RecipeDetail( { navigation, route }: any ) {
         setOpenDrop={ setOpenDrop }
         setDropValue={ setDropValue }
         save={ addToPlannerTrackerPress }
+      />
+
+      <CommentModal 
+        modal={ commentModal } 
+        showModal={ showCommentModal } 
+        name={ comment } 
+        setName={ setComment } 
+        onCancel={ showCommentModal } 
+        onConfirm={ () => {
+          if ( comment ) {
+            dispatch( updateComment( 
+              plannerRecipe[ 0 ].mealId,
+              {
+                ...plannerRecipe[ 0 ],
+                comment: comment
+              }
+            ))
+          }
+
+          showCommentModal()
+        }}      
       />
     </SafeAreaView>
   )

@@ -52,7 +52,7 @@ export default function Timer() {
         setTimers( activeTimers )
       }
     } catch ( error ) {
-      console.error( "Error getting saved timers: ", error )
+      console.log( "Error getting saved timers: ", error )
     }
   }
 

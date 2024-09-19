@@ -40,7 +40,7 @@ export default function MapCard( { storeAddress, receiverAddress }: any ) {
         }
       }
     } catch ( error: any ) {
-      console.error( error.message )
+      console.log( error.message )
     }
   }
 
@@ -114,7 +114,7 @@ export default function MapCard( { storeAddress, receiverAddress }: any ) {
           strokeColor={ LightMode.grabGreen }
           strokeWidth={ 6 }
           optimizeWaypoints={ true }
-          onError={ ( error: any ) => console.error( "Error getting direction: ", error ) }
+          onError={ ( error: any ) => console.log( "Error getting direction: ", error ) }
         />
 
         <MapViewDirections
@@ -124,7 +124,7 @@ export default function MapCard( { storeAddress, receiverAddress }: any ) {
           strokeColor={ LightMode.halfGrabGreen }
           strokeWidth={ 6 }
           optimizeWaypoints={ true }
-          onError={ ( error: any ) => console.error( "Error getting direction: ", error ) }
+          onError={ ( error: any ) => console.log( "Error getting direction: ", error ) }
         />
       </MapView>
     </View>

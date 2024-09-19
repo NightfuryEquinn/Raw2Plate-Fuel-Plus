@@ -57,8 +57,9 @@ export default function DiscoverRecipe( { navigation }: any ) {
   const SearchItem = ( { item, index }: any ) => (
     <HoriCardWithCTA 
       key={ index }
-      onPress={ () => navigation.navigate( "RecipeDetail", { recipeId: item.id, inBookmark: false } ) }
+      onPress={ () => navigation.navigate( "RecipeDetail", { info: item, recipeId: item.id, inBookmark: false } ) }
       data={ item }
+      changeOrAdd=""
     />
   )
   

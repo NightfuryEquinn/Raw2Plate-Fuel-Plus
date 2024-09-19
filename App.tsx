@@ -5,13 +5,12 @@ import { FontProvider } from 'context/FontProvider';
 import { registerRootComponent } from 'expo';
 import * as Notifications from 'expo-notifications';
 import React, { useEffect } from 'react';
-import { Alert, Linking, LogBox } from 'react-native';
+import { Alert, Linking } from 'react-native';
 import { configureFonts, DefaultTheme, PaperProvider } from 'react-native-paper';
 import { Provider } from 'react-redux';
 import { store } from 'redux/reducers/store';
-
-// Ignore library warning due to react native versioning
-LogBox.ignoreAllLogs()
+import * as Location from 'expo-location'
+import { Audio } from 'expo-av'
 
 export default function App() {
   const fontConfig = {
@@ -38,8 +37,44 @@ export default function App() {
     }
   }
 
+  const registerForLocationAsync = async () => {
+    const { status: foregroundStatus } = await Location.requestForegroundPermissionsAsync()
+    const { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync()
+  
+    if ( 
+      foregroundStatus !== Location.PermissionStatus.GRANTED ||
+      backgroundStatus !== Location.PermissionStatus.GRANTED
+    ) {
+      Alert.alert(
+        "Permission Required!",
+        `You need to enable foreground and background location services to use the app!`,
+        [
+          { text: "Cancel", style: "cancel" },
+          { text: "Open Settings", onPress: () => Linking.openSettings() }
+        ]
+      )
+    }
+  } 
+
+  const registerForMicrophoneAsync = async () => {
+    const { status } = await Audio.requestPermissionsAsync()
+
+    if ( status !== Audio.PermissionStatus.GRANTED ) {
+      Alert.alert(
+        "Permission Required!",
+        `You need to enable microphone to use the app!`,
+        [
+          { text: "Cancel", style: "cancel" },
+          { text: "Open Settings", onPress: () => Linking.openSettings() }
+        ]
+      )
+    }
+  }
+
   useEffect(() => {
     registerForPushNotificationAsync()
+    registerForLocationAsync()
+    registerForMicrophoneAsync()
     registerBackgroundTask()
   }, [])
 

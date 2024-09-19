@@ -25,7 +25,7 @@ export default function AddRecipeToPlannerModal( { comment = "", setComment = nu
       <View style={ s.modalContainer }>
         <View style={ s.modalContent }>
           <View style={ s.modalHint }>
-            <Text style={ s.modalHeading }>Add this Recipe to Planner?</Text>
+            <Text style={ s.modalHeading }>Add recipe and track calories?</Text>
             <Text style={ s.hint }>Select a meal and date for this recipe to be included.</Text>
           </View>
           

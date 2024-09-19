@@ -105,7 +105,7 @@ export default function MoreDetails() {
   }, [])
 
   useEffect(() => {
-    if ( userSession && ( !data[ 0 ].trackerRecipes || !data[ 0 ].trackerManual ) ) {
+    if ( userSession ) {
       dispatch( fetchTrackerRecipes( userSession.userId ))
       dispatch( fetchTrackerManual( userSession.userId ) )
     }
@@ -246,7 +246,7 @@ export default function MoreDetails() {
                       ))
                     )
                   :
-                    <Fragment>
+                    <Fragment key={ `empty-${ index }` }>
                       <Spacer size={ 10 } />
                       
                       <EmptyContent 

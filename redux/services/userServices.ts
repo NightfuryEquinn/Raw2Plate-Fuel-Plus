@@ -18,7 +18,7 @@ export const userRegisterService = async ( theUser: User ) => {
     console.log( "DONE - userRegisterService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - userRegisterService: ", error )
+    console.log( "ERROR - userRegisterService: ", error )
 
     throw error
   }
@@ -27,14 +27,14 @@ export const userRegisterService = async ( theUser: User ) => {
 /**
  * Set user session
  */
-export const getTheUserService = async ( theEmail: string, thePassword: string ) => {
+export const getTheUserService = async ( theEmail: string ) => {
   try {
-    const res: ApiRes<ReduxState[]> = await awsInstance.get( `/user/email/${ theEmail }/password/${ thePassword }` )
+    const res: ApiRes<ReduxState[]> = await awsInstance.get( `/user/email/${ theEmail }` )
 
     console.log( "DONE - getTheUserService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - getTheUserService: ", error )
+    console.log( "ERROR - getTheUserService: ", error )
 
     throw error
   }
@@ -50,7 +50,7 @@ export const updateProfileService = async ( theUser: User ) => {
     console.log( "DONE - updateProfileService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - updateProfileService: ", error )
+    console.log( "ERROR - updateProfileService: ", error )
 
     throw error
   }
@@ -66,7 +66,7 @@ export const fetchBookmarkService = async ( theUserId: number ) => {
     console.log( "DONE - fetchBookmarkService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - fetchBookmarkService: ", error )
+    console.log( "ERROR - fetchBookmarkService: ", error )
 
     throw error
   }
@@ -83,7 +83,7 @@ export const fetchBookmarkInfoService = async ( theRecipeIds: string ) => {
     console.log( "DONE - fetchBookmarkInfoService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.error( "ERROR - fetchBookmarkInfoService: ", error )
+    console.log( "ERROR - fetchBookmarkInfoService: ", error )
     
     throw error
   }
@@ -99,7 +99,7 @@ export const deleteBookmarkService = async ( theUserId: number, theRecipeId: num
     console.log( "DONE - deleteBookmarkService: ", res.data )
     return res.data
   } catch ( error: any ) {
-    console.error( "ERROR - deleteBookmarkService: ", error )
+    console.log( "ERROR - deleteBookmarkService: ", error )
 
     throw error
   }

@@ -85,7 +85,7 @@ export default function GroceryList() {
   }, [])
 
   useEffect(() => {
-    if ( userSession && !data[ 0 ].groceryList ) {
+    if ( userSession ) {
       dispatch( fetchGroceryList( userSession.userId ) )
 
       dispatch( checkAddGroceryList(

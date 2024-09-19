@@ -84,7 +84,7 @@ export default function AddTimerModal( { modal, showModal, loadTimers, hour, min
         ]
       )
     } catch ( error ) {
-      console.error( "Error adding timer: ", error )
+      console.log( "Error adding timer: ", error )
 
       Alert.alert(
         "Failed!",

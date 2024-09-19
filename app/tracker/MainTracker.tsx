@@ -7,7 +7,7 @@ import TrackerPieChart from 'components/TrackerPieChart'
 import { useFontFromContext } from 'context/FontProvider'
 import dayjs from 'dayjs'
 import React, { useEffect, useRef, useState } from 'react'
-import { Dimensions, Image, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, Image, Modal, Pressable, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import DatePicker from 'react-native-ui-datepicker'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
@@ -40,6 +40,8 @@ export default function MainTracker( { navigation }: any ) {
 
   const [ modal, setModal ] = useState( false )
   const [ modalDate, setModalDate ] = useState( today )
+
+  const [ refreshing, setRefreshing ] = useState( false )
 
   const showModal = () => {
     setModal( !modal )
@@ -74,6 +76,17 @@ export default function MainTracker( { navigation }: any ) {
   }
 
   const dates = generateDates()
+
+  const onRefresh = () => {
+    setRefreshing( true )
+
+    if ( userSession ) {
+      dispatch( fetchTrackerRecipes( userSession.userId ) )
+      dispatch( fetchTrackerManual( userSession.userId ) )
+    }
+
+    setRefreshing( false )
+  }
 
   const tabulateNutrients = () => {
     let totalCal = 0
@@ -132,8 +145,8 @@ export default function MainTracker( { navigation }: any ) {
   }, [])
 
   useEffect(() => {
-    if ( userSession && ( !data[ 0 ].trackerRecipes || !data[ 0 ].trackerManual ) ) {
-      dispatch( fetchTrackerRecipes( userSession.userId ))
+    if ( userSession ) {
+      dispatch( fetchTrackerRecipes( userSession.userId ) )
       dispatch( fetchTrackerManual( userSession.userId ) )
     }
   }, [ userSession ])
@@ -150,10 +163,8 @@ export default function MainTracker( { navigation }: any ) {
   }, [ selectedDate, dates ])
 
   useEffect(() => {
-    if ( data && data[ 0 ].trackerRecipes && data[ 0 ].trackerManual ) {
-      tabulateNutrients()
-    }
-  }, [ data, currentMonth, selectedDate ])
+    tabulateNutrients()
+  }, [ currentMonth, selectedDate ])
   
   return (
     loading ? <Loading /> :
@@ -240,6 +251,12 @@ export default function MainTracker( { navigation }: any ) {
         <ScrollView
           showsVerticalScrollIndicator={ false }
           style={{ height: Dimensions.get( "window" ).height * 0.625 }}
+          refreshControl={
+            <RefreshControl 
+              refreshing={ refreshing }
+              onRefresh={ onRefresh } 
+            />
+          }
         >
           { 
             cal !== 0 && manualCal !== 0 ?

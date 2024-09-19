@@ -7,7 +7,7 @@ import Spacer from 'components/Spacer'
 import { useFirebaseFromContext } from 'context/FirebaseProvider'
 import { useFontFromContext } from 'context/FontProvider'
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
@@ -18,7 +18,7 @@ export default function Login( { navigation }: any ) {
   const dispatch: AppDispatch = useDispatch()
   const { data, loading, error } = useSelector(( state: RootState ) => state.user )
 
-  const { authInit } = useFirebaseFromContext()
+  const { user, isAuth, authInit } = useFirebaseFromContext()
 
   const [ email, setEmail ] = useState( "" )
   const [ password, setPassword ] = useState( "" )
@@ -35,7 +35,7 @@ export default function Login( { navigation }: any ) {
   const firebaseLogin = async ( theEmail: string, thePassword: string ) => {
     await signInWithEmailAndPassword( authInit, theEmail, thePassword )
       .then(() => {
-        dispatch( getTheUser( theEmail, thePassword ))
+        dispatch( getTheUser( theEmail ) )
 
         navigation.reset({
           index: 0,
@@ -83,7 +83,7 @@ export default function Login( { navigation }: any ) {
           )
         }
 
-        console.error( "Error login: ", error )
+        console.log( "Error login: ", error )
       })
   }
 
@@ -92,6 +92,12 @@ export default function Login( { navigation }: any ) {
   if ( !fontsLoaded ) {
     return null
   }
+
+  useEffect(() => {
+    if ( user && isAuth ) {
+      dispatch( getTheUser( user.email ) )
+    }
+  }, [ user, isAuth ])
  
   return (
     loading ? <Loading /> :
@@ -130,42 +136,24 @@ export default function Login( { navigation }: any ) {
           <KeyboardAvoidingView behavior={ Platform.OS === "ios" ? "padding" : "height" }>
             <Spacer size={ 20 } />
 
-            { email !== "" ?
-              <RoundedBorderButton
-                onPress={ () => firebaseLogin( email, password ) }
-                icon="MA"
-                name="account-circle"
-                text="Proceed with Login"
-                color={ LightMode.green }
-                textColor={ LightMode.black }
-                borderRadius={ 10 }
-              />
-              :
-              <RoundedBorderButton
-                onPress={ () => toRegister() }
-                icon="MA"
-                name="account-circle"
-                text="Create New Account"
-                color={ LightMode.yellow }
-                textColor={ LightMode.white }
-                borderRadius={ 10 }
-              />
-            }
+            <RoundedBorderButton
+              onPress={ () => firebaseLogin( email, password ) }
+              icon="MA"
+              name="account-circle"
+              text="Proceed with Login"
+              color={ LightMode.green }
+              textColor={ email === "" || password === "" ? LightMode.white : LightMode.black }
+              borderRadius={ 10 }
+              disabled={ email === "" || password === "" }
+            />
 
             <Spacer size={ 25 } />
 
             <RoundedBorderButton
-              onPress={ () => {
-                Alert.alert(
-                  "Not yet available!",
-                  "Apple authentication will be integrated in the future. Please use the default email-password sign-in method!",
-                  [
-                    { text: "I Understood", style: "default" },
-                  ]
-                )
-              }}
-              name="apple"
-              text="Login with Apple"
+              onPress={ () => toRegister() }
+              icon="MA"
+              name="account-circle"
+              text="Create New Account"
               color={ LightMode.black }
               textColor={ LightMode.white }
               borderRadius={ 10 }

@@ -53,12 +53,12 @@ const getTheUserFailure = ( error: string ) => ({
   payload: error
 })
 
-export const getTheUser = ( theEmail: string, thePassword: string ) => {
+export const getTheUser = ( theEmail: string ) => {
   return async ( dispatch: AppDispatch ) => {
     dispatch( getTheUserLoading() )
 
     try {
-      const res = await getTheUserService( theEmail, thePassword )
+      const res = await getTheUserService( theEmail )
       dispatch( getTheUserSuccess( res ) ) 
 
       // Create async session
@@ -66,7 +66,7 @@ export const getTheUser = ( theEmail: string, thePassword: string ) => {
         await AsyncStorage.setItem( "@user_session", JSON.stringify( res ) )
         console.log( "Done creating session: ", res )
       } catch ( error: any ) {
-        console.error( "Error creating session: ", error )
+        console.log( "Error creating session: ", error )
       }
     } catch ( error: any ) {
       dispatch( getTheUserFailure( error.message ) )
@@ -142,7 +142,7 @@ export const updateProfile = ( theUser: User ) => {
 
         console.log( "Done updating session: ", sessionUser )
       } catch ( error: any ) {
-        console.error( "Error updating session: ", error )
+        console.log( "Error updating session: ", error )
       }
     } catch ( error: any ) {
       dispatch( updateProfileFailure( error.message ) )
