@@ -644,7 +644,7 @@ const s = StyleSheet.create({
     gap: 5
   },
   "sub": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12
   },
   "yellow": {
@@ -745,12 +745,12 @@ const s = StyleSheet.create({
     elevation: 10,
   },
   "boxText": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.white,
   },
   "hintText": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.halfBlack
   }

@@ -37,7 +37,7 @@ export default function AddRecipeToPlannerModal( { comment = "", setComment = nu
             setValue={ setDropValue }
             placeholder="Choose Meal"
             textStyle={{
-              fontFamily: "cantarell"
+              fontFamily: "fira"
             }}
           />
 
@@ -130,7 +130,7 @@ const s = StyleSheet.create({
     alignItems: "center"
   },
   "hint": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.lightBlack,
     textAlign: "center"

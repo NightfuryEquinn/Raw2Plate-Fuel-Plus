@@ -235,7 +235,7 @@ const s = StyleSheet.create({
     color: LightMode.black
   },
   "sub": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.black
   },
@@ -269,7 +269,7 @@ const s = StyleSheet.create({
   },
   "vertSub": {
     padding: 5,
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12, 
     textAlign: "center",
     color: LightMode.black

@@ -203,7 +203,7 @@ const s = StyleSheet.create({
     color: LightMode.black
   },
   "sub": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     textAlign: "center",
     marginBottom: 20,
@@ -215,7 +215,7 @@ const s = StyleSheet.create({
   },
   "minor": {
     fontSize: 12,
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     color: LightMode.black
   }
 })

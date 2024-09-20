@@ -422,7 +422,7 @@ const s = StyleSheet.create({
     alignSelf: "center"
   },
   "sub": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.black
   },
@@ -460,7 +460,7 @@ const s = StyleSheet.create({
     marginRight: 10,
   },
   "dateText": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.black,
     textTransform: "uppercase"
@@ -471,7 +471,7 @@ const s = StyleSheet.create({
     color: LightMode.black,
   },
   "headingSub": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 32,
     color: LightMode.yellow
   },
@@ -493,12 +493,12 @@ const s = StyleSheet.create({
     height: 36,
   },
   "main": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.black,
   },
   "secondary": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.halfBlack
   },
@@ -528,7 +528,7 @@ const s = StyleSheet.create({
     flex: 1
   },
   "hint": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.lightBlack,
   },
@@ -557,7 +557,7 @@ const s = StyleSheet.create({
     alignItems: "center"
   },
   "empty": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 24,
     color: LightMode.lightBlack,
     textAlign: "center"

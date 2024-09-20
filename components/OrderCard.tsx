@@ -153,7 +153,7 @@ const s = StyleSheet.create({
     justifyContent: "center",
   },
   "dividerText": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 14,
     color: LightMode.white,
   },
@@ -172,12 +172,12 @@ const s = StyleSheet.create({
     alignItems: "center"
   },
   "name": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.black
   },
   "price": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.halfBlack
   },
@@ -195,7 +195,7 @@ const s = StyleSheet.create({
     gap: 10,
   },
   "topHeading": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.halfBlack
   },
@@ -205,7 +205,7 @@ const s = StyleSheet.create({
     color: LightMode.black
   },
   "method": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.yellow
   },
@@ -223,7 +223,7 @@ const s = StyleSheet.create({
     gap: 5,
   },
   "address": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 14,
     color: LightMode.black
   },
@@ -231,7 +231,7 @@ const s = StyleSheet.create({
     color: LightMode.yellow
   },
   "completed": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 14,
     color: LightMode.halfBlack
   },

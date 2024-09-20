@@ -307,7 +307,7 @@ const s = StyleSheet.create({
     justifyContent: "center",
   },
   "dividerText": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 14,
     color: LightMode.white,
   },
@@ -332,12 +332,12 @@ const s = StyleSheet.create({
     alignItems: "center"
   },
   "name": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.black
   },
   "price": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.halfBlack
   },
@@ -371,7 +371,7 @@ const s = StyleSheet.create({
     paddingHorizontal: 7.5,
     paddingVertical: 2.5,
     backgroundColor: LightMode.white,
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.black
   },

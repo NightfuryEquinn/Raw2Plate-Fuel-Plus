@@ -64,7 +64,7 @@ const s = StyleSheet.create({
   "heading": {
     flex: 1, 
     padding: 10,
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.white
   }

@@ -301,7 +301,7 @@ const s = StyleSheet.create({
     justifyContent: "center"
   },
   "dateText": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.black,
     textAlign: "center"
@@ -332,7 +332,7 @@ const s = StyleSheet.create({
     borderRadius: 10,
   },
   "meal": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.black
   },
@@ -354,12 +354,12 @@ const s = StyleSheet.create({
     borderRadius: 10,
   },
   "ctaText": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.black
   },
   "hint": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.lightBlack,
     textAlign: "center"

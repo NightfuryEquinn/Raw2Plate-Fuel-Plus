@@ -202,7 +202,7 @@ const s = StyleSheet.create({
     gap: 10
   },
   "hint": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.lightBlack,
     textAlign: "right"
@@ -238,8 +238,8 @@ const s = StyleSheet.create({
   "black": {
     color: LightMode.black,
   },
-  "cantarell": {
-    fontFamily: "cantarell",
+  "fira": {
+    fontFamily: "fira",
     fontSize: 12,
   },
 })

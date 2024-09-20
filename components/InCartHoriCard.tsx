@@ -108,7 +108,7 @@ const s = StyleSheet.create({
     gap: 20,
   },
   "name": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.black
   },
@@ -116,7 +116,7 @@ const s = StyleSheet.create({
     gap: 5,
   },
   "quantity": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.halfBlack
   },
@@ -124,7 +124,7 @@ const s = StyleSheet.create({
     color: LightMode.black
   },
   "price": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.black
   },

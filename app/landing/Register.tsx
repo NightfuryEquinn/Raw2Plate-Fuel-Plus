@@ -194,14 +194,14 @@ const s = StyleSheet.create({
     color: LightMode.black
   },
   "sub": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     textAlign: "center",
     marginBottom: 20,
     color: LightMode.black
   },
   "subLeft": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     marginBottom: 20,
     color: LightMode.black

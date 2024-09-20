@@ -122,7 +122,7 @@ const s = StyleSheet.create({
     justifyContent: "space-between"
   },
   "heading": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.black
   },
@@ -152,12 +152,12 @@ const s = StyleSheet.create({
     justifyContent: "space-between"
   },
   "boxTitle": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.black
   },
   "boxSub": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.halfBlack
   }

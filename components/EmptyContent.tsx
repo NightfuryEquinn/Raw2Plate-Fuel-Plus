@@ -40,7 +40,7 @@ const s = StyleSheet.create({
   },
   "emptyText": {
     paddingHorizontal: 20,
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.black,
     textAlign: "center"

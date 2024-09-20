@@ -51,7 +51,7 @@ const s = StyleSheet.create({
   },
   "sub": {
     padding: 10,
-    fontFamily: "cantarell"
+    fontFamily: "fira"
   }
 })
 

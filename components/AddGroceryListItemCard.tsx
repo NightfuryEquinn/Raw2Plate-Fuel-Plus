@@ -49,7 +49,7 @@ const s = StyleSheet.create({
     borderRadius: 10,
   },
   "text": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.white
   }

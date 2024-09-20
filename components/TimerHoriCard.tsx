@@ -105,7 +105,7 @@ const s = StyleSheet.create({
     color: LightMode.yellow
   },
   "heading": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.black
   },

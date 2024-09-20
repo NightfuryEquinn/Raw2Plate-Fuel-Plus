@@ -370,7 +370,7 @@ const s = StyleSheet.create({
     alignSelf: "center"
   },
   "sub": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.black
   },
@@ -413,7 +413,7 @@ const s = StyleSheet.create({
     marginRight: 10,
   },
   "dateText": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.black,
     textTransform: "uppercase"
@@ -440,7 +440,7 @@ const s = StyleSheet.create({
     justifyContent: "center",
   },
   "dividerText": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 14,
     color: LightMode.white,
   },

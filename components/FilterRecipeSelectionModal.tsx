@@ -56,7 +56,7 @@ export default function FilterRecipeSelectionModal( {
                   setValue={ setCuisinesValue }
                   placeholder="Choose Cuisines"
                   textStyle={{
-                    fontFamily: "cantarell"
+                    fontFamily: "fira"
                   }}
                   zIndex={ 3000 }
                   zIndexInverse={ 1000 }
@@ -78,7 +78,7 @@ export default function FilterRecipeSelectionModal( {
                   setValue={ setIncludeValue }
                   placeholder="To be included"
                   textStyle={{
-                    fontFamily: "cantarell"
+                    fontFamily: "fira"
                   }}
                   zIndex={ 2000 }
                   zIndexInverse={ 2000 }
@@ -109,7 +109,7 @@ export default function FilterRecipeSelectionModal( {
                   setValue={ setExcludeValue }
                   placeholder="To be excluded"
                   textStyle={{
-                    fontFamily: "cantarell"
+                    fontFamily: "fira"
                   }}
                   zIndex={ 1000 }
                   zIndexInverse={ 3000 }
@@ -235,7 +235,7 @@ const s = StyleSheet.create({
     flex: 1,
   },
   "listText": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 14,
     color: LightMode.black
   },
@@ -246,7 +246,7 @@ const s = StyleSheet.create({
     alignItems: "center",
   },
   "textButton": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.yellow
   },

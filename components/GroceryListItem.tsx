@@ -83,7 +83,7 @@ const s = StyleSheet.create({
     flex: 1,
   },
   "text": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.black
   },

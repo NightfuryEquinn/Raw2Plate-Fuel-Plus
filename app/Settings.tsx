@@ -269,7 +269,7 @@ const s = StyleSheet.create({
   },
   "sub": {
     flex: 1,
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.black
   },
@@ -278,7 +278,7 @@ const s = StyleSheet.create({
     height: 24
   },
   "version": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 10,
     color: LightMode.lightBlack
   }

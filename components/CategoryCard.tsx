@@ -44,7 +44,7 @@ const s = StyleSheet.create({
     justifyContent: "space-between"
   },
   "label": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.black
   },

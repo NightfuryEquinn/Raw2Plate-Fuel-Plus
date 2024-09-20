@@ -170,7 +170,7 @@ const s = StyleSheet.create({
     color: LightMode.black
   },
   "sub": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.black
   },

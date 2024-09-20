@@ -54,7 +54,7 @@ export default function HoriScrollRecipes( { navigation, title, data }: any ) {
 
 const s = StyleSheet.create({
   "recipeSection": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.darkGreen,
     textTransform: "uppercase"

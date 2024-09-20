@@ -73,7 +73,7 @@ const s = StyleSheet.create({
     textTransform: "uppercase"
   },
   "hintText": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.halfBlack
   }

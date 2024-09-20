@@ -129,7 +129,7 @@ const s = StyleSheet.create({
     alignItems: "center",
   },
   "textButton": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.yellow
   },

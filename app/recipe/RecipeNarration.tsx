@@ -242,13 +242,13 @@ const s = StyleSheet.create({
     textAlign: "center",
   },
   "step": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.lightBlack,
     textAlign: "center"
   },
   "featured": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 24,
     color: LightMode.black,
     textAlign: "center"
@@ -279,7 +279,7 @@ const s = StyleSheet.create({
     textAlign: "center"
   },
   "hint": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.lightBlack,
     textAlign: "center"

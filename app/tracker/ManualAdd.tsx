@@ -234,7 +234,7 @@ export default function ManualAdd( { navigation }: any ) {
               setValue={ setDropValue }
               placeholder="Choose Meal"
               textStyle={{
-                fontFamily: "cantarell"
+                fontFamily: "fira"
               }}
             />
 
@@ -392,7 +392,7 @@ const s = StyleSheet.create({
     justifyContent: "center"
   },
   "dateText": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.black,
     textAlign: "center"
@@ -413,12 +413,12 @@ const s = StyleSheet.create({
     justifyContent: "center",
   },
   "dividerText": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 14,
     color: LightMode.white,
   },
   "hintText": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.halfBlack
   }

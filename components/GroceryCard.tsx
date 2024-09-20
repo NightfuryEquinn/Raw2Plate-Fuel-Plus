@@ -60,12 +60,12 @@ const s = StyleSheet.create({
     backgroundColor: "#FFFFFF",
   },
   "price": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.black,
   },
   "name": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.halfBlack
   }

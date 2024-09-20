@@ -67,7 +67,7 @@ const s = StyleSheet.create({
     gap: 20,
   },
   "message": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 20,
     color: LightMode.black,
     textAlign: "center"

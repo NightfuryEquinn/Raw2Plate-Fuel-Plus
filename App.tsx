@@ -14,7 +14,7 @@ import { Audio } from 'expo-av'
 
 export default function App() {
   const fontConfig = {
-    fontFamily: "cantarell"
+    fontFamily: "fira"
   }
 
   const theme = {

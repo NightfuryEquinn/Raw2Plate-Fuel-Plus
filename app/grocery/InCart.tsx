@@ -199,7 +199,7 @@ const s = StyleSheet.create({
     borderRadius: 10,
   },
   "text": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.halfBlack
   },
@@ -239,12 +239,12 @@ const s = StyleSheet.create({
     paddingHorizontal: 7.5,
     paddingVertical: 2.5,
     backgroundColor: LightMode.white,
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.black
   },
   "hint": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.lightBlack,
     textAlign: "right"

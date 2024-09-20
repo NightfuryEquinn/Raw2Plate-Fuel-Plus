@@ -309,7 +309,7 @@ const s = StyleSheet.create({
     color: LightMode.black
   },
   "profileSub": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.lightBlack
   },
@@ -326,7 +326,7 @@ const s = StyleSheet.create({
     gap: 5
   },
   "detailHeading": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.lightBlack
   },

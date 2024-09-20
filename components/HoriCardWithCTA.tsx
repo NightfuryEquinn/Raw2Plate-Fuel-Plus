@@ -87,7 +87,7 @@ const s = StyleSheet.create({
     flexDirection: "row",
   },
   "detailHeading": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     flex: 1,
     flexWrap: "wrap"
@@ -97,7 +97,7 @@ const s = StyleSheet.create({
     gap: 5
   },
   "sub": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12
   },
   "yellow": {

@@ -96,7 +96,7 @@ const MainStack = () => {
         options={{
           drawerLabelStyle: {
             marginLeft: -10,
-            fontFamily: "cantarell", 
+            fontFamily: "fira", 
             fontWeight: 900, 
             fontSize: 14
           },
@@ -118,7 +118,7 @@ const MainStack = () => {
         options={{
           drawerLabelStyle: {
             marginLeft: -10,
-            fontFamily: "cantarell", 
+            fontFamily: "fira", 
             fontWeight: 900, 
             fontSize: 14 
           },
@@ -140,7 +140,7 @@ const MainStack = () => {
         options={{
           drawerLabelStyle: {
             marginLeft: -10,
-            fontFamily: "cantarell", 
+            fontFamily: "fira", 
             fontWeight: 900, 
             fontSize: 14 
           },
@@ -162,7 +162,7 @@ const MainStack = () => {
         options={{
           drawerLabelStyle: {
             marginLeft: -10,
-            fontFamily: "cantarell", 
+            fontFamily: "fira", 
             fontWeight: 900, 
             fontSize: 14 
           },
@@ -185,7 +185,7 @@ const MainStack = () => {
         options={{
           drawerLabelStyle: {
             marginLeft: -10,
-            fontFamily: "cantarell", 
+            fontFamily: "fira", 
             fontWeight: 900, 
             fontSize: 14 
           },
@@ -207,7 +207,7 @@ const MainStack = () => {
         options={{
           drawerLabelStyle: {
             marginLeft: -10,
-            fontFamily: "cantarell", 
+            fontFamily: "fira", 
             fontWeight: 900, 
             fontSize: 14 
           },
@@ -229,7 +229,7 @@ const MainStack = () => {
         options={{
           drawerLabelStyle: {
             marginLeft: -10,
-            fontFamily: "cantarell", 
+            fontFamily: "fira", 
             fontWeight: 900, 
             fontSize: 14 
           },
@@ -251,7 +251,7 @@ const MainStack = () => {
         options={{
           drawerLabelStyle: {
             marginLeft: -10,
-            fontFamily: "cantarell", 
+            fontFamily: "fira", 
             fontWeight: 900, 
             fontSize: 14 
           },
@@ -273,7 +273,7 @@ const MainStack = () => {
         options={{
           drawerLabelStyle: {
             marginLeft: -10,
-            fontFamily: "cantarell", 
+            fontFamily: "fira", 
             fontWeight: 900, 
             fontSize: 14 
           },
@@ -295,7 +295,7 @@ const MainStack = () => {
         options={{
           drawerLabelStyle: {
             marginLeft: -10,
-            fontFamily: "cantarell", 
+            fontFamily: "fira", 
             fontWeight: 900, 
             fontSize: 14 
           },

@@ -164,12 +164,12 @@ const s = StyleSheet.create({
     backgroundColor: "#FFFFFF"
   },
   "price": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 28,
     color: LightMode.black,
   },
   "name": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.halfBlack
   },
@@ -178,7 +178,7 @@ const s = StyleSheet.create({
     gap: 10,
   },
   "quantityHeading": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 22,
     color: LightMode.black
   },
@@ -188,7 +188,7 @@ const s = StyleSheet.create({
     alignItems: "center"
   },
   "quantity": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 28,
     color: LightMode.lightBlack
   },
@@ -215,7 +215,7 @@ const s = StyleSheet.create({
     alignItems: "center",
   },
   "textButton": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.yellow
   },

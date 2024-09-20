@@ -328,7 +328,7 @@ const s = StyleSheet.create({
   },
   "sub": {
     marginTop: 15,
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.black,
   },
@@ -360,12 +360,12 @@ const s = StyleSheet.create({
     elevation: 10,
   },
   "boxText": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.black,
   },
   "textButton": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
     color: LightMode.yellow
   },

@@ -160,7 +160,7 @@ const s = StyleSheet.create({
     justifyContent: "center"
   },
   "dateText": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 12,
     color: LightMode.black,
     textAlign: "center"

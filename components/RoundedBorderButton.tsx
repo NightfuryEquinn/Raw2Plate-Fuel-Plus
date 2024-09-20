@@ -67,7 +67,7 @@ const s = StyleSheet.create({
     gap: 10,
   },
   "buttonText": {
-    fontFamily: "cantarell",
+    fontFamily: "fira",
     fontSize: 16,
   }
 })
