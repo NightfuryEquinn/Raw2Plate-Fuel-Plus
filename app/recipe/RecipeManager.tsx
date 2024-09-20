@@ -56,14 +56,14 @@ export default function RecipeManager( {  }: any ) {
     if ( userSession ) {
       await dispatch( fetchPlannerRecipes( userSession.userId ) )
 
-      const theRecipeIds = data[ 0 ].plannerRecipes.filter(
-        ( item: any ) =>
-          item.date === dayjs( modalDate ).format( "YYYY-MM-DD" ).toString()
-      ).map(
-        ( item: any ) => item.recipeId
-      ).join( "," )
+      if ( data[ 0 ].plannerRecipes && data[ 0 ].plannerRecipes.length > 0 ) {
+        const theRecipeIds = data[ 0 ].plannerRecipes
+          .filter(( item: any ) => item.date === dayjs( modalDate ).format( "YYYY-MM-DD" ).toString())
+          .map(( item: any ) => item.recipeId)
+          .join( "," )
   
-      await dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
+        await dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
+      }
     }
 
     setRefreshing( false )
@@ -129,27 +129,23 @@ export default function RecipeManager( {  }: any ) {
   }, [])
 
   useEffect(() => {
-    onRefresh()
-  }, [ modalDate ])
+    const fetchData = async () => {
+      if ( userSession ) {
+        await dispatch( fetchPlannerRecipes( userSession.userId ) )
 
-  useEffect(() => {
-    if ( userSession ) {
-      dispatch( fetchPlannerRecipes( userSession.userId ) )
+        if ( data[ 0 ].plannerRecipes && data[ 0 ].plannerRecipes.length > 0 ) {
+          const theRecipeIds = data[ 0 ].plannerRecipes
+            .filter(( item: any ) => item.date === dayjs( modalDate ).format( "YYYY-MM-DD" ).toString())
+            .map(( item: any ) => item.recipeId)
+            .join( "," )
+    
+          await dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
+        }
+      }
     }
+    
+    fetchData()
   }, [ userSession ])
-
-  useEffect(() => {
-    if ( data[ 0 ].plannerRecipes && !data[ 0 ].plannerRecipesInfo ) {
-      const theRecipeIds = data[ 0 ].plannerRecipes.filter(
-        ( item: any ) =>
-          item.date === dayjs( modalDate ).format( "YYYY-MM-DD" ).toString()
-      ).map(
-        ( item: any ) => item.recipeId
-      ).join( "," )
-
-      dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
-    }
-  }, [ data[ 0 ].plannerRecipes ])
   
   return (
     loading ? <Loading /> :
@@ -179,6 +175,7 @@ export default function RecipeManager( {  }: any ) {
               mealCategories.map(( meal: MealCategory, index: number ) => { 
                 return (
                   <TouchableOpacity
+                    key={ index }
                     activeOpacity={ 0.5 } 
                     onPress={ () => setSelectedMeal( index ) }
                     style={[ s.mealBlock, selectedMeal === index ? { backgroundColor: LightMode.green } : { backgroundColor: LightMode.white } ]}

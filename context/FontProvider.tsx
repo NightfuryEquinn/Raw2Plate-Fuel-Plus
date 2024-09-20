@@ -1,5 +1,5 @@
 import { FjallaOne_400Regular as fjalla } from '@expo-google-fonts/fjalla-one';
-import { FiraSansCondensed_500Medium as fira } from "@expo-google-fonts/fira-sans-condensed"
+import { FiraSansCondensed_400Regular as fira } from "@expo-google-fonts/fira-sans-condensed"
 import { useFonts } from 'expo-font';
 import React, { createContext, ReactNode, useContext } from "react";
 

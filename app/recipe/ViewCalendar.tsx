@@ -112,20 +112,22 @@ export default function ViewCalendar( { navigation }: any ) {
   }, [])
 
   useEffect(() => {
-    if ( userSession ) {
-      dispatch( fetchPlannerRecipes( userSession.userId ) )
+    const fetchData = async () => {
+      if ( userSession ) {
+        await dispatch( fetchPlannerRecipes( userSession.userId ) )
+
+        if ( data[ 0 ].plannerRecipes && data[ 0 ].plannerRecipes.length > 0 ) {
+          const theRecipeIds = data[ 0 ].plannerRecipes
+            .map(( item: any ) => item.recipeId)
+            .join( "," )
+    
+          await dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
+        }
+      }
     }
+
+    fetchData()
   }, [ userSession ])
-
-  useEffect(() => {
-    if ( data[ 0 ].plannerRecipes && !data[ 0 ].plannerRecipesInfo ) {
-      const theRecipeIds = data[ 0 ].plannerRecipes.map(
-        ( item: any ) => item.recipeId
-      ).join( "," )
-
-      dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
-    }
-  }, [ data[ 0 ].plannerRecipes ])
 
   useEffect(() => {
     const selectedIndex = dates.findIndex( date => date.dayOfMonth === selectedDate )

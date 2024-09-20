@@ -47,7 +47,7 @@ export default function RecipeSelectionModal({
           "Existed!",
           "This recipe has already been added at this meal time!",
           [
-            { text: "I Understood", style: "default" },
+            { text: "Ok", style: "default" },
           ]
         )
       } else {
@@ -55,7 +55,7 @@ export default function RecipeSelectionModal({
           "Success!",
           "This recipe has been added!",
           [
-            { text: "I Understood", style: "default" },
+            { text: "Ok", style: "default" },
           ]
         )
       }

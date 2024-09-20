@@ -8,8 +8,7 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: false,
       immutableCheck: false
-    }).concat( thunk ),
-  devTools: true
+    }).concat( thunk )
 })
 
 // Infer the RootState and AppDispatch types from the store itself

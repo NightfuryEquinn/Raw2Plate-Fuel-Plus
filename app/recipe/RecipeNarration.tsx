@@ -64,6 +64,9 @@ export default function RecipeNarration( { navigation, route }: any ) {
 
   const endStep = () => {
     Speech.stop()
+    Voice.stop()
+    Voice.destroy().then( Voice.removeAllListeners )
+
     navigation.goBack() 
   }
 
@@ -78,16 +81,17 @@ export default function RecipeNarration( { navigation, route }: any ) {
       if ( command.includes( "back" ) ) {
         backStep()
       } 
+
       if ( [ "stop", "end", "done", "finish" ].some( word => command.includes( word ) ) ) {
         endStep()
-      } 
+      }
+
       if ( [ "tell", "again", "repeat" ].some( word => command.includes( word ) ) ) {
         tellStep()
       }
     }, 1000 )
   }
   
-
   const onSpeechStart = () => {
     console.log( "Speech Start" )
   }
@@ -114,8 +118,9 @@ export default function RecipeNarration( { navigation, route }: any ) {
   }
 
   const onRecord = () => {
-    Voice.stop()
-    Voice.start( "en-US" )
+    setTimeout(() => {
+      Voice.start( "en-US" )
+    }, 2000 )
   }
 
   const { fontsLoaded } = useFontFromContext()
@@ -202,7 +207,7 @@ export default function RecipeNarration( { navigation, route }: any ) {
 
         <Spacer size={ 20 } />
 
-        <Text style={ s.hint }>You can voice-control for recipe narration.</Text>
+        <Text style={ s.hint }>Voice controls are only available for ColorOS 13 and above.</Text>
         <Text style={ s.hint }>Try saying "Tell", "Stop", "Back", and "Next".</Text>
       </View>
 
@@ -211,11 +216,9 @@ export default function RecipeNarration( { navigation, route }: any ) {
         showModal={ showModal }
         message="Finish cooking?"
         onCancel={ () => {
-          console.log( "Cancel" )
           showModal()
         }}
         onConfirm={ () => {
-          console.log( "Confirm" ) 
           showModal()
           endStep()
         }}

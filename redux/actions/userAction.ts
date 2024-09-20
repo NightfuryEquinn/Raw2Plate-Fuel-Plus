@@ -138,7 +138,7 @@ export const updateProfile = ( theUser: User ) => {
 
       try {
         await AsyncStorage.removeItem( "@user_session" )
-        const sessionUser = await AsyncStorage.setItem( "@user_session", JSON.stringify( theUser ) )
+        const sessionUser = await AsyncStorage.setItem( "@user_session", JSON.stringify( res ) )
 
         console.log( "Done updating session: ", sessionUser )
       } catch ( error: any ) {

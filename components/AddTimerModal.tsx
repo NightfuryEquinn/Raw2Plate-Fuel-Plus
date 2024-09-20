@@ -80,7 +80,7 @@ export default function AddTimerModal( { modal, showModal, loadTimers, hour, min
         "Timer added!",
         "Bao will notify you later when the timer is up!",
         [
-          { text: "I Understood", style: "default" },
+          { text: "Ok", style: "default" },
         ]
       )
     } catch ( error ) {
@@ -90,7 +90,7 @@ export default function AddTimerModal( { modal, showModal, loadTimers, hour, min
         "Failed!",
         "Unknown error occured, please try again!",
         [
-          { text: "I Understood", style: "default" },
+          { text: "Ok", style: "default" },
         ]
       )
     }

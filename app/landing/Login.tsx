@@ -48,7 +48,7 @@ export default function Login( { navigation }: any ) {
             "Invalid credentials!",
             "Email address or password is incorrect or user not exist!",
             [
-              { text: "I Understood", style: "default" },
+              { text: "Ok", style: "default" },
             ]
           )
         }
@@ -58,7 +58,7 @@ export default function Login( { navigation }: any ) {
             "User not found!",
             "No user found with this email, please register a new account!",
             [
-              { text: "I Understood", style: "default" },
+              { text: "Ok", style: "default" },
             ]
           )
         }
@@ -68,7 +68,7 @@ export default function Login( { navigation }: any ) {
             "Incorrect password!",
             "Password doesn't match, please check again!",
             [
-              { text: "I Understood", style: "default" },
+              { text: "Ok", style: "default" },
             ]
           )
         }
@@ -78,7 +78,7 @@ export default function Login( { navigation }: any ) {
             "Weak password!",
             "Password should be at least 6 characters!",
             [
-              { text: "I Understood", style: "default" },
+              { text: "Ok", style: "default" },
             ]
           )
         }
@@ -167,7 +167,7 @@ export default function Login( { navigation }: any ) {
                   "Not yet available!",
                   "Google authentication will be integrated in the future. Please use the default email-password sign-in method!",
                   [
-                    { text: "I Understood", style: "default" },
+                    { text: "Ok", style: "default" },
                   ]
                 )
               }}

@@ -17,7 +17,7 @@ const initialState: ReduxState = {
   error: null
 }
 
-export const grcoeryReducer = (
+export const groceryReducer = (
   state = initialState,
   action: any
 ): ReduxState => {

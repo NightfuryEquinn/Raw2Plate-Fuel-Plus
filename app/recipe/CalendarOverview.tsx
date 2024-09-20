@@ -15,6 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import IconMA from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPlannerRecipes, fetchRecipePlannerTrackerInfo } from 'redux/actions/recipeAction';
+import { fetchBookmarkInfo } from 'redux/actions/userAction';
 import { AppDispatch, RootState } from 'redux/reducers/store';
 
 export default function CalendarOverview( { navigation }: any ) {
@@ -107,20 +108,22 @@ export default function CalendarOverview( { navigation }: any ) {
   }, [])
 
   useEffect(() => {
-    if ( userSession ) {
-      dispatch( fetchPlannerRecipes( userSession.userId ) )
+    const fetchData = async () => {
+      if ( userSession ) {
+        await dispatch( fetchPlannerRecipes( userSession.userId ) )
+
+        if ( data[ 0 ]?.plannerRecipes && data[ 0 ]?.plannerRecipes.length > 0 ) {
+          const theRecipeIds = data[ 0 ].plannerRecipes
+            .filter( ( item: any ) => item.date === dayjs().format( "YYYY-MM-DD" ).toString() )
+            .map( ( item: any ) => item.recipeId )
+            .join( "," )
+    
+          await dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
+        }
+      }
     }
 
-    if ( data[ 0 ].plannerRecipes && !data[ 0 ].plannerRecipesInfo ) {
-      const theRecipeIds = data[ 0 ].plannerRecipes.filter(
-        ( item: any ) =>
-          item.date === dayjs().format( "YYYY-MM-DD" ).toString()
-      ).map(
-        ( item: any ) => item.recipeId
-      ).join( "," )
-
-      dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
-    }
+    fetchData()
   }, [ userSession ])
   
   return (

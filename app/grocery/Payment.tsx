@@ -81,7 +81,7 @@ export default function Payment( { navigation, route }: any ) {
         "Active order!",
         "You currently have an active and ongoing order! Please wait for it to be delivered before issuing another!",
         [
-          { text: "I Understood", style: "default" },
+          { text: "Ok", style: "default" },
         ]
       )
     } else {
@@ -115,7 +115,7 @@ export default function Payment( { navigation, route }: any ) {
         "Success!",
         "Your order has been placed, please view it in your active order.",
         [
-          { text: "I Understood", style: "default" },
+          { text: "Ok", style: "default" },
         ]
       )
     }

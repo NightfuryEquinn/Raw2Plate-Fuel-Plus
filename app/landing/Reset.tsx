@@ -38,7 +38,7 @@ export default function Reset( { navigation }: any ) {
         "Email address is empty!",
         "Please enter your email address to have the reset link sent to your account!",
         [
-          { text: "I Understood", style: "default" },
+          { text: "Ok", style: "default" },
         ]
       )
 
@@ -53,7 +53,7 @@ export default function Reset( { navigation }: any ) {
           "Reset link sent!",
           "A password reset link has been sent to your email address, please check!",
           [
-            { text: "I Understood", style: "default" },
+            { text: "Ok", style: "default" },
           ]
         )
       })
@@ -63,7 +63,7 @@ export default function Reset( { navigation }: any ) {
             "Invalid email format!",
             "Email address format is badly written!",
             [
-              { text: "I Understood", style: "default" },
+              { text: "Ok", style: "default" },
             ]
           )
         }
@@ -73,7 +73,7 @@ export default function Reset( { navigation }: any ) {
             "User not found!",
             "No user found with this email, please register a new account!",
             [
-              { text: "I Understood", style: "default" },
+              { text: "Ok", style: "default" },
             ]
           )
         }

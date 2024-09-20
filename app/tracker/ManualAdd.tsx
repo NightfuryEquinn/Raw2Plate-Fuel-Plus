@@ -106,7 +106,7 @@ export default function ManualAdd( { navigation }: any ) {
           "Conflict!",
           "This recipe has been already been tracked!",
           [
-            { text: "I Understood", style: "default" },
+            { text: "Ok", style: "default" },
           ]
         )
       } else {
@@ -114,7 +114,7 @@ export default function ManualAdd( { navigation }: any ) {
           "Success!",
           "This recipe has been tracked!",
           [
-            { text: "I Understood", style: "default" },
+            { text: "Ok", style: "default" },
           ]
         )
 
@@ -136,7 +136,7 @@ export default function ManualAdd( { navigation }: any ) {
         "Success!",
         "This recipe has been tracked!",
         [
-          { text: "I Understood", style: "default" },
+          { text: "Ok", style: "default" },
         ]
       )
 

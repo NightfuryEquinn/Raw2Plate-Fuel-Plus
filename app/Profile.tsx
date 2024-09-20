@@ -24,7 +24,7 @@ export default function Profile( { navigation }: any ) {
 
   const { authInit, storageInit } = useFirebaseFromContext()
 
-  const [ image, setImage ] = useState( "" )
+  const [ image, setImage ] = useState( userInfo.image )
   const [ email, setEmail ] = useState( userInfo.email )
   const [ contact, setContact ] = useState( userInfo.contact )
   const [ height, setHeight ] = useState( userInfo?.height?.toString() || "0" )
@@ -87,7 +87,7 @@ export default function Profile( { navigation }: any ) {
           "Failed to logout!",
           "Unknown error occured, please try again!",
           [
-            { text: "I Understood", style: "default" },
+            { text: "Ok", style: "default" },
           ]
         )
 
@@ -106,7 +106,7 @@ export default function Profile( { navigation }: any ) {
           "Failed to upload image!",
           "There was an error uploading the image. Please try again!",
           [
-            { text: "I Understood", style: "default" }
+            { text: "Ok", style: "default" }
           ]
         )
 
@@ -114,7 +114,7 @@ export default function Profile( { navigation }: any ) {
       }
     }
 
-    dispatch( updateProfile(
+    await dispatch( updateProfile(
       {
         ...userInfo,
         image: imageUrl,
@@ -130,7 +130,7 @@ export default function Profile( { navigation }: any ) {
       "Success!",
       "New user info has been saved successfully!",
       [
-        { text: "I Understood", style: "default" },
+        { text: "Ok", style: "default" },
       ]
     )
   }

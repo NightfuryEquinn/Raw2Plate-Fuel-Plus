@@ -2,10 +2,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import Loading from 'app/Loading'
 import { LightMode } from 'assets/colors/LightMode'
 import AddRecipeToPlannerModal from 'components/AddRecipeToPlannerModal'
-import AddRecipeToTrackerModal from 'components/AddRecipeToTrackerModal'
 import CommentModal from 'components/CommentModal'
+import EmptyContent from 'components/EmptyContent'
 import RoundedBorderButton from 'components/RoundedBorderButton'
 import Spacer from 'components/Spacer'
+import StepBox from 'components/StepBox'
 import TopBar from 'components/TopBar'
 import { useFontFromContext } from 'context/FontProvider'
 import { capitalizeWords } from 'data/formatData'
@@ -36,8 +37,6 @@ export default function RecipeDetail( { navigation, route }: any ) {
 
   const [ modal, setModal ] = useState( false )
   const [ modalDate, setModalDate ] = useState( dayjs() )
-  const [ trackModal, setTrackModal ] = useState( false )
-  const [ trackModalDate, setTrackModalDate ] = useState( dayjs() )
   const [ commentModal, setCommentModal ] = useState( false )
   const [ comment, setComment ] = useState( "" )
 
@@ -58,33 +57,43 @@ export default function RecipeDetail( { navigation, route }: any ) {
     setModal( !modal )
   }
 
-  const showTrackModal = () => {
-    setTrackModal( !trackModal )
-  }
-
   const showCommentModal = () => {
     setCommentModal( !commentModal )
   }
 
-  const onRefresh = () => {
+  const onRefresh = async () => {
     setRefreshing( true )
 
-    if ( data[ 0 ].plannerRecipes ) {
+    if ( data[ 0 ]?.plannerRecipes ) {
       const viewingRecipe = data[ 0 ].plannerRecipes.filter(( item: any ) => item.recipeId === recipeId )
       setPlannerRecipe( viewingRecipe )
     }
 
     if ( data[ 0 ]?.recipeInfo?.id !== recipeId ) {
-      dispatch( fetchRecipeInfo( recipeId ) )
-      dispatch( fetchRecipeIngreSteps( recipeId ) )
+      await dispatch( fetchRecipeInfo( recipeId ) )
+      await dispatch( fetchRecipeIngreSteps( recipeId ) )
     }
 
-    if ( recipeIngreSteps ) {
+    if ( data[ 0 ]?.recipeIngreSteps ) {
       setDisplayIngre( cacheIngredients( recipeIngreSteps ) )
       setDisplaySteps( cacheSteps( recipeIngreSteps ) )
     }
 
     setRefreshing( false )
+  }
+
+  const confirmComment = () => {
+    if ( comment ) {
+      dispatch( updateComment( 
+        plannerRecipe[ 0 ].mealId,
+        {
+          ...plannerRecipe[ 0 ],
+          comment: comment
+        }
+      ))
+    }
+
+    showCommentModal()
   }
 
   const shareRecipe = () => {
@@ -140,7 +149,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
           "Existed!",
           "This recipe has already been bookmarked before!",
           [
-            { text: "I Understood", style: "default" },
+            { text: "Ok", style: "default" },
           ]
         )
       } else {
@@ -148,7 +157,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
           "Success!",
           "This recipe has been bookmarked!",
           [
-            { text: "I Understood", style: "default" },
+            { text: "Ok", style: "default" },
           ]
         )
       }
@@ -157,7 +166,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
         "Error!",
         "Unknown error occured, please try again!",
         [
-          { text: "I Understood", style: "default" },
+          { text: "Ok", style: "default" },
         ]
       )
 
@@ -182,7 +191,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
           "Success!",
           "This recipe has been removed from your bookmark list!",
           [
-            { text: "I Understood", style: "default" },
+            { text: "Ok", style: "default" },
           ]
         )
 
@@ -193,7 +202,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
         "Error!",
         "Unknown error occured, please try again!",
         [
-          { text: "I Understood", style: "default" },
+          { text: "Ok", style: "default" },
         ]
       )
 
@@ -202,6 +211,20 @@ export default function RecipeDetail( { navigation, route }: any ) {
   }
 
   const addToPlannerTrackerPress = async () => {
+    const notIncludeMealType = dropItems.every( obj => obj.value !== dropValue )
+
+    if ( notIncludeMealType ) {
+      Alert.alert(
+        "Missing field!",
+        "You haven't choose your meal for this recipe!",
+        [
+          { text: "Ok", style: "default" },
+        ]
+      )
+
+      return
+    }
+
     try {
       const res = await dispatch( addRecipesPlanner(
         userSession.userId,
@@ -229,7 +252,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
           "Success!",
           `The recipe has been added to ${ dropValue } on ${ dayjs( modalDate ).format( "YYYY-MM-DD" ).toString() }!`,
           [
-            { text: "I Understood", style: "default" },
+            { text: "Ok", style: "default" },
           ]
         )
       }
@@ -238,7 +261,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
         "Error!",
         "Unknown error occured, please try again!",
         [
-          { text: "I Understood", style: "default" },
+          { text: "Ok", style: "default" },
         ]
       )
 
@@ -269,21 +292,27 @@ export default function RecipeDetail( { navigation, route }: any ) {
   }, [])
 
   useEffect(() => {
-    if ( data[ 0 ].plannerRecipes ) {
-      const viewingRecipe = data[ 0 ].plannerRecipes.filter(( item: any ) => item.recipeId === recipeId )
-      setPlannerRecipe( viewingRecipe )
+    const fetchData = async () => {
+      if ( data[ 0 ]?.plannerRecipes ) {
+        const viewingRecipe = data[ 0 ].plannerRecipes.filter(( item: any ) => item.recipeId === recipeId )
+        setPlannerRecipe( viewingRecipe )
+      }
+  
+      if ( data[ 0 ]?.recipeInfo?.id !== recipeId ) {
+        await dispatch( fetchRecipeInfo( recipeId ) )
+        await dispatch( fetchRecipeIngreSteps( recipeId ) )
+      }
     }
+    
+    fetchData()
+  }, [ userSession ])
 
-    if ( data[ 0 ]?.recipeInfo?.id !== recipeId ) {
-      dispatch( fetchRecipeInfo( recipeId ) )
-      dispatch( fetchRecipeIngreSteps( recipeId ) )
-    }
-
-    if ( recipeIngreSteps ) {
+  useEffect(() => {
+    if ( recipeInfo && recipeIngreSteps ) {
       setDisplayIngre( cacheIngredients( recipeIngreSteps ) )
       setDisplaySteps( cacheSteps( recipeIngreSteps ) )
     }
-  }, [ userSession ])
+  }, [ recipeInfo, recipeIngreSteps ])
   
   return (
     loading ? <Loading /> :
@@ -456,7 +485,9 @@ export default function RecipeDetail( { navigation, route }: any ) {
                   <Text key={ index } style={[ s.boxText, { color: LightMode.black, fontSize: 16, textTransform: "capitalize" } ]}>• { name }</Text>
                 ))
                 :
-                <Text style={[ s.boxText, { color: LightMode.black, fontSize: 16, textTransform: "capitalize" } ]}>• No ingredients list available</Text>
+                <EmptyContent 
+                  message="No ingredients available..."
+                />
               }
             </View>
           </View>
@@ -474,14 +505,20 @@ export default function RecipeDetail( { navigation, route }: any ) {
               <Text style={ s.sectionHeading }>Guiding Steps</Text>
             </View>
 
-            <View style={[ s.sectionContent, { gap: 15, flexWrap: "nowrap" } ]}>
+            <View style={[ s.sectionContent, { gap: 10, flexWrap: "nowrap" } ]}>
               {
                 displaySteps ?
                 displaySteps.map(( name: string, index: number ) => (
-                  <Text key={ index } style={[ s.boxText, { color: LightMode.black, fontSize: 16 } ]}>{ index + 1 }. { name }</Text>
+                  <StepBox 
+                    key={ index }
+                    index={ index + 1 }
+                    step={ name }
+                  />
                 ))
                 :
-                <Text style={[ s.boxText, { color: LightMode.black, fontSize: 16 } ]}>• No steps available</Text>
+                <EmptyContent 
+                  message="No steps available..."
+                />
               }
             </View>
           </View>
@@ -490,6 +527,15 @@ export default function RecipeDetail( { navigation, route }: any ) {
         <Spacer size={ 30 } />
 
         <View style={ s.actionContainer }>
+          <RoundedBorderButton 
+            onPress={ () => navigation.navigate( "RecipeNarration", { recipeTitle: capitalizeWords( recipeInfo.title ), recipeSteps: displaySteps } ) }
+            color={ LightMode.yellow }
+            text="Cooking"
+            textColor={ LightMode.white }      
+            borderRadius={ 10 }
+            marginHori={ 0 }
+          />
+
           <View style={ s.actionWrapper }>
             { inBookmark ? 
               <TouchableOpacity
@@ -529,18 +575,6 @@ export default function RecipeDetail( { navigation, route }: any ) {
               />
             </TouchableOpacity>
 
-            <TouchableOpacity
-              activeOpacity={ 0.5 }
-              onPress={ showTrackModal }
-              style={ s.actionIcon }
-            >
-              <IconMA 
-                name="insert-chart-outlined"
-                color={ LightMode.black }
-                size={ 32 }
-              />
-            </TouchableOpacity>
-
             { plannerRecipe && plannerRecipe.length !== 0 && 
               <TouchableOpacity
                 activeOpacity={ 0.5 }
@@ -555,15 +589,6 @@ export default function RecipeDetail( { navigation, route }: any ) {
               </TouchableOpacity>
             }
           </View>
-          
-          <RoundedBorderButton 
-            onPress={ () => navigation.navigate( "RecipeNarration", { recipeTitle: capitalizeWords( recipeInfo.title ), recipeSteps: displaySteps } ) }
-            color={ LightMode.yellow }
-            text="Cooking"
-            textColor={ LightMode.white }      
-            borderRadius={ 10 }
-            marginHori={ 0 }
-          />
         </View>
       </View>
 
@@ -582,40 +607,13 @@ export default function RecipeDetail( { navigation, route }: any ) {
         save={ addToPlannerTrackerPress }
       />
 
-      <AddRecipeToTrackerModal 
-        comment={ comment }
-        setComment={ setComment }
-        modal={ trackModal }
-        showModal={ showTrackModal }
-        modalDate={ trackModalDate }
-        setModalDate={ setTrackModalDate }
-        openDrop={ openDrop }
-        dropValue={ dropValue }
-        dropItems={ dropItems }
-        setOpenDrop={ setOpenDrop }
-        setDropValue={ setDropValue }
-        save={ addToPlannerTrackerPress }
-      />
-
       <CommentModal 
         modal={ commentModal } 
         showModal={ showCommentModal } 
         name={ comment } 
         setName={ setComment } 
         onCancel={ showCommentModal } 
-        onConfirm={ () => {
-          if ( comment ) {
-            dispatch( updateComment( 
-              plannerRecipe[ 0 ].mealId,
-              {
-                ...plannerRecipe[ 0 ],
-                comment: comment
-              }
-            ))
-          }
-
-          showCommentModal()
-        }}      
+        onConfirm={ confirmComment }    
       />
     </SafeAreaView>
   )

@@ -38,7 +38,7 @@ export default function Register( { navigation }: any ) {
         "Passwords doesn't match!",
         "Please ensure both passwords are correctly typed!",
         [
-          { text: "I Understood", style: "default" },
+          { text: "Ok", style: "default" },
         ]
       )
 
@@ -73,7 +73,7 @@ export default function Register( { navigation }: any ) {
           "Logged in!",
           "You are ready to use Bao!",
           [
-            { text: "I Understood", style: "default" },
+            { text: "Ok", style: "default" },
           ]
         )
       })
@@ -83,7 +83,7 @@ export default function Register( { navigation }: any ) {
             "Existing email address!",
             "That email address is already in use!",
             [
-              { text: "I Understood", style: "default" },
+              { text: "Ok", style: "default" },
             ]
           )
         }
@@ -93,7 +93,7 @@ export default function Register( { navigation }: any ) {
             "Invalid email address!",
             "That email address is invalid!",
             [
-              { text: "I Understood", style: "default" },
+              { text: "Ok", style: "default" },
             ]
           )
         }
