@@ -27,7 +27,7 @@ export default function RecipeSelectionModal({
   const ctaPress = async ( item: any ) => {
     if ( changeOrAdd === "change" ) {
       // Sub for getting the recipe id for review while adding in tracker
-      setSelectedRecipe( item )
+      setSelectedRecipe( [ item ] )
     } else {
       const res = await dispatch( addRecipesPlanner(
         userSession.userId,

@@ -126,7 +126,9 @@ export default function ViewCalendar( { navigation }: any ) {
       }
     }
 
-    fetchData()
+    if ( userSession ) {
+      fetchData()
+    }
   }, [ userSession ])
 
   useEffect(() => {

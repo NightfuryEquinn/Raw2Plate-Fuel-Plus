@@ -144,7 +144,9 @@ export default function RecipeManager( {  }: any ) {
       }
     }
     
-    fetchData()
+    if ( userSession ) {
+      fetchData()
+    }
   }, [ userSession ])
   
   return (

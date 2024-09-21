@@ -123,7 +123,9 @@ export default function CalendarOverview( { navigation }: any ) {
       }
     }
 
-    fetchData()
+    if ( userSession ) {
+      fetchData()
+    }
   }, [ userSession ])
   
   return (

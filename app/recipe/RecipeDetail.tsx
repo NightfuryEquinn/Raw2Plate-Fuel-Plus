@@ -304,7 +304,9 @@ export default function RecipeDetail( { navigation, route }: any ) {
       }
     }
     
-    fetchData()
+    if ( userSession ) {
+      fetchData()
+    }
   }, [ userSession ])
 
   useEffect(() => {

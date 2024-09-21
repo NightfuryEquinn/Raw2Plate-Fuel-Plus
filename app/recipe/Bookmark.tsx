@@ -11,7 +11,7 @@ import { useFontFromContext } from 'context/FontProvider'
 import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useDispatch, useSelector } from 'react-redux'
+import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { fetchBookmark, fetchBookmarkInfo } from 'redux/actions/userAction'
 import { AppDispatch, RootState } from 'redux/reducers/store'
 
@@ -19,7 +19,7 @@ export default function Bookmark() {
   const [ userSession, setUserSession ] = useState<any>( null )
 
   const dispatch: AppDispatch = useDispatch()
-  const { data, loading, error } = useSelector(( state: RootState ) => state.user )
+  const { data, loading, error } = useSelector(( state: RootState ) => state.user, shallowEqual )
 
   const navigation = useNavigation<NavigationProp<ParamListBase>>()
 
@@ -81,7 +81,7 @@ export default function Bookmark() {
   useEffect(() => {
     const fetchData = async () => {
       if ( userSession ) {
-        await dispatch( fetchBookmark( userSession.userId ) )
+          await dispatch( fetchBookmark( userSession.userId ) )
       
         if ( data[ 0 ]?.fetchBookmarks && data[ 0 ]?.fetchBookmarks.length > 0 ) {  
           const theRecipeIds = data[ 0 ].fetchBookmarks
@@ -93,7 +93,9 @@ export default function Bookmark() {
       }
     }
 
-    fetchData()
+    if ( userSession && !data[ 0 ]?.fetchBookmarks ) {
+      fetchData()
+    }
   }, [ userSession ])
   
   return (

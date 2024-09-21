@@ -1,27 +1,26 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native'
-import React, { Fragment, useEffect, useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import TopBar from 'components/TopBar'
-import Spacer from 'components/Spacer'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Loading from 'app/Loading'
 import { LightMode } from 'assets/colors/LightMode'
-import { useFontFromContext } from 'context/FontProvider'
-import dayjs from 'dayjs'
-import RecipeSelectionModal from 'components/RecipeSelectionModal'
 import CalendarModal from 'components/CalendarModal'
-import DropDownPicker from 'react-native-dropdown-picker'
+import EmptyContent from 'components/EmptyContent'
 import LinedTextField from 'components/LinedTextField'
 import RecipeMoreDetails from 'components/RecipeMoreDetails'
-import { AppDispatch, RootState } from 'redux/reducers/store'
-import { useDispatch, useSelector } from 'react-redux'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { addRecipesPlanner, discoverSearch, fetchRandom } from 'redux/actions/recipeAction'
-import Loading from 'app/Loading'
+import RecipeSelectionModal from 'components/RecipeSelectionModal'
 import RoundedBorderButton from 'components/RoundedBorderButton'
-import { addManualRecipesTracker, fetchRecipesNutrients } from 'redux/actions/trackerAction'
-import { mealCategories } from 'data/mealCategory'
-import EmptyContent from 'components/EmptyContent'
+import Spacer from 'components/Spacer'
+import TopBar from 'components/TopBar'
+import { useFontFromContext } from 'context/FontProvider'
 import { capitalizeWords } from 'data/formatData'
+import dayjs from 'dayjs'
+import React, { Fragment, useEffect, useState } from 'react'
+import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import DropDownPicker from 'react-native-dropdown-picker'
 import { ScrollView } from 'react-native-gesture-handler'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { useDispatch, useSelector } from 'react-redux'
+import { addRecipesPlanner, discoverSearch, fetchRandom } from 'redux/actions/recipeAction'
+import { addManualRecipesTracker, fetchRecipesNutrients } from 'redux/actions/trackerAction'
+import { AppDispatch, RootState } from 'redux/reducers/store'
 
 export default function ManualAdd( { navigation }: any ) {
   const [ userSession, setUserSession ] = useState<any>( null )
@@ -88,13 +87,25 @@ export default function ManualAdd( { navigation }: any ) {
 
   const addToTrackerPress = async () => {
     if ( !manual ) {
+      if ( !dropValue || selectedRecipe === null || selectedRecipe.length === 0 ) {
+        Alert.alert(
+          "Missing field!",
+          "Please select a meal type and a recipe!",
+          [
+            { text: "Ok", style: "default" },
+          ]
+        )
+
+        return
+      }
+
       const res = await dispatch( addRecipesPlanner(
         userSession.userId,
         dayjs( modalDate ).format( "YYYY-MM-DD" ).toString(),
         {
           mealId: 0,
           mealType: dropValue,
-          recipeId: selectedRecipe.id,
+          recipeId: selectedRecipe[ 0 ].id,
           comment: "",
           plannerId: 0,
           trackerId: 0,
@@ -169,20 +180,22 @@ export default function ManualAdd( { navigation }: any ) {
   }, [])
 
   useEffect(() => {
-    if ( selectedRecipe.length !== 0 ) {
-      dispatch( fetchRecipesNutrients( selectedRecipe.id ) )
-    }
-  }, [ selectedRecipe ])
+    if ( selectedRecipe && selectedRecipe.length > 0 ) {
+      const cachedRecipeNutrients = trackerData.data[ 0 ]?.cacheRecipesNutrients?.find(
+        ( item: any ) => item.recipeId === selectedRecipe[ 0 ]?.id
+      );
 
-  useEffect(() => {
-    if ( trackerData.data[ 0 ]?.cacheRecipesNutrients ) {
-      const theRecipeNutrients = trackerData.data[ 0 ]?.cacheRecipesNutrients?.filter(( item: any ) =>
-        item.recipeId === selectedRecipe.id
-      )
+      if ( !cachedRecipeNutrients ) {
+        dispatch( fetchRecipesNutrients( selectedRecipe[ 0 ].id ) )
+      } else {
+        const theRecipeNutrients = trackerData.data[ 0 ]?.cacheRecipesNutrients?.filter(
+          ( item: any ) => item.recipeId === selectedRecipe[ 0 ]?.id
+        )
 
-      setRecipeNutrients( theRecipeNutrients )
+        setRecipeNutrients( theRecipeNutrients )
+      }
     }
-  }, [ trackerData.data[ 0 ]?.cacheRecipesNutrients ])
+  }, [ selectedRecipe, trackerData.data[ 0 ]?.cacheRecipesNutrients ])
   
   return (
     recipeData.loading || trackerData.loading ? <Loading /> :
@@ -274,10 +287,10 @@ export default function ManualAdd( { navigation }: any ) {
         </View> 
 
         {
-          trackerData && trackerData.data.length > 0 && trackerData.data[ 0 ]?.cacheRecipesNutrients && selectedRecipe.length !== 0 && recipeNutrients.length !== 0 ?
+          selectedRecipe && recipeNutrients.length !== 0 ?
             <RecipeMoreDetails 
-              name={ capitalizeWords( selectedRecipe?.title ) }
-              image={ selectedRecipe?.image }
+              name={ capitalizeWords( selectedRecipe[ 0 ]?.title ) }
+              image={ selectedRecipe[ 0 ]?.image }
               calories={ recipeNutrients[ 0 ]?.nutrients[ 0 ]?.amount.toFixed( 2 ) }
               carbo={ recipeNutrients[ 0 ]?.nutrients[ 3 ]?.amount }
               protein={ recipeNutrients[ 0 ]?.nutrients[ 8 ]?.amount }

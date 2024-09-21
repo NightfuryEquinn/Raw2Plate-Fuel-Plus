@@ -96,11 +96,11 @@ export default function MainTracker( { navigation }: any ) {
     let totalFibers = 0
     let totalFats = 0
 
-    const mealsToInclude = data[ 0 ].trackerRecipes.filter(( item: any ) => (
+    const mealsToInclude = data[ 0 ].trackerRecipes?.filter(( item: any ) => (
       item.date === dayjs( `${ currentMonth.year() }-${ currentMonth.month() + 1 }-${ selectedDate }` ).format( "YYYY-MM-DD" )
     ))
 
-    mealsToInclude.forEach(( data: any ) => {
+    mealsToInclude?.forEach(( data: any ) => {
       totalCal += data.recipeNutrients[ 0 ].amount
       totalCarbs += data.recipeNutrients[ 3 ].amount
       totalProtein += data.recipeNutrients[ 8 ].amount
@@ -108,11 +108,11 @@ export default function MainTracker( { navigation }: any ) {
       totalFats += data.recipeNutrients[ 1 ].amount
     })
 
-    const manualToInclude = data[ 0 ].trackerManual.filter(( item: any ) =>
+    const manualToInclude = data[ 0 ].trackerManual?.filter(( item: any ) =>
       item.date === dayjs( `${ currentMonth.year() }-${ currentMonth.month() + 1 }-${ selectedDate }` ).format( "YYYY-MM-DD" )
     )
 
-    manualToInclude.forEach(( data: any ) => {
+    manualToInclude?.forEach(( data: any ) => {
       totalManualCal += data.calories
     })
 
@@ -145,9 +145,15 @@ export default function MainTracker( { navigation }: any ) {
   }, [])
 
   useEffect(() => {
+    const fetchData = async () => {
+      if ( userSession ) {
+        await dispatch( fetchTrackerRecipes( userSession.userId ) )
+        await dispatch( fetchTrackerManual( userSession.userId ) )
+      }
+    }
+
     if ( userSession ) {
-      dispatch( fetchTrackerRecipes( userSession.userId ) )
-      dispatch( fetchTrackerManual( userSession.userId ) )
+      fetchData()
     }
   }, [ userSession ])
 
@@ -164,7 +170,7 @@ export default function MainTracker( { navigation }: any ) {
 
   useEffect(() => {
     tabulateNutrients()
-  }, [ currentMonth, selectedDate ])
+  }, [ selectedDate, data[ 0 ].trackerRecipes, data[ 0 ].trackerManual ])
   
   return (
     loading ? <Loading /> :
@@ -259,13 +265,17 @@ export default function MainTracker( { navigation }: any ) {
           }
         >
           { 
-            cal !== 0 && manualCal !== 0 ?
+            cal !== 0 ?
               <TrackerPieChart 
                 carbs={ carbs } 
                 proteins={ proteins } 
                 fibers={ fibers } 
                 fats={ fats }          
               />
+            : manualCal !== 0 ?
+            <View style={ s.emptyContainer }>
+              <Text style={ s.empty }>Manually-inputted recipes won't generate chart!</Text>
+            </View>
             :
             <View style={ s.emptyContainer }>
               <Text style={ s.empty }>You haven't even record what you eat!</Text>
