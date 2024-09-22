@@ -15,7 +15,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import IconMA from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPlannerRecipes, fetchRecipePlannerTrackerInfo } from 'redux/actions/recipeAction';
-import { fetchBookmarkInfo } from 'redux/actions/userAction';
 import { AppDispatch, RootState } from 'redux/reducers/store';
 
 export default function CalendarOverview( { navigation }: any ) {
@@ -66,17 +65,33 @@ export default function CalendarOverview( { navigation }: any ) {
   const onRefresh = async () => {
     setRefreshing( true )
 
-    if ( userSession ) {
-      await dispatch( fetchPlannerRecipes( userSession.userId ) )
+    const fetchData = async () => {
+      if ( userSession ) {
+        await dispatch( fetchPlannerRecipes( userSession.userId ) )
 
-      const theRecipeIds = data[ 0 ].plannerRecipes.filter(
-        ( item: any ) =>
-          item.date === dayjs().format( "YYYY-MM-DD" ).toString()
-      ).map(
-        ( item: any ) => item.recipeId
-      ).join( "," )
-  
-      await dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
+        if ( data[ 0 ].plannerRecipes && data[ 0 ].plannerRecipes.length > 0 ) {
+          const theRecipeIds = data[ 0 ].plannerRecipes
+            .filter(( item: any ) => item.date === dayjs().format( "YYYY-MM-DD" ).toString())
+            .map(( item: any ) => item.recipeId)
+
+          const previousRecipeIds = data[ 0 ].plannerRecipesInfo
+            ?.map(( item: any ) => item.id ) || []
+
+          const newRecipeIds = theRecipeIds
+            .filter(( item: any ) => !previousRecipeIds.includes( item ) )
+          
+          const removedRecipeIds = previousRecipeIds
+            .filter(( item: any ) => !theRecipeIds.includes( item ) )
+
+          if ( newRecipeIds.length > 0 || removedRecipeIds.length > 0 ) {
+            await dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds.join( "," ) ) )
+          }
+        }
+      }
+    }
+    
+    if ( userSession ) {
+      fetchData()
     }
     
     setRefreshing( false )
@@ -112,17 +127,27 @@ export default function CalendarOverview( { navigation }: any ) {
       if ( userSession ) {
         await dispatch( fetchPlannerRecipes( userSession.userId ) )
 
-        if ( data[ 0 ]?.plannerRecipes && data[ 0 ]?.plannerRecipes.length > 0 ) {
+        if ( data[ 0 ].plannerRecipes && data[ 0 ].plannerRecipes.length > 0 ) {
           const theRecipeIds = data[ 0 ].plannerRecipes
-            .filter( ( item: any ) => item.date === dayjs().format( "YYYY-MM-DD" ).toString() )
-            .map( ( item: any ) => item.recipeId )
-            .join( "," )
-    
-          await dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
+            .filter(( item: any ) => item.date === dayjs().format( "YYYY-MM-DD" ).toString())
+            .map(( item: any ) => item.recipeId)
+
+          const previousRecipeIds = data[ 0 ].plannerRecipesInfo
+            ?.map(( item: any ) => item.id ) || []
+
+          const newRecipeIds = theRecipeIds
+            .filter(( item: any ) => !previousRecipeIds.includes( item ) )
+          
+          const removedRecipeIds = previousRecipeIds
+            .filter(( item: any ) => !theRecipeIds.includes( item ) )
+
+          if ( newRecipeIds.length > 0 || removedRecipeIds.length > 0 ) {
+            await dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds.join( "," ) ) )
+          }
         }
       }
     }
-
+    
     if ( userSession ) {
       fetchData()
     }

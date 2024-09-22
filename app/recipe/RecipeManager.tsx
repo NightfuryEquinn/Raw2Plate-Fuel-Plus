@@ -12,7 +12,7 @@ import { useFontFromContext } from 'context/FontProvider'
 import { mealCategories, MealCategory } from 'data/mealCategory'
 import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
 import { deletePlannerRecipes, discoverSearch, fetchPlannerRecipes, fetchRandom, fetchRecipePlannerTrackerInfo } from 'redux/actions/recipeAction'
@@ -53,17 +53,33 @@ export default function RecipeManager( {  }: any ) {
   const onRefresh = async () => {
     setRefreshing( true )
 
-    if ( userSession ) {
-      await dispatch( fetchPlannerRecipes( userSession.userId ) )
+    const fetchData = async () => {
+      if ( userSession ) {
+        await dispatch( fetchPlannerRecipes( userSession.userId ) )
 
-      if ( data[ 0 ].plannerRecipes && data[ 0 ].plannerRecipes.length > 0 ) {
-        const theRecipeIds = data[ 0 ].plannerRecipes
-          .filter(( item: any ) => item.date === dayjs( modalDate ).format( "YYYY-MM-DD" ).toString())
-          .map(( item: any ) => item.recipeId)
-          .join( "," )
-  
-        await dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
+        if ( data[ 0 ].plannerRecipes && data[ 0 ].plannerRecipes.length > 0 ) {
+          const theRecipeIds = data[ 0 ].plannerRecipes
+            .filter(( item: any ) => item.date === dayjs( modalDate ).format( "YYYY-MM-DD" ).toString())
+            .map(( item: any ) => item.recipeId)
+
+          const previousRecipeIds = data[ 0 ].plannerRecipesInfo
+            ?.map(( item: any ) => item.id ) || []
+
+          const newRecipeIds = theRecipeIds
+            .filter(( item: any ) => !previousRecipeIds.includes( item ) )
+          
+          const removedRecipeIds = previousRecipeIds
+            .filter(( item: any ) => !theRecipeIds.includes( item ) )
+
+          if ( newRecipeIds.length > 0 || removedRecipeIds.length > 0 ) {
+            await dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds.join( "," ) ) )
+          }
+        }
       }
+    }
+    
+    if ( userSession ) {
+      fetchData()
     }
 
     setRefreshing( false )
@@ -137,9 +153,19 @@ export default function RecipeManager( {  }: any ) {
           const theRecipeIds = data[ 0 ].plannerRecipes
             .filter(( item: any ) => item.date === dayjs( modalDate ).format( "YYYY-MM-DD" ).toString())
             .map(( item: any ) => item.recipeId)
-            .join( "," )
-    
-          await dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
+
+          const previousRecipeIds = data[ 0 ].plannerRecipesInfo
+            ?.map(( item: any ) => item.id ) || []
+
+          const newRecipeIds = theRecipeIds
+            .filter(( item: any ) => !previousRecipeIds.includes( item ) )
+          
+          const removedRecipeIds = previousRecipeIds
+            .filter(( item: any ) => !theRecipeIds.includes( item ) )
+
+          if ( newRecipeIds.length > 0 || removedRecipeIds.length > 0 ) {
+            await dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds.join( "," ) ) )
+          }
         }
       }
     }
@@ -262,7 +288,18 @@ export default function RecipeManager( {  }: any ) {
           showConfirmModal()
         }}
         onConfirm={ () => {
-          dispatch( deletePlannerRecipes( filteredPlanner[ selectedRecipe ].mealId ) )
+          Alert.alert(
+            "Delete success!",
+            "The selected recipe is removed!",
+            [
+              { text: "Ok", style: "default" },
+            ]
+          )
+          
+          const toDelete = filteredPlanner
+            .filter(( item: any ) => item.recipeId === filteredPlannerInfo[ selectedRecipe ]?.id )[ 0 ].mealId
+
+          dispatch( deletePlannerRecipes( toDelete ) )
           showConfirmModal()
         }}
       />

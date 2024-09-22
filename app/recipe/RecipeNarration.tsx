@@ -12,8 +12,6 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 export default function RecipeNarration( { navigation, route }: any ) {
   const { recipeTitle, recipeSteps } = route.params
 
-  const speechTimeout = useRef<any>( null )
-
   const [ numberSteps, setNumberSteps ] = useState( 0 )
 
   const [ modal, setModal ] = useState( false )
@@ -22,43 +20,37 @@ export default function RecipeNarration( { navigation, route }: any ) {
     setModal( !modal )
   }
 
-  const tellStep = () => {
-    Speech.speak( recipeSteps[ numberSteps ], {
-      pitch: 0.95,
-      rate: 0.95,
-      onDone: onRecord
+  const backStep = () => {
+    setNumberSteps(( prev ) => {
+      const newStep = prev !== 0 ? prev - 1 : prev
+      Speech.stop()
+
+      setTimeout(() => {
+        Speech.speak( recipeSteps[ newStep ], {
+          pitch: 0.95,
+          rate: 0.95,
+          onDone: onRecord
+        })
+      }, 1000)
+
+      return newStep
     })
   }
 
-  const backStep = () => {
-    if ( numberSteps !== 0 ) {
-      setNumberSteps( numberSteps - 1 )
-      Speech.stop()
-
-      Speech.speak( recipeSteps[ numberSteps - 1 ], {
-        pitch: 0.95,
-        rate: 0.95,
-        onDone: onRecord
-      })
-    } else {
-      Speech.stop()
-
-      Speech.speak( recipeSteps[ numberSteps ], {
-        pitch: 0.95,
-        rate: 0.95,
-        onDone: onRecord
-      })
-    }
-  }
-
   const nextStep = () => {
-    setNumberSteps( numberSteps + 1 )
-    Speech.stop()
+    setNumberSteps(( prev ) => {
+      const newStep = prev + 1
+      Speech.stop()
 
-    Speech.speak( recipeSteps[ numberSteps + 1 ], {
-      pitch: 0.95,
-      rate: 0.95,
-      onDone: onRecord
+      setTimeout(() => {
+        Speech.speak( recipeSteps[ newStep ], {
+          pitch: 0.95,
+          rate: 0.95,
+          onDone: onRecord
+        })
+      }, 1000)
+
+      return newStep
     })
   }
 
@@ -70,26 +62,29 @@ export default function RecipeNarration( { navigation, route }: any ) {
     navigation.goBack() 
   }
 
+
   const handleSpeechCommand = ( command: string ) => {
-    if ( speechTimeout.current ) clearTimeout( speechTimeout.current )
+    if ( command.includes( "next" ) ) {
+      nextStep()
+    } 
   
-    speechTimeout.current = setTimeout( () => {
-      if ( command.includes( "next" ) ) {
-        nextStep()
-      } 
-      
-      if ( command.includes( "back" ) ) {
-        backStep()
-      } 
+    if ( command.includes( "back" ) ) {
+      backStep()
+    } 
 
-      if ( [ "stop", "end", "done", "finish" ].some( word => command.includes( word ) ) ) {
-        endStep()
-      }
+    if ( [ "stop", "end", "done", "finish" ].some( word => command.includes( word ) ) ) {
+      endStep()
+    }
 
-      if ( [ "tell", "again", "repeat" ].some( word => command.includes( word ) ) ) {
-        tellStep()
-      }
-    }, 1000 )
+    if ( [ "tell", "again", "repeat" ].some( word => command.includes( word ) ) ) {
+      setTimeout(() => {
+        Speech.speak( recipeSteps[ numberSteps ], {
+          pitch: 0.95,
+          rate: 0.95,
+          onDone: onRecord
+        })
+      }, 1000)
+    }
   }
   
   const onSpeechStart = () => {
@@ -102,13 +97,10 @@ export default function RecipeNarration( { navigation, route }: any ) {
 
   const onSpeechEnd = () => {
     console.log( "Speech End" )
-    onRecord()
   }
 
   const onSpeechPartialResults = ( e: any ) => {
     console.log( "Speech Partials Result: ", e.value[ 0 ] )
-
-    handleSpeechCommand( e.value[ 0 ].toLowerCase() )
   }
 
   const onSpeechResults = ( e: any ) => {

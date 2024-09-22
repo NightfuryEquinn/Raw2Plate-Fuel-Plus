@@ -98,6 +98,16 @@ export default function Register( { navigation }: any ) {
           )
         }
 
+        if ( error.code === "auth/invalid-password") {
+          Alert.alert(
+            "Invalid password!",
+            "Password must be longer than 6 characters!",
+            [
+              { text: "Ok", style: "default" },
+            ]
+          )
+        }
+
         console.log( "Error registering: ", error )
       })
   }

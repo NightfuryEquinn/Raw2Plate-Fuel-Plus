@@ -17,7 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Share from 'react-native-share'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
 import { useDispatch, useSelector } from 'react-redux'
-import { addRecipesPlanner, bookmarkRecipe, fetchRecipeInfo, fetchRecipeIngreSteps, updateComment } from 'redux/actions/recipeAction'
+import { addRecipesPlanner, bookmarkRecipe, fetchPlannerRecipes, fetchRecipeInfo, fetchRecipeIngreSteps, updateComment } from 'redux/actions/recipeAction'
 import { deleteBookmark } from 'redux/actions/userAction'
 import { AppDispatch, RootState } from 'redux/reducers/store'
 
@@ -64,19 +64,33 @@ export default function RecipeDetail( { navigation, route }: any ) {
   const onRefresh = async () => {
     setRefreshing( true )
 
-    if ( data[ 0 ]?.plannerRecipes ) {
-      const viewingRecipe = data[ 0 ].plannerRecipes.filter(( item: any ) => item.recipeId === recipeId )
-      setPlannerRecipe( viewingRecipe )
+    const fetchData = async () => {
+      if ( userSession.userId ) {
+        await dispatch( fetchPlannerRecipes( userSession.userId ) )
+      }
+      
+      if ( data[ 0 ]?.plannerRecipes ) {
+        const viewingRecipe = data[ 0 ].plannerRecipes.filter(( item: any ) => item.recipeId === recipeId )
+        setPlannerRecipe( viewingRecipe )
+      }
+  
+      if ( data[ 0 ]?.recipeInfo?.id !== recipeId ) {
+        await dispatch( fetchRecipeInfo( recipeId ) )
+        await dispatch( fetchRecipeIngreSteps( recipeId ) )
+      }
     }
 
-    if ( data[ 0 ]?.recipeInfo?.id !== recipeId ) {
-      await dispatch( fetchRecipeInfo( recipeId ) )
-      await dispatch( fetchRecipeIngreSteps( recipeId ) )
-    }
-
-    if ( data[ 0 ]?.recipeIngreSteps ) {
+    const fetchIngreSteps = () => {
       setDisplayIngre( cacheIngredients( recipeIngreSteps ) )
       setDisplaySteps( cacheSteps( recipeIngreSteps ) )
+    }
+    
+    if ( userSession ) {
+      fetchData()
+    }
+
+    if ( data[ 0 ]?.recipeInfo || data[ 0 ]?.recipeIngreSteps ) {
+      fetchIngreSteps()
     }
 
     setRefreshing( false )
@@ -303,18 +317,20 @@ export default function RecipeDetail( { navigation, route }: any ) {
         await dispatch( fetchRecipeIngreSteps( recipeId ) )
       }
     }
+
+    const fetchIngreSteps = () => {
+      setDisplayIngre( cacheIngredients( recipeIngreSteps ) )
+      setDisplaySteps( cacheSteps( recipeIngreSteps ) )
+    }
     
     if ( userSession ) {
       fetchData()
     }
-  }, [ userSession ])
 
-  useEffect(() => {
-    if ( recipeInfo && recipeIngreSteps ) {
-      setDisplayIngre( cacheIngredients( recipeIngreSteps ) )
-      setDisplaySteps( cacheSteps( recipeIngreSteps ) )
+    if ( data[ 0 ]?.recipeInfo || data[ 0 ]?.recipeIngreSteps ) {
+      fetchIngreSteps()
     }
-  }, [ recipeInfo, recipeIngreSteps ])
+  }, [ userSession, data ])
   
   return (
     loading ? <Loading /> :
