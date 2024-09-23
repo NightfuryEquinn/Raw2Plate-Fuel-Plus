@@ -180,5 +180,6 @@ const s = StyleSheet.create({
 
 MapCard.propTypes = {
   storeAddress: PropTypes.string.isRequired,
-  receiverAddress: PropTypes.string.isRequired
+  receiverAddress: PropTypes.string.isRequired,
+  setLast: PropTypes.func.isRequired
 }
