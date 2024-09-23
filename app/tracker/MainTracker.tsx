@@ -116,8 +116,8 @@ export default function MainTracker( { navigation }: any ) {
       totalManualCal += data.calories
     })
 
-    setCal( +totalCal.toFixed( 0 ) )
-    setManualCal( +totalManualCal.toFixed( 0 ) )
+    setCal( +totalCal.toFixed( 2 ) )
+    setManualCal( +totalManualCal.toFixed( 2 ) )
     setCarbs( +totalCarbs.toFixed( 2 ) )
     setProteins( +totalProtein.toFixed( 2 ) )
     setFibers( +totalFibers.toFixed( 2 ) )

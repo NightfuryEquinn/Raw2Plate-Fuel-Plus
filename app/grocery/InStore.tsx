@@ -75,8 +75,8 @@ export default function InStore( { navigation, route }: any ) {
 
     getUserSession()
     
-    if ( !data[ 0 ].storeItems || ( data[ 0 ].storeItems[ 0 ].storeId !== storeData.storeId ) ) {
-      dispatch( fetchStoreItem( storeData.storeId ) )
+    if ( !data[ 0 ].storeItems || ( data[ 0 ].storeItems[ 0 ]?.storeId !== storeData.storeId ) ) {
+      dispatch( fetchStoreItem( storeData?.storeId ) )
     }
   }, [])
   
@@ -166,6 +166,7 @@ export default function InStore( { navigation, route }: any ) {
 
       <SingleGroceryCardModal
         userId={ userSession?.userId }
+        storeId={ storeData.storeId }
         data={ singleData }
         modal={ singleModal }
         showModal={ () => {

@@ -2,15 +2,15 @@ import { LightMode } from 'assets/colors/LightMode'
 import { useFontFromContext } from 'context/FontProvider'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Dimensions, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Dimensions, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
 import RoundedBorderButton from './RoundedBorderButton'
 import Spacer from './Spacer'
 import { AppDispatch } from 'redux/reducers/store'
 import { useDispatch } from 'react-redux'
-import { addItemCart, updateItemCart } from 'redux/actions/groceryAction'
+import { addItemCart, fetchInCart, updateItemCart } from 'redux/actions/groceryAction'
 
-export default function SingleGroceryCardModal( { userId, data, modal, showModal, quantity, setQuantity, editable = false }: any ) {
+export default function SingleGroceryCardModal( { userId, storeId, data, modal, showModal, quantity, setQuantity, editable = false }: any ) {
   const dispatch: AppDispatch = useDispatch()
   
   const { fontsLoaded } = useFontFromContext()
@@ -81,11 +81,11 @@ export default function SingleGroceryCardModal( { userId, data, modal, showModal
 
             <View style={ s.buttonContainer }>
               <RoundedBorderButton 
-                onPress={ () => {
+                onPress={ async () => {
                   showModal()
 
                   if ( editable ) {
-                    dispatch( updateItemCart(
+                    await dispatch( updateItemCart(
                       {
                         cartId: data.cartId,
                         quantity: quantity,
@@ -93,15 +93,22 @@ export default function SingleGroceryCardModal( { userId, data, modal, showModal
                         itemId: data.itemId
                       }
                     ))
+
+                    await dispatch( fetchInCart( userId, storeId ) )
                   } else {
-                    dispatch( addItemCart(
+                    await dispatch( addItemCart(
                       {
                         cartId: 0,
                         quantity: quantity,
                         userId: userId,
                         itemId: data.itemId
                       }
-                    )) 
+                    ))
+
+                    Alert.alert(
+                      "Success!",
+                      `${ data.name } has been added to your cart in this store!`
+                    )
                   }
                 }}
                 text={ editable ? "Update Cart" : "Add to Cart" }
@@ -223,6 +230,7 @@ const s = StyleSheet.create({
 
 SingleGroceryCardModal.propTypes = {
   userId: PropTypes.number.isRequired,
+  storeId: PropTypes.number.isRequired,
   data: PropTypes.any.isRequired,
   modal: PropTypes.bool.isRequired,
   showModal: PropTypes.func.isRequired,

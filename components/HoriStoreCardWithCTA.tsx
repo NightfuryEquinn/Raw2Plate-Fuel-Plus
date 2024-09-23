@@ -19,7 +19,7 @@ export default function HoriStoreCardWithCTA( { data, onPress }: any ) {
         </View>
         
         <View style={ s.detailWrapper }>
-          <Text style={[ s.sub, s.yellow ]}>{ data.distance }.0 km</Text>
+          <Text style={[ s.sub, s.yellow ]}>{ data.distance } km</Text>
           <Text numberOfLines={ 1 } style={[ s.sub, { flex: 1 } ]}>away</Text>
         </View>
       </View>
@@ -64,7 +64,7 @@ const s = StyleSheet.create({
   },
   "detailHeading": {
     fontFamily: "fira",
-    fontSize: 20,
+    fontSize: 16,
     flex: 1,
     flexWrap: "wrap"
   },

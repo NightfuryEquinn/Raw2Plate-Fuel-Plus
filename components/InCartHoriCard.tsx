@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import { LightMode } from 'assets/colors/LightMode'
 import SingleGroceryCardModal from './SingleGroceryCardModal'
 
-export default function InCartHoriCard( { userId, data, onDelete }: any ) {
+export default function InCartHoriCard( { userId, storeId, data, onDelete }: any ) {
   const [ quantity, setQuantity ] = useState( data.quantity )
   const [ editModal, setEditModal ] = useState( false )
 
@@ -66,6 +66,7 @@ export default function InCartHoriCard( { userId, data, onDelete }: any ) {
 
       <SingleGroceryCardModal 
         userId={ userId }
+        storeId={ storeId }
         data={ data }
         modal={ editModal }
         showModal={ showEditModal }
@@ -103,7 +104,7 @@ const s = StyleSheet.create({
   },
   "contentContainer": {
     flex: 1,
-    paddingVertical: 15,
+    paddingVertical: 10,
     justifyContent: "space-between",
     gap: 20,
   },
@@ -156,6 +157,7 @@ const s = StyleSheet.create({
 
 InCartHoriCard.propTypes = {
   userId: PropTypes.number.isRequired,
+  storeId: PropTypes.number.isRequired,
   data: PropTypes.any.isRequired,
   onDelete: PropTypes.func.isRequired,
 }

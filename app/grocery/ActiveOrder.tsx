@@ -24,9 +24,9 @@ export default function ActiveOrder() {
   const dispatch: AppDispatch = useDispatch()
   const { data, loading, error } = useSelector(( state: RootState ) => state.grocery )
 
-  const [ activeOrder, setActiveOrder ] = useState( data[ 0 ]?.activeOrder )
   const [ modal, setModal ] = useState( false )
   const [ refreshing, setRefreshing ] = useState( false )
+  const [ last, setLast ] = useState( dayjs().format( "YYYY-MM-DD h:mm:ss a" ) )
 
   const showModal = () => {
     setModal( !modal )
@@ -37,8 +37,11 @@ export default function ActiveOrder() {
     setRefreshing( true )
 
     if ( userSession ) {
-      dispatch( fetchFirstActiveOrder( userSession.userId ) )
-      dispatch( fetchOrderItems( activeOrder?.orderId ) )
+      await dispatch( fetchFirstActiveOrder( userSession.userId ) )
+    }
+
+    if ( data[ 0 ].activeOrder ) {
+      await dispatch( fetchOrderItems( data[ 0 ].activeOrder.orderId ) )
     }
 
     setRefreshing( false )
@@ -65,16 +68,24 @@ export default function ActiveOrder() {
   }, [])
 
   useEffect(() => {
-    if ( userSession ) {
-      dispatch( fetchFirstActiveOrder( userSession.userId ) )
+    const fetchData = async () => {
+      if ( userSession ) {
+        await dispatch( fetchFirstActiveOrder( userSession.userId ) )
+      }
     }
+    
+    fetchData()
   }, [ userSession ])
 
   useEffect(() => {
-    if ( userSession && activeOrder && !data[ 0 ]?.orderItems ) {
-      dispatch( fetchOrderItems( activeOrder.orderId ) )
+    const fetchItems = async () => {
+      if ( data[ 0 ].activeOrder ) {
+        await dispatch( fetchOrderItems( data[ 0 ].activeOrder.orderId ) )
+      }
     }
-  }, [ activeOrder ])
+
+    fetchItems()
+  }, [ data[ 0 ].activeOrder ])
   
   return (
     loading ? <Loading /> :
@@ -87,20 +98,21 @@ export default function ActiveOrder() {
         <Text style={ s.heading }>Active Order</Text>
 
         {
-          !activeOrder ?
+          !data[ 0 ].activeOrder ?
             null
           :
             <Fragment>
               <Spacer size={ 10 } />
 
               <MapCard
-                storeAddress={ activeOrder.storeName }
-                receiverAddress={ activeOrder.address }
+                storeAddress={ data[ 0 ].activeOrder.storeName }
+                receiverAddress={ data[ 0 ].activeOrder.address }
+                setLast={ setLast }
               />
 
               <Spacer size={ 5 } />
 
-              <Text style={ s.hint }>Last updated at { dayjs().format( "YYYY-MM-DD h:mm:ss a" ) }</Text>  
+              <Text style={ s.hint }>Last updated at { last }</Text>  
             </Fragment>
         }
 
@@ -118,7 +130,7 @@ export default function ActiveOrder() {
           }
         >
           {
-            !activeOrder ?
+            !data[ 0 ].activeOrder ?
               <EmptyContent 
                 message="You haven't place an order yet..."
               />
@@ -128,22 +140,25 @@ export default function ActiveOrder() {
                   <View style={[ s.infoWrapper, { flex: 0.6 } ]}>
                     <Text style={[ s.info, s.black ]}>Order Time</Text>
 
-                    <Text style={ s.info }>{ dayjs( activeOrder.orderTime.slice( 0, -3 ) ).format( "h:mm a" ) }</Text>
+                    <Text style={ s.info }>{ dayjs( data[ 0 ].activeOrder.orderTime.slice( 0, -3 ) ).format( "h:mm a" ) }</Text>
                   </View>
 
                   <View style={[ s.infoWrapper, { flex: 0.4 } ]}>
                     <Text style={[ s.info, s.black ]}>ETA</Text>
 
-                    <Text style={ s.info }>{ Math.floor( Math.random() * ( 85 - 25 + 1 ) ) + 25 } <Text style={[ s.black, s.cantarell ]}>mins</Text></Text>
+                    <Text style={ s.info }>{ Math.floor( Math.random() * ( 85 - 25 + 1 ) ) + 25 } <Text style={[ s.black, s.fira ]}>mins</Text></Text>
                   </View>
                 </View>
 
                 <Spacer size={ 15 } />
 
-                <OrderCard 
-                  orderData={ activeOrder }
-                  title={ `Order Review | Status: ${ activeOrder.status }` }            
-                />
+                {
+                  data[ 0 ].activeOrder && data[ 0 ].orderItems &&
+                  <OrderCard 
+                    orderData={ data[ 0 ].activeOrder }
+                    title={ `Order Review | Status: ${ data[ 0 ].activeOrder.status }` }            
+                  />
+                }
               </Fragment>
           }
         </ScrollView>
@@ -160,7 +175,7 @@ export default function ActiveOrder() {
             textColor={ LightMode.white }
             borderRadius={ 10 }
             marginHori={ 0 }
-            disabled={activeOrder?.status !== "Pending" }
+            disabled={ data[ 0 ].activeOrder?.status !== "Pending" }
           />
         </View>
       </View>
@@ -175,7 +190,7 @@ export default function ActiveOrder() {
         onConfirm={ () => {
           dispatch( cancelOrder(
             {
-              ...activeOrder,
+              ...data[ 0 ].activeOrder,
               status: Status.cancel,
               deliveredTime: dayjs().format( "YYYY-MM-DD HH:mm:ss" ).toString()
             }

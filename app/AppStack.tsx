@@ -5,12 +5,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { LightMode } from 'assets/colors/LightMode'
 import { useFirebaseFromContext } from 'context/FirebaseProvider'
 import { useFontFromContext } from 'context/FontProvider'
-import React, { useEffect } from 'react'
+import React from 'react'
 import IconEN from 'react-native-vector-icons/Entypo'
 import IconMA from 'react-native-vector-icons/MaterialIcons'
-import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch, RootState } from 'redux/reducers/store'
+import { useSelector } from 'react-redux'
+import { RootState } from 'redux/reducers/store'
 import AppDrawer from './AppDrawer'
+import Loading from './Loading'
 import Profile from './Profile'
 import Settings from './Settings'
 import ActiveOrder from './grocery/ActiveOrder'
@@ -35,15 +36,12 @@ import AllNutrients from './tracker/AllNutrients'
 import MainTracker from './tracker/MainTracker'
 import ManualAdd from './tracker/ManualAdd'
 import MoreDetails from './tracker/MoreDetails'
-import Loading from './Loading'
-import { getTheUser } from 'redux/actions/userAction'
 
 const Tab = createMaterialBottomTabNavigator()
 const Drawer = createDrawerNavigator()
 const Stack = createNativeStackNavigator()
 
 export default function AppStack() {
-  const dispatch: AppDispatch = useDispatch()
   const { data, loading, error } = useSelector(( state: RootState ) => state.user )
 
   const theme = {
@@ -78,7 +76,7 @@ export default function AppStack() {
       theme={ theme } 
       linking={ linking }
     >
-      { data[ 0 ]?.setUserSession && user && isAuth ? <MainStack /> : <LandingStack /> }
+      { data[ 0 ]?.setUserSession || ( user && isAuth ) ? <MainStack /> : <LandingStack /> }
     </NavigationContainer>
   )
 }

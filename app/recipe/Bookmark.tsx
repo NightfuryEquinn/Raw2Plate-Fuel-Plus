@@ -11,7 +11,7 @@ import { useFontFromContext } from 'context/FontProvider'
 import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { shallowEqual, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { fetchBookmark, fetchBookmarkInfo } from 'redux/actions/userAction'
 import { AppDispatch, RootState } from 'redux/reducers/store'
 
@@ -19,7 +19,7 @@ export default function Bookmark() {
   const [ userSession, setUserSession ] = useState<any>( null )
 
   const dispatch: AppDispatch = useDispatch()
-  const { data, loading, error } = useSelector(( state: RootState ) => state.user, shallowEqual )
+  const { data, loading, error } = useSelector(( state: RootState ) => state.user )
 
   const navigation = useNavigation<NavigationProp<ParamListBase>>()
 

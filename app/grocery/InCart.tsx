@@ -34,8 +34,11 @@ export default function InCart( { navigation, route }: any ) {
     <InCartHoriCard
       key={ index }
       userId={ userSession?.userId }
+      storeId={ storeId }
       data={ item }
-      onDelete={ () => showModal( item.cartId ) }
+      onDelete={ () => {
+        showModal( item.cartId ) 
+      }}
     />
   )
 
@@ -171,9 +174,10 @@ export default function InCart( { navigation, route }: any ) {
         onCancel={ () => {
           showModal()
         }}
-        onConfirm={ () => {
+        onConfirm={ async () => {
           if ( selected ) {
-            dispatch( deleteItemCart( selected ) )
+            await dispatch( deleteItemCart( selected ) )
+            await dispatch( fetchInCart( userSession.userId, storeId ) )
           }
           showModal()
         }}

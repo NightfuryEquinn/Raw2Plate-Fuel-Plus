@@ -30,6 +30,8 @@ export default function LinedTextField( { name, placeholder, secure = false, tex
           secureTextEntry={ secure }
           keyboardType={ number ? "number-pad" : "default" }
           multiline={ multiline }
+          blurOnSubmit={ true }
+          returnKeyType="done"
         />
       </View>
     </View>

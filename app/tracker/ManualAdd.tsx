@@ -132,6 +132,30 @@ export default function ManualAdd( { navigation }: any ) {
         navigation.goBack()
       }
     } else {
+      if ( manualRecipe === "" || manualCalories === "" ) {
+        Alert.alert(
+          "Missing field!",
+          "Please type a recipe name and calories!",
+          [
+            { text: "Ok", style: "default" },
+          ]
+        )
+
+        return
+      }
+
+      if ( parseFloat( manualCalories ) < 0 ) {
+        Alert.alert(
+          "Invalid calories!",
+          "Calories should not be 0!",
+          [
+            { text: "Ok", style: "default" },
+          ]
+        )
+
+        return
+      }
+
       await dispatch( addManualRecipesTracker(
         userSession.userId,
         dayjs( modalDate ).format( "YYYY-MM-DD" ).toString(),

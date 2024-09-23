@@ -24,7 +24,7 @@ export default function OrderCard( { orderData, title }: any ) {
   return (
     <Fragment>
       {
-        title || title !== "" &&
+        title && title !== "" &&
         <Fragment>
           <View style={ s.divider }>
             <Text style={ s.dividerText }>{ title }</Text>
@@ -55,9 +55,9 @@ export default function OrderCard( { orderData, title }: any ) {
         <Spacer size={ 10 } />
 
         {
-          orderData && ( orderData.status === "Cancelled" || orderData.status === "Completed" ) ?
+          orderData && ( orderData?.status === "Cancelled" || orderData?.status === "Completed" ) ?
             <Fragment>
-              <Text style={ s.completed }>Completed at { dayjs( orderData?.deliveredTime ).format( 'h:mm a' ) }. </Text>
+              <Text style={ s.completed }>{ orderData.status } at { dayjs( orderData?.deliveredTime ).format( 'h:mm a' ) }. </Text>
               
               <Spacer size={ 5 } />
 
@@ -86,17 +86,17 @@ export default function OrderCard( { orderData, title }: any ) {
 
         <View>
           {
-            data[ 0 ]?.orderItems && data[ 0 ]?.orderItems.length > 0 && data[ 0 ].orderItems[ 0 ].orderId === orderData.orderId ?
-              data[ 0 ].orderItems.map(( item: any, index: number ) => (
+            data[ 0 ]?.orderItems && data[ 0 ]?.orderItems.length > 0 && data[ 0 ].orderItems[ 0 ].orderId === orderData?.orderId ?
+              data[ 0 ]?.orderItems.map(( item: any, index: number ) => (
                 <View key={ index } style={ s.itemContainer }>
                   <Text style={ s.name }>{ item.name }</Text>
                   <Text style={ s.price }>{ item.quantity } * { item.price } / RM { ( item.quantity * item.price ).toFixed( 2 ) }</Text>
                 </View>
               ))
-            : data[ 0 ].orderItems[ 0 ].orderId !== orderData.orderId ?
+            : data[ 0 ].orderItems[ 0 ].orderId !== orderData?.orderId ?
               <Fragment>
                 <RoundedBorderButton 
-                  onPress={ () => dispatch( fetchOrderItems( orderData.orderId ) ) }
+                  onPress={ () => dispatch( fetchOrderItems( orderData?.orderId ) ) }
                   text="View Details"
                   color={ LightMode.blue }
                   textColor={ LightMode.white }
