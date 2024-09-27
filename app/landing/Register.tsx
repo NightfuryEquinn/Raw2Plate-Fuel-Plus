@@ -108,7 +108,8 @@ export default function Register( { navigation }: any ) {
           )
         }
 
-        console.log( "Error registering: ", error )
+        // console.log( "Error registering: ", error )
+        throw error
       })
   }
 

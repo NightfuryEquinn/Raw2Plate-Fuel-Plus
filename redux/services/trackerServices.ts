@@ -15,10 +15,10 @@ export const addManualRecipesTrackerService = async ( theUserId: number, theDate
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.post( `/manualmeal/user/${ theUserId }/${ theDate }`, theManualMeal )
 
-    console.log( "DONE - addManualRecipesTrackerService: ", res.data )
+    // console.log( "DONE - addManualRecipesTrackerService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - addManualRecipesTrackerService: ", error )
+    // console.log( "ERROR - addManualRecipesTrackerService: ", error )
 
     throw error
   }
@@ -36,10 +36,10 @@ export const fetchRecipesNutrientsService = async ( theRecipeId: number ) => {
       recipeId: theRecipeId
     }
 
-    console.log( "DONE - fetchRecipesNutrientsService: ", appendRecipeIdData )
+    // console.log( "DONE - fetchRecipesNutrientsService: ", appendRecipeIdData )
     return appendRecipeIdData
   } catch ( error ) {
-    console.log( "ERROR - fetchRecipesNutrientsService: ", error )
+    // console.log( "ERROR - fetchRecipesNutrientsService: ", error )
 
     throw error
   }
@@ -69,10 +69,10 @@ export const fetchTrackerRecipesService = async ( theUserId: number ) => {
       })
     )
 
-    console.log( "DONE - fetchTrackerRecipesService: Include nutrition: ", recipesWithNutrients )
+    // console.log( "DONE - fetchTrackerRecipesService: Include nutrition: ", recipesWithNutrients )
     return recipesWithNutrients
   } catch ( error ) {
-    console.log( "ERROR - fetchTrackerRecipesService: ", error )
+    // console.log( "ERROR - fetchTrackerRecipesService: ", error )
 
     throw error
   }
@@ -85,10 +85,10 @@ export const fetchTrackerManualService = async ( theUserId: number ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.get( `/manualmeal/tracker/${ theUserId }` )
 
-    console.log( "DONE - fetchTrackerManualService: ", res.data )
+    // console.log( "DONE - fetchTrackerManualService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchTrackerManualService: ", error )
+    // console.log( "ERROR - fetchTrackerManualService: ", error )
 
     throw error
   }
@@ -101,10 +101,10 @@ export const deleteManualService = async ( theManualId: number ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.delete( `/manualmeal/${ theManualId }` )
 
-    console.log( "DONE - deleteManualService: ", res.data )
+    // console.log( "DONE - deleteManualService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - deleteManualService: ", error )
+    // console.log( "ERROR - deleteManualService: ", error )
 
     throw error
   }

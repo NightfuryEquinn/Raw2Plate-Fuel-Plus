@@ -17,10 +17,10 @@ export const fetchRandomService = async ( theNumber: number ) => {
     // Limit license true
     const res: ApiRes<ReduxState[]> = await spoonInstance.get( `/recipes/random?limitLicense=true&number=${ theNumber }&includeNutrition=true` )
 
-    console.log( "DONE - fetchRandomService: ", res.data )
+    // console.log( "DONE - fetchRandomService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchRandomService: ", error )
+    // console.log( "ERROR - fetchRandomService: ", error )
 
     throw error
   }
@@ -34,10 +34,10 @@ export const fetchRecipeInfoService = async ( theRecipeId: number ) => {
     // Include nutrition true
     const res: ApiRes<ReduxState[]> = await spoonInstance.get( `/recipes/${ theRecipeId }/information?includeNutrition=true` )
 
-    console.log( "DONE - fetchRecipeInfoService: ", res.data )
+    // console.log( "DONE - fetchRecipeInfoService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchRecipeInfoService: ", error )
+    // console.log( "ERROR - fetchRecipeInfoService: ", error )
 
     throw error
   }
@@ -51,10 +51,10 @@ export const fetchRecipeIngreStepsService = async ( theRecipeId: number ) => {
     // Step breakdown true
     const res: ApiRes<ReduxState[]> = await spoonInstance.get( `/recipes/${ theRecipeId }/analyzedInstructions?stepBreakdown=true` )
 
-    console.log( "DONE - fetchRecipeIngreService: ", res.data )
+    // console.log( "DONE - fetchRecipeIngreService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchRecipeIngreService: ", error )
+    // console.log( "ERROR - fetchRecipeIngreService: ", error )
 
     throw error
   }
@@ -68,10 +68,10 @@ export const discoverSearchService = async ( query: string, theNumber: number, t
     // Limit license true, Ignore pantry true
     const res: ApiRes<ReduxState[]> = await spoonInstance.get( `/recipes/complexSearch?ignorePantry=true&limitLicense=true&query=${ query }&number=${ theNumber }&cuisine=${ theCuisine }&includeIngredients=${ include }&excludeIngredients=${ exclude }&minCalories=${ minCal }&maxCalories=${ maxCal }` )
 
-    console.log( "DONE - discoverSearchService: ", res.data )
+    // console.log( "DONE - discoverSearchService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - discoverSearchService: ", error )
+    // console.log( "ERROR - discoverSearchService: ", error )
 
     throw error
   }
@@ -84,10 +84,10 @@ export const bookmarkRecipeService = async ( theBookmark: Bookmark ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.post( `/bookmark`, theBookmark )
 
-    console.log( "DONE - bookmarkRecipeService: ", res.data )
+    // console.log( "DONE - bookmarkRecipeService: ", res.data )
     return res.data
   } catch ( error: any ) {
-    console.log( "ERROR - bookmarkRecipeService: ", error )
+    // console.log( "ERROR - bookmarkRecipeService: ", error )
 
     throw error
   }
@@ -100,10 +100,10 @@ export const fetchPlannerRecipesService = async ( theUserId: number ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.get( `/meal/planner/${ theUserId }` )
 
-    console.log( "DONE - fetchPlannerRecipesService: ", res.data )
+    // console.log( "DONE - fetchPlannerRecipesService: ", res.data )
     return res.data
   } catch ( error: any ) {
-    console.log( "ERROR - fetchPlannerRecipesService: ", error )
+    // console.log( "ERROR - fetchPlannerRecipesService: ", error )
 
     throw error
   }
@@ -116,10 +116,10 @@ export const addRecipesPlannerService = async ( theUserId: number, theDate: stri
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.post( `/meal/user/${ theUserId }/${ theDate }`, theMeal )
 
-    console.log( "DONE - addRecipesPlannerService: ", res.data )
+    // console.log( "DONE - addRecipesPlannerService: ", res.data )
     return res.data
   } catch ( error: any ) {
-    console.log( "ERROR - addRecipesPlannerService: ", error )
+    // console.log( "ERROR - addRecipesPlannerService: ", error )
 
     throw error
   }
@@ -133,10 +133,10 @@ export const fetchRecipePlannerTrackerInfoService = async ( theRecipeIds: string
     // Include nutrition true
     const res: ApiRes<ReduxState[]> = await spoonInstance.get( `/recipes/informationBulk?ids=${ theRecipeIds }&includeNutrition=true` )
     
-    console.log( "DONE - fetchRecipePlannerTrackerInfoService: ", res.data )
+    // console.log( "DONE - fetchRecipePlannerTrackerInfoService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchRecipePlannerTrackerInfoService: ", error )
+    // console.log( "ERROR - fetchRecipePlannerTrackerInfoService: ", error )
     
     throw error
   }
@@ -149,10 +149,10 @@ export const deletePlannerRecipesService = async ( theMealId: number ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.delete( `/meal/${ theMealId }` )
     
-    console.log( "DONE - deletePlannerRecipesService: ", res.data )
+    // console.log( "DONE - deletePlannerRecipesService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - deletePlannerRecipesService: ", error )
+    // console.log( "ERROR - deletePlannerRecipesService: ", error )
     
     throw error
   }
@@ -165,10 +165,10 @@ export const updateCommentService = async ( theMealId: number, theMeal: Meal ) =
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.put( `/meal/${ theMealId }`, theMeal )
     
-    console.log( "DONE - updateCommentService: ", res.data )
+    // console.log( "DONE - updateCommentService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - updateCommentService: ", error )
+    // console.log( "ERROR - updateCommentService: ", error )
     
     throw error
   }

@@ -88,23 +88,23 @@ export default function RecipeNarration( { navigation, route }: any ) {
   }
   
   const onSpeechStart = () => {
-    console.log( "Speech Start" )
+    // console.log( "Speech Start" )
   }
 
   const onSpeechRecognized = () => {
-    console.log( "Speech Recognized" )
+    // console.log( "Speech Recognized" )
   }
 
   const onSpeechEnd = () => {
-    console.log( "Speech End" )
+    // console.log( "Speech End" )
   }
 
   const onSpeechPartialResults = ( e: any ) => {
-    console.log( "Speech Partials Result: ", e.value[ 0 ] )
+    // console.log( "Speech Partials Result: ", e.value[ 0 ] )
   }
 
   const onSpeechResults = ( e: any ) => {
-    console.log( "Speech Result: ", e.value[ 0 ] )
+    // console.log( "Speech Result: ", e.value[ 0 ] )
 
     handleSpeechCommand( e.value[ 0 ].toLowerCase() )
   }

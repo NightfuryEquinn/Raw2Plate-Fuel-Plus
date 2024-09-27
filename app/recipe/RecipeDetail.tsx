@@ -120,8 +120,13 @@ export default function RecipeDetail( { navigation, route }: any ) {
     }
 
     Share.open( shareOptions )
-      .then(( res ) => console.log( "Success sharing: ", res ) )
-      .catch(( err ) => console.log( "Error sharing: ", err ) )
+      .then(( res ) => {
+        // console.log( "Success sharing: ", res ) 
+      })
+      .catch(( error ) => {
+        // console.log( "Error sharing: ", err ) 
+        throw error
+      })
   }
 
   const cacheIngredients = ( recipe: any ) => {
@@ -184,7 +189,8 @@ export default function RecipeDetail( { navigation, route }: any ) {
         ]
       )
 
-      console.log( "Error bookmarking: ", error )
+      // console.log( "Error bookmarking: ", error )
+      throw error
     }
   }
 
@@ -220,7 +226,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
         ]
       )
 
-      console.log( "Error adding recipe to planner: ", error )
+      // console.log( "Error adding recipe to planner: ", error )
     }
   }
 
@@ -279,7 +285,7 @@ export default function RecipeDetail( { navigation, route }: any ) {
         ]
       )
 
-      console.log( "Error deleting bookmark: ", error )
+      // console.log( "Error deleting bookmark: ", error )
     }
 
     showModal()

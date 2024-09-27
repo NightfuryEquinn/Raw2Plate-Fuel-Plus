@@ -15,10 +15,10 @@ export const userRegisterService = async ( theUser: User ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.post( "/user", theUser )
 
-    console.log( "DONE - userRegisterService: ", res.data )
+    // console.log( "DONE - userRegisterService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - userRegisterService: ", error )
+    // console.log( "ERROR - userRegisterService: ", error )
 
     throw error
   }
@@ -31,10 +31,10 @@ export const getTheUserService = async ( theEmail: string ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.get( `/user/email/${ theEmail }` )
 
-    console.log( "DONE - getTheUserService: ", res.data )
+    // console.log( "DONE - getTheUserService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - getTheUserService: ", error )
+    // console.log( "ERROR - getTheUserService: ", error )
 
     throw error
   }
@@ -47,10 +47,10 @@ export const updateProfileService = async ( theUser: User ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.put( `/user/${ theUser.userId }`, theUser )
 
-    console.log( "DONE - updateProfileService: ", res.data )
+    // console.log( "DONE - updateProfileService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - updateProfileService: ", error )
+    // console.log( "ERROR - updateProfileService: ", error )
 
     throw error
   }
@@ -63,10 +63,10 @@ export const fetchBookmarkService = async ( theUserId: number ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.get( `/bookmark/userId/${ theUserId }` )
     
-    console.log( "DONE - fetchBookmarkService: ", res.data )
+    // console.log( "DONE - fetchBookmarkService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchBookmarkService: ", error )
+    // console.log( "ERROR - fetchBookmarkService: ", error )
 
     throw error
   }
@@ -80,10 +80,10 @@ export const fetchBookmarkInfoService = async ( theRecipeIds: string ) => {
     // Include nutrition true
     const res: ApiRes<ReduxState[]> = await spoonInstance.get( `/recipes/informationBulk?ids=${ theRecipeIds }&includeNutrition=true` )
     
-    console.log( "DONE - fetchBookmarkInfoService: ", res.data )
+    // console.log( "DONE - fetchBookmarkInfoService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchBookmarkInfoService: ", error )
+    // console.log( "ERROR - fetchBookmarkInfoService: ", error )
     
     throw error
   }
@@ -96,10 +96,10 @@ export const deleteBookmarkService = async ( theUserId: number, theRecipeId: num
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.delete( `/bookmark/${ theUserId }/${ theRecipeId }` )
 
-    console.log( "DONE - deleteBookmarkService: ", res.data )
+    // console.log( "DONE - deleteBookmarkService: ", res.data )
     return res.data
   } catch ( error: any ) {
-    console.log( "ERROR - deleteBookmarkService: ", error )
+    // console.log( "ERROR - deleteBookmarkService: ", error )
 
     throw error
   }

@@ -41,7 +41,8 @@ export default function MapCard( { storeAddress, receiverAddress, setLast }: any
         }
       }
     } catch ( error: any ) {
-      console.log( error.message )
+      // console.log( error.message )
+      throw error
     }
   }
 
@@ -139,7 +140,7 @@ export default function MapCard( { storeAddress, receiverAddress, setLast }: any
           strokeColor={ LightMode.grabGreen }
           strokeWidth={ 6 }
           optimizeWaypoints={ true }
-          onError={ ( error: any ) => console.log( "Error getting direction: ", error ) }
+          // onError={ ( error: any ) => console.log( "Error getting direction: ", error ) }
         />
 
         <MapViewDirections
@@ -149,7 +150,7 @@ export default function MapCard( { storeAddress, receiverAddress, setLast }: any
           strokeColor={ LightMode.halfGrabGreen }
           strokeWidth={ 6 }
           optimizeWaypoints={ true }
-          onError={ ( error: any ) => console.log( "Error getting direction: ", error ) }
+          // onError={ ( error: any ) => console.log( "Error getting direction: ", error ) }
         />
       </MapView>
     </View>

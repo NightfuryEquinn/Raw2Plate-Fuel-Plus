@@ -64,9 +64,10 @@ export const getTheUser = ( theEmail: string ) => {
       // Create async session
       try {
         await AsyncStorage.setItem( "@user_session", JSON.stringify( res ) )
-        console.log( "Done creating session: ", res )
+        // console.log( "Done creating session: ", res )
       } catch ( error: any ) {
-        console.log( "Error creating session: ", error )
+        // console.log( "Error creating session: ", error )
+        throw error
       }
     } catch ( error: any ) {
       dispatch( getTheUserFailure( error.message ) )
@@ -102,7 +103,7 @@ export const logoutClear = () => {
 
       const sessionUser = await AsyncStorage.removeItem( "@user_session" )
 
-      console.log( "Done removing session: ", sessionUser )
+      // console.log( "Done removing session: ", sessionUser )
     } catch ( error: any ) {
       dispatch( logoutClearFailure( error.message ) )
 
@@ -140,9 +141,10 @@ export const updateProfile = ( theUser: User ) => {
         await AsyncStorage.removeItem( "@user_session" )
         const sessionUser = await AsyncStorage.setItem( "@user_session", JSON.stringify( res ) )
 
-        console.log( "Done updating session: ", sessionUser )
+        // console.log( "Done updating session: ", sessionUser )
       } catch ( error: any ) {
-        console.log( "Error updating session: ", error )
+        // console.log( "Error updating session: ", error )
+        throw error
       }
     } catch ( error: any ) {
       dispatch( updateProfileFailure( error.message ) )

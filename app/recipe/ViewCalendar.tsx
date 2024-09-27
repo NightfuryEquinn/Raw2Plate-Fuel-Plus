@@ -280,8 +280,6 @@ export default function ViewCalendar( { navigation }: any ) {
                   item.id === filteredPlanner[ innerIndex ]?.recipeId &&
                   meal.label === filteredPlanner[ innerIndex ]?.mealType
               ) || []
-
-              console.log( filteredPlannerInfo )
               
               return (
                 <View key={ index }>

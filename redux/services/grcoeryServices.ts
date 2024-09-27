@@ -18,10 +18,10 @@ export const fetchStoreService = async () => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.get( "/store" )
 
-    console.log( "DONE - fetchStoreService: ", res.data )
+    // console.log( "DONE - fetchStoreService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchStoreService: ", error )
+    // console.log( "ERROR - fetchStoreService: ", error )
 
     throw error
   }
@@ -34,10 +34,10 @@ export const fetchOneStoreService = async ( theStoreId: number ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.get( `/store/${ theStoreId }` )
 
-    console.log( "DONE - fetchOneStoreService: ", res.data )
+    // console.log( "DONE - fetchOneStoreService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchOneStoreService: ", error )
+    // console.log( "ERROR - fetchOneStoreService: ", error )
 
     throw error
   }
@@ -50,10 +50,10 @@ export const fetchStoreItemService = async ( theStoreId: number ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.get( `/item/store/${ theStoreId }` )
 
-    console.log( "DONE - fetchStoreItemService: ", res.data )
+    // console.log( "DONE - fetchStoreItemService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchStoreItemService: ", error )
+    // console.log( "ERROR - fetchStoreItemService: ", error )
 
     throw error
   }
@@ -66,10 +66,10 @@ export const fetchInCartService = async ( theUserId: number, theStoreId: number 
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.get( `/cart/user/${ theUserId }/store/${ theStoreId }` )
 
-    console.log( "DONE - fetchInCartService: ", res.data )
+    // console.log( "DONE - fetchInCartService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchInCartService: ", error )
+    // console.log( "ERROR - fetchInCartService: ", error )
 
     throw error
   }
@@ -82,10 +82,10 @@ export const addItemCartService = async ( theCart: Cart ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.post( `/cart`, theCart )
 
-    console.log( "DONE - addItemCartService: ", res.data )
+    // console.log( "DONE - addItemCartService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - addItemCartService: ", error )
+    // console.log( "ERROR - addItemCartService: ", error )
 
     throw error
   }
@@ -98,10 +98,10 @@ export const updateItemCartService = async ( theCart: Cart ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.put( `/cart/${ theCart.cartId }`, theCart )
 
-    console.log( "DONE - updateItemCartService: ", res.data )
+    // console.log( "DONE - updateItemCartService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - updateItemCartService: ", error )
+    // console.log( "ERROR - updateItemCartService: ", error )
 
     throw error
   }
@@ -114,10 +114,10 @@ export const deleteItemCartService = async ( theCartId: number ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.delete( `/cart/${ theCartId }` )
 
-    console.log( "DONE - deleteItemCartService: ", res.data )
+    // console.log( "DONE - deleteItemCartService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - deleteItemCartService: ", error )
+    // console.log( "ERROR - deleteItemCartService: ", error )
 
     throw error
   }
@@ -130,7 +130,7 @@ export const addOrderService = async ( theOrder: Order, theOrderItems: any[] ) =
   try {
     const orderRes: ApiRes<any> = await awsInstance.post( "/order", theOrder )
 
-    console.log( "DONE - addOrderService: ", orderRes.data )
+    // console.log( "DONE - addOrderService: ", orderRes.data )
 
     const theOrderId = orderRes.data.orderId
     const updatedOrderItems = theOrderItems.map( item => ({
@@ -150,18 +150,18 @@ export const addOrderService = async ( theOrder: Order, theOrderItems: any[] ) =
     )
     
     const updatedOrderItemsResponse = await Promise.all( updatedOrderItemsRequest )
-    console.log( "DONE - addAllOrderItems: ", updatedOrderItemsResponse.map( res => res.data ) )
+    // console.log( "DONE - addAllOrderItems: ", updatedOrderItemsResponse.map( res => res.data ) )
 
     const deleteCartRequest = updatedOrderItems.map( item => 
       awsInstance.delete( `/cart/${ item.cartId }` )
     )
 
     const deleteCartResponse = await Promise.all( deleteCartRequest )
-    console.log( "DONE - deleteAllCartItems: ", deleteCartResponse.map( res => res.data ) )
+    // console.log( "DONE - deleteAllCartItems: ", deleteCartResponse.map( res => res.data ) )
 
     return orderRes.data
   } catch ( error ) {
-    console.log( "ERROR - addOrderService: ", error )
+    // console.log( "ERROR - addOrderService: ", error )
 
     throw error
   }
@@ -174,10 +174,10 @@ export const cancelOrderService = async ( theOrder: Order ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.put( `/order/${ theOrder.orderId }`, theOrder )
 
-    console.log( "DONE - cancelOrderService: ", res.data )
+    // console.log( "DONE - cancelOrderService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - cancelOrderService: ", error )
+    // console.log( "ERROR - cancelOrderService: ", error )
 
     throw error
   }
@@ -190,10 +190,10 @@ export const fetchFirstActiveOrderService = async ( theUserId: number ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.get( `/order/user/${ theUserId }` )
 
-    console.log( "DONE - fetchFirstActiveOrderService: ", res.data )
+    // console.log( "DONE - fetchFirstActiveOrderService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchFirstActiveOrderService: ", error )
+    // console.log( "ERROR - fetchFirstActiveOrderService: ", error )
 
     throw error
   }
@@ -206,10 +206,10 @@ export const fetchOrderItemsService = async ( theOrderId: number ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.get( `/order/user/${ theOrderId }/items` )
 
-    console.log( "DONE - fetchOrderItemsService: ", res.data )
+    // console.log( "DONE - fetchOrderItemsService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchOrderItemsService: ", error )
+    // console.log( "ERROR - fetchOrderItemsService: ", error )
 
     throw error
   }
@@ -222,10 +222,10 @@ export const fetchOrderHistoryService = async ( theUserId: number ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.get( `/order/user/${ theUserId }/past` )
 
-    console.log( "DONE - fetchOrderHistoryService: ", res.data )
+    // console.log( "DONE - fetchOrderHistoryService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchOrderHistoryService: ", error )
+    // console.log( "ERROR - fetchOrderHistoryService: ", error )
 
     throw error
   }
@@ -238,10 +238,10 @@ export const fetchGroceryListService = async ( theUserId: number ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.get( `/grocerylist/user/${ theUserId }` )
 
-    console.log( "DONE - fetchGroceryListService: ", res.data )
+    // console.log( "DONE - fetchGroceryListService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - fetchGroceryListService: ", error )
+    // console.log( "ERROR - fetchGroceryListService: ", error )
 
     throw error
   }
@@ -254,10 +254,10 @@ export const checkAddGroceryListService = async ( theGroceryList: GroceryList ) 
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.post( `/grocerylist`, theGroceryList )
 
-    console.log( "DONE - checkAddGroceryListService: ", res.data )
+    // console.log( "DONE - checkAddGroceryListService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - checkAddGroceryListService: ", error )
+    // console.log( "ERROR - checkAddGroceryListService: ", error )
 
     throw error
   }
@@ -270,10 +270,10 @@ export const addGroceryListService = async ( theGroceryItem: GroceryItem ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.post( `/groceryitem`, theGroceryItem )
 
-    console.log( "DONE - addGroceryListService: ", res.data )
+    // console.log( "DONE - addGroceryListService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - addGroceryListService: ", error )
+    // console.log( "ERROR - addGroceryListService: ", error )
 
     throw error
   }
@@ -286,10 +286,10 @@ export const updateGroceryListService = async ( theGroceryItem: GroceryItem ) =>
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.put( `/groceryitem/${ theGroceryItem.groceryItemId }`, theGroceryItem )
 
-    console.log( "DONE - updateGroceryListService: ", res.data )
+    // console.log( "DONE - updateGroceryListService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - updateGroceryListService: ", error )
+    // console.log( "ERROR - updateGroceryListService: ", error )
 
     throw error
   }
@@ -302,10 +302,10 @@ export const deleteGroceryListService = async ( theGroceryItemId: number ) => {
   try {
     const res: ApiRes<ReduxState[]> = await awsInstance.delete( `/groceryitem/${ theGroceryItemId }` )
 
-    console.log( "DONE - deleteGroceryListService: ", res.data )
+    // console.log( "DONE - deleteGroceryListService: ", res.data )
     return res.data
   } catch ( error ) {
-    console.log( "ERROR - deleteGroceryListService: ", error )
+    // console.log( "ERROR - deleteGroceryListService: ", error )
 
     throw error
   }

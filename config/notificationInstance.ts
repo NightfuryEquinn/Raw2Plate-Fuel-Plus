@@ -43,7 +43,8 @@ export const registerBackgroundTask = async () => {
       startOnBoot: true,
     })
   } catch ( error ) {
-    console.log( "Error registering background task: ", error )
+    // console.log( "Error registering background task: ", error )
+    throw error
   }
 }
 

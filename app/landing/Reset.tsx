@@ -78,7 +78,8 @@ export default function Reset( { navigation }: any ) {
           )
         }
 
-        console.log( "Error reseting: ", error )
+        // console.log( "Error reseting: ", error )
+        throw error
       })
   }
 
