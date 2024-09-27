@@ -16,7 +16,7 @@ export default function Settings() {
   const userInfo = data[ 0 ].setUserSession
 
   const pkg = require( "../package.json" )
-  const [ darkMode, setDarkMode ] = useState( userInfo.isDarkMode )
+  const [ darkMode, setDarkMode ] = useState( userInfo?.isDarkMode || false )
   const [ foreground, setForeground ] = useState( false )
   const [ background, setBackground ] = useState( false )
   const [ microphone, setMicrophone ] = useState( false )

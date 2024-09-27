@@ -139,7 +139,7 @@ export default function Login( { navigation }: any ) {
             <RoundedBorderButton
               onPress={ () => firebaseLogin( email, password ) }
               icon="MA"
-              name="account-circle"
+              name="login"
               text="Proceed with Login"
               color={ LightMode.green }
               textColor={ email === "" || password === "" ? LightMode.white : LightMode.black }

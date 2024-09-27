@@ -75,17 +75,36 @@ export default function ViewCalendar( { navigation }: any ) {
 
   const dates = generateDates()
 
-  const onRefresh = () => {
+  const onRefresh = async () => {
     setRefreshing( true )
 
+    const fetchData = async () => {
+      if ( userSession ) {
+        await dispatch( fetchPlannerRecipes( userSession.userId ) )
+
+        if ( data[ 0 ].plannerRecipes && data[ 0 ].plannerRecipes.length > 0 ) {
+          const theRecipeIds = data[ 0 ].plannerRecipes
+            .filter(( item: any ) => item.date === dayjs( modalDate ).format( "YYYY-MM-DD" ).toString())
+            .map(( item: any ) => item.recipeId)
+
+          const previousRecipeIds = data[ 0 ].plannerRecipesInfo
+            ?.map(( item: any ) => item.id ) || []
+
+          const newRecipeIds = theRecipeIds
+            .filter(( item: any ) => !previousRecipeIds.includes( item ) )
+          
+          const removedRecipeIds = previousRecipeIds
+            .filter(( item: any ) => !theRecipeIds.includes( item ) )
+
+          if ( newRecipeIds.length > 0 || removedRecipeIds.length > 0 ) {
+            await dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds.join( "," ) ) )
+          }
+        }
+      }
+    }
+    
     if ( userSession ) {
-      dispatch( fetchPlannerRecipes( userSession.userId ) )
-
-      const theRecipeIds = data[ 0 ].plannerRecipes.map(
-        ( item: any ) => item.recipeId
-      ).join( "," )
-
-      dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
+      fetchData()
     }
 
     setRefreshing( false )
@@ -118,14 +137,25 @@ export default function ViewCalendar( { navigation }: any ) {
 
         if ( data[ 0 ].plannerRecipes && data[ 0 ].plannerRecipes.length > 0 ) {
           const theRecipeIds = data[ 0 ].plannerRecipes
+            .filter(( item: any ) => item.date === dayjs( modalDate ).format( "YYYY-MM-DD" ).toString())
             .map(( item: any ) => item.recipeId)
-            .join( "," )
-    
-          await dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds ) )
+
+          const previousRecipeIds = data[ 0 ].plannerRecipesInfo
+            ?.map(( item: any ) => item.id ) || []
+
+          const newRecipeIds = theRecipeIds
+            .filter(( item: any ) => !previousRecipeIds.includes( item ) )
+          
+          const removedRecipeIds = previousRecipeIds
+            .filter(( item: any ) => !theRecipeIds.includes( item ) )
+
+          if ( newRecipeIds.length > 0 || removedRecipeIds.length > 0 ) {
+            await dispatch( fetchRecipePlannerTrackerInfo( theRecipeIds.join( "," ) ) )
+          }
         }
       }
     }
-
+    
     if ( userSession ) {
       fetchData()
     }
@@ -246,10 +276,12 @@ export default function ViewCalendar( { navigation }: any ) {
           {
             mealCategories.map(( meal: MealCategory, index: number ) => {
               const filteredPlannerInfo = data[ 0 ]?.plannerRecipesInfo?.filter(
-                ( item: any, index: number ) => 
-                  item.id === filteredPlanner[ index ]?.recipeId &&
-                  meal.label === filteredPlanner[ index ]?.mealType
+                ( item: any, innerIndex: number ) => 
+                  item.id === filteredPlanner[ innerIndex ]?.recipeId &&
+                  meal.label === filteredPlanner[ innerIndex ]?.mealType
               ) || []
+
+              console.log( filteredPlannerInfo )
               
               return (
                 <View key={ index }>

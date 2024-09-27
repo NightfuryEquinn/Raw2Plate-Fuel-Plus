@@ -47,7 +47,7 @@ export default function Bookmark() {
       if ( userSession ) {
           await dispatch( fetchBookmark( userSession.userId ) )
       
-        if ( data[ 0 ]?.fetchBookmarks && data[ 0 ]?.fetchBookmarks.length > 0 ) {  
+        if ( data[ 0 ].fetchBookmarks || data[ 0 ].bookmarkedRecipes ) {  
           const theRecipeIds = data[ 0 ].fetchBookmarks
             .map( ( item: any ) => item.recipeId )
             .join( "," )
@@ -89,7 +89,7 @@ export default function Bookmark() {
       if ( userSession ) {
           await dispatch( fetchBookmark( userSession.userId ) )
       
-        if ( data[ 0 ]?.fetchBookmarks && data[ 0 ]?.fetchBookmarks.length > 0 ) {  
+        if ( data[ 0 ]?.fetchBookmarks ) {  
           const theRecipeIds = data[ 0 ].fetchBookmarks
             .map( ( item: any ) => item.recipeId )
             .join( "," )
@@ -126,7 +126,7 @@ export default function Bookmark() {
         <Spacer size={ 30 } />
 
         {
-          data[ 0 ].fetchBookmarks || data[ 0 ].fetchBookmarks.length > 0 || data[ 0 ].bookmarkedRecipes || data[ 0 ].bookmarkedRecipes.length > 0 ?
+          data[ 0 ].fetchBookmarks || data[ 0 ].bookmarkedRecipes ?
             <FlatList
               refreshing={ refreshing }
               onRefresh={ onRefresh }

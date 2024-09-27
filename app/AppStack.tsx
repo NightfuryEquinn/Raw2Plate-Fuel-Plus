@@ -76,7 +76,7 @@ export default function AppStack() {
       theme={ theme } 
       linking={ linking }
     >
-      { data[ 0 ]?.setUserSession || ( user && isAuth ) ? <MainStack /> : <LandingStack /> }
+      { data[ 0 ]?.setUserSession && ( user && isAuth ) ? <MainStack /> : <LandingStack /> }
     </NavigationContainer>
   )
 }

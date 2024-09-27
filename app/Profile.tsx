@@ -74,8 +74,8 @@ export default function Profile( { navigation }: any ) {
   // Firebase logout
   const firebaseLogout = async () => {
     await signOut( authInit )
-      .then(() => {
-        dispatch( logoutClear() )
+      .then( async () => {
+        await dispatch( logoutClear() )
 
         navigation.reset({
           index: 0,
